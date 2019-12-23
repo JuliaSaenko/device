@@ -1,0 +1,83 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+
+  display: none;
+
+  color: #000000;
+
+  background-color: #ffffff;
+  -webkit-box-shadow: 0 10px 20px rgba(4, 6, 6, 0.2);
+  box-shadow: 0 10px 20px rgba(4, 6, 6, 0.2);
+
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  -webkit-animation-name: popup;
+  animation-name: popup;
+  -webkit-animation-duration: 0.6s;
+  animation-duration: 0.6s;
+}
+
+.modal--opened {
+  display: block;
+}
+
+.modal--invalid {
+  -webkit-animation-name: shake;
+  animation-name: shake;
+}
+
+.modal--write-us {
+  width: 960px;
+  padding-top: 93px;
+  padding-right: 100px;
+  padding-bottom: 78px;
+  padding-left: 100px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.modal--map {
+  width: 960px;
+  padding: 0;
+
+  -webkit-animation-name: popup-bottom;
+  animation-name: popup-bottom;
+}
+
+.modal__close {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 10;
+
+  display: block;
+  width: 55px;
+  height: 55px;
+  margin: 0;
+  padding: 0;
+
+  background: none;
+  background-image: url("../img/modal-close.svg");
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 55px 55px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.modal__close:hover,
+.modal__close:focus {
+  opacity: 1;
+  outline: none;
+}
+
+.modal__close:active {
+  opacity: 0.3;
+  outline: none;
+}

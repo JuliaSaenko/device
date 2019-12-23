@@ -1,0 +1,45 @@
+.about-us {
+  width: 480px;
+}
+
+.about-us__text {
+  margin-bottom: 30px;
+  padding-right: 2px;
+}
+
+.about-us__list {
+  margin-top: 65px;
+  margin-bottom: 55px;
+  padding-left: 0;
+
+  font-family: "Gilroy", "Arial", sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 40px;
+  color: #000000;
+
+  list-style: none;
+}
+
+.about-us__list-item {
+  position: relative;
+
+  padding-left: 35px;
+}
+
+.about-us__list-item::before {
+  content: "";
+
+  position: absolute;
+  top: 17px;
+  left: 1px;
+
+  display: block;
+  width: 8px;
+  height: 8px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  border: 2px solid #e5e5e5;
+  border-radius: 50%;
+}

@@ -1,0 +1,30 @@
+.catalog-menu {
+  width: 160px;
+  margin-top: 0;
+  margin-right: 40px;
+  margin-bottom: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.catalog-menu:first-child {
+  width: 200px;
+}
+
+.catalog-menu__link {
+  line-height: 36px;
+  letter-spacing: 0.15px;
+  text-decoration: none;
+  color: #000000;
+}
+
+.catalog-menu__link[href]:hover,
+.catalog-menu__link:focus {
+  opacity: 0.6;
+}
+
+.catalog-menu__link[href]:active {
+  outline: none;
+  opacity: 0.3;
+}

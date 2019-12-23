@@ -1,0 +1,65 @@
+.page-header {
+  padding-top: 21px;
+  padding-bottom: 44px;
+
+  background-image: -webkit-linear-gradient(top, transparent 40px, #f8e296 40px);
+  background-image: -o-linear-gradient(top, transparent 40px, #f8e296 40px);
+  background-image: linear-gradient(180deg, transparent 40px, #f8e296 40px);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+
+.page-header__logo {
+  margin-bottom: 18px;
+}
+
+.page-header__user-menu {
+  width: 260px;
+  margin-left: 100px;
+  padding-top: 8px;
+}
+
+.page-header__user-actions {
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+
+  width: 240px;
+  padding-top: 8px;
+}
+
+.page-header__site-menu {
+  width: 100%;
+  margin-top: 22px;
+}
+
+.page-header__site-menu li:first-child {
+  position: relative;
+
+  width: 500px;
+  margin-right: 40px;
+}
+
+.page-header__site-menu li:last-child {
+  margin-right: -3.6px;
+  margin-left: auto;
+}
+
+.page-header__catalog-dropdown {
+  top: 30px;
+  left: -60px;
+
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+
+  width: 1160px;
+  padding-top: 21px;
+  padding-right: 60px;
+  padding-bottom: 34px;
+  padding-left: 60px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  background-color: #f7e296;
+}

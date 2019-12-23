@@ -1,0 +1,121 @@
+.filter {
+  padding-bottom: 77px;
+
+  color: #000000;
+}
+
+.filter__form {
+  padding-top: 69px;
+}
+
+.filter__section {
+  margin: 0;
+  margin-bottom: 32px;
+  padding: 0;
+
+  border: none;
+}
+
+.filter__section-title {
+  display: block;
+  width: 100%;
+
+  padding-top: 10px;
+  padding-bottom: 17px;
+
+  font-family: "Gilroy", "Arial", sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.18px;
+
+  border-top: 2px solid #000000;
+}
+
+.filter__range {
+  margin-bottom: 17px;
+}
+
+.filter__options {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.filter__option-label {
+  position: relative;
+  left: -2px;
+
+  display: block;
+  padding-left: 40px;
+
+  font-size: 14px;
+  line-height: 40px;
+  letter-spacing: 0.14px;
+
+  cursor: pointer;
+}
+
+.filter__option-label::before {
+  content: "";
+
+  position: absolute;
+  top: 7px;
+  left: 0;
+
+  display: block;
+  width: 30px;
+  height: 30px;
+
+  background-repeat: no-repeat;
+}
+
+.filter__option-label:hover::before {
+  opacity: 0.6;
+}
+
+.filter__option:focus + .filter__option-label {
+  outline: 1px dotted rgba(0, 0, 0, 0.6);
+}
+
+.filter__option-label:active::before {
+  opacity: 1;
+}
+
+.filter__option-label--check::before,
+.filter__option:checked:enabled + .filter__option-label--check:active::before {
+  background-image: url("../img/checkbox-off.svg");
+  background-position: 0 2px;
+  background-size: 23px 23px;
+}
+
+.filter__option-label--radio::before,
+.filter__option:checked:enabled + .filter__option-label--radio:active::before {
+  background-image: url("../img/radio-off.svg");
+  background-position: 0 0;
+  background-size: 25px 25px;
+}
+
+.filter__option:checked + .filter__option-label--check::before,
+.filter__option:not(:checked):enabled + .filter__option-label--check:active::before {
+  background-image: url("../img/checkbox-on.svg");
+  background-size: 27px 23px;
+}
+
+.filter__option:checked + .filter__option-label--radio::before,
+.filter__option:not(:checked):enabled + .filter__option-label--radio:active::before {
+  background-image: url("../img/radio-on.svg");
+}
+
+.filter__option:disabled + .filter__option-label {
+  color: #a6a6a6;
+}
+
+.filter__option:disabled + .filter__option-label::before {
+  opacity: 0.25;
+}
+
+.filter__btn {
+  min-width: 200px;
+}

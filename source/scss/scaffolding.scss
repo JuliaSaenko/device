@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+
+  font-family: "Open Sans", "Arial", sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 30px;
+  color: #464646;
+
+  background-color: #ffffff;
+}
+
+
+.visually-hidden,
+.dropdown {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+
+  border: 0;
+
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.dropdown {
+  z-index: 20;
+}
+
+:hover ~ .dropdown,
+:focus ~ .dropdown,
+.dropdown:hover,
+.dropdown--hover {
+  height: auto;
+  margin: 0;
+
+  clip: auto;
+  overflow: visible;
+}

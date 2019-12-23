@@ -1,0 +1,69 @@
+.btn {
+  position: relative;
+  z-index: 0;
+
+  display: inline-block;
+  min-width: 260px;
+  padding-top: 8px;
+  padding-right: 12.4px;
+  padding-bottom: 8px;
+  padding-left: 16px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  font-family: "Gilroy", "Arial", sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 3.6px;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  vertical-align: top;
+  color: #000000;
+
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  -webkit-transition: color 0.1s ease-in-out;
+  -o-transition: color 0.1s ease-in-out;
+  transition: color 0.1s ease-in-out;
+}
+
+.btn:active {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.btn:focus,
+.btn:active {
+  outline: none;
+}
+
+.btn::before {
+  content: "";
+
+  position: absolute;
+  top: 16px;
+  left: 0;
+  z-index: -1;
+
+  display: block;
+  width: 100%;
+  height: 1px;
+  min-height: calc(100% - 32px);
+
+  background-color: #f0c52e;
+
+  -webkit-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+}
+
+.btn:hover::before,
+.btn:focus::before {
+  top: 0;
+
+  height: 100%;
+  min-height: calc(100% - 32px);
+}

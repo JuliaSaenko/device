@@ -1,0 +1,137 @@
+.user-menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: auto;
+  padding: 0;
+
+  list-style: none;
+}
+
+.user-menu__item {
+  margin-left: 37px;
+}
+
+.user-menu__item:first-child {
+  margin-left: 0;
+}
+
+.user-menu__link {
+  position: relative;
+
+  display: block;
+  padding-left: 27px;
+
+  text-decoration: none;
+  color: #000000;
+
+  -webkit-transition: color 0.1s ease-in-out;
+  -o-transition: color 0.1s ease-in-out;
+  transition: color 0.1s ease-in-out;
+}
+
+.user-menu__link:hover,
+.user-menu__link:focus {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.user-menu__link:active {
+  color: rgba(0, 0, 0, 0.3);
+
+  outline: none;
+}
+
+.user-menu__link::before {
+  content: "";
+
+  position: absolute;
+  top: 5px;
+  left: 0;
+
+  display: block;
+  width: 28px;
+  height: 20px;
+
+  background-repeat: no-repeat;
+
+  -webkit-transition: opacity 0.1s ease-in-out;
+  -o-transition: opacity 0.1s ease-in-out;
+  transition: opacity 0.1s ease-in-out;
+}
+
+.user-menu__link:hover::before,
+.user-menu__link:focus::before {
+  opacity: 0.6;
+}
+
+.user-menu__link:active::before {
+  opacity: 0.3;
+}
+
+.user-menu__link--login::before,
+.user-menu__link--profile::before {
+  background-image: url("../img/user.svg");
+  background-position: left bottom 4px;
+  background-size: 13px 12px;
+}
+
+.user-menu__link--logout {
+  margin-left: 22px;
+  padding-left: 0;
+
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.user-menu__link--cart {
+  margin-left: auto;
+}
+
+.user-menu__link--compare::before {
+  background-image: url("../img/compare.svg");
+  background-position: left 6px bottom 4px;
+  background-size: 10px 10px;
+}
+
+.user-menu__link--cart::before {
+  background-image: url("../img/cart.svg");
+  background-position: left 4px bottom 4px;
+  background-size: 12px 12px;
+}
+
+.user-menu--contrast .user-menu__link {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.user-menu--contrast .user-menu__link:hover,
+.user-menu--contrast .user-menu__link:focus {
+  color: #ffffff;
+}
+
+.user-menu--contrast .user-menu__link:active {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.user-menu--contrast .user-menu__link--login::before,
+.user-menu--contrast .user-menu__link--profile::before {
+  background-image: url("../img/user-color.svg");
+}
+
+.user-menu--contrast .user-menu__link--logout {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.user-menu--contrast .user-menu__link--compare::before {
+  background-image: url("../img/compare-color.svg");
+}
+
+.user-menu--contrast .user-menu__link--cart::before {
+  background-image: url("../img/cart-color.svg");
+}

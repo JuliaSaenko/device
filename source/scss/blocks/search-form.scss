@@ -1,0 +1,121 @@
+.search-form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+
+  width: 440px;
+}
+
+.search-form__input {
+  width: 355px;
+  height: 49px;
+  padding-top: 8px;
+  padding-right: 20px;
+  padding-bottom: 9px;
+  padding-left: 38px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  font: inherit;
+  letter-spacing: 0.15px;
+  color: #000000;
+
+  background: none;
+  background-image: url("../img/search.svg");
+  background-repeat: no-repeat;
+  background-position: 3px 17px;
+  background-size: 16px 16px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  outline: none;
+}
+
+.search-form__input--focus,
+.search-form__input:focus,
+.search-form__input:valid {
+  border-color: #000000;
+}
+
+.search-form__input:invalid {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.search-form__input::-webkit-input-placeholder {
+  color: #000000;
+  opacity: 0.3;
+}
+
+.search-form__input:-ms-input-placeholder {
+  color: #000000;
+  opacity: 0.3;
+}
+
+.search-form__input::-ms-input-placeholder {
+  color: #000000;
+  opacity: 0.3;
+}
+
+.search-form__input::placeholder {
+  color: #000000;
+  opacity: 0.3;
+}
+
+.search-form__input:hover::-webkit-input-placeholder {
+  opacity: 0.6;
+}
+
+.search-form__input:hover:-ms-input-placeholder {
+  opacity: 0.6;
+}
+
+.search-form__input:hover::-ms-input-placeholder {
+  opacity: 0.6;
+}
+
+.search-form__input:hover::placeholder {
+  opacity: 0.6;
+}
+
+.search-form__btn {
+  display: block;
+
+  width: 85px;
+  padding-top: 6px;
+  padding-bottom: 9px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  font: inherit;
+  letter-spacing: 0.15px;
+  text-align: center;
+  color: #000000;
+
+  background: none;
+  border: 2px solid #000000;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.search-form__btn:focus,
+.search-form__btn:active,
+.search-form__input:valid ~ .search-form__btn,
+.search-form__input:focus ~ .search-form__btn {
+  opacity: 1;
+}
+
+.search-form__btn:hover,
+.search-form__btn:focus,
+.search-form__btn:active {
+  background-color: #000000;
+  outline: none;
+}
+
+.search-form__btn:hover,
+.search-form__btn:focus {
+  color: #ffffff;
+}
+
+.search-form__btn:active {
+  color: rgba(255, 255, 255, 0.3);
+}

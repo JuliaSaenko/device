@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title>Device — интернет-магазин гаджетов</title>
     <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.min.css">
+    <link rel="stylesheet" href="node_modules/swiper/css/swiper.min.css">
+    <link rel="stylesheet" href="css/style.css">
   </head>
 
   <body class="page">
@@ -14,22 +15,22 @@
           <img class="logo__image" src="img/logo-device.svg" width="163" height="36" alt="Интернет-магазин Device">
         </a>
 
-        <form class="search-form" action="https://echo.htmlacademy.ru" method="get">
-          <label class="visually-hidden" for="site-search">Поиск по сайту</label>
-          <input class="search-form__input" id="site-search" type="text" name="search" placeholder="Поиск по сайту" required>
-          <button class="search-form__btn" type="submit">Найти</button>
-        </form>
+<!--        <form class="search-form" action="https://echo.htmlacademy.ru" method="get">-->
+<!--          <label class="visually-hidden" for="site-search">Поиск по сайту</label>-->
+<!--          <input class="search-form__input" id="site-search" type="text" name="search" placeholder="Поиск по сайту" required>-->
+<!--          <button class="search-form__btn" type="submit">Найти</button>-->
+<!--        </form>-->
 
-        <ul class="page-header__user-menu user-menu">
-          <li class="user-menu__item">
-            <a class="user-menu__link user-menu__link--login" href="#">Войти</a>
-          </li>
-        </ul>
+<!--        <ul class="page-header__user-menu user-menu">-->
+<!--          <li class="user-menu__item">-->
+<!--            <a class="user-menu__link user-menu__link&#45;&#45;login" href="#">Войти</a>-->
+<!--          </li>-->
+<!--        </ul>-->
 
         <ul class="page-header__user-actions user-menu">
-          <li class="user-menu__item">
-            <a class="user-menu__link user-menu__link--compare" href="#">Сравнить</a>
-          </li>
+<!--          <li class="user-menu__item">-->
+<!--            <a class="user-menu__link user-menu__link&#45;&#45;compare" href="#">Сравнить</a>-->
+<!--          </li>-->
           <li class="user-menu__item">
             <a class="user-menu__link user-menu__link--cart" href="#">Корзина</a>
           </li>
@@ -262,18 +263,21 @@
             <li class="about-us__list-item">Автотрейдинг</li>
             <li class="about-us__list-item">ЖелДорЭкспедиция</li>
           </ul>
-          <a class="btn" href="#">Подробнее о нас</a>
+<!--          <a class="btn" href="#">Подробнее о нас</a>-->
+          <a class="contacts__btn btn" href="feedback.html">Напишите нам</a>
         </section>
 
         <section class="contacts columns__item">
           <h2 class="columns__title">Контакты</h2>
           <p class="contacts__text">Вы можете забрать товар сами, заехав в наш офис. Заодно, вы сможете проверить работоспособность покупки. Всякое бывает.</p>
-          <p class="contacts__map">
-            <a class="contacts__map-link" href="map.html">
-              <img class="contacts__map-image" src="img/map-small.jpg" width="560" height="222" alt="Наш офис по адресу: город Москва, улица Строителей, дом 15">
-            </a>
-          </p>
-          <a class="contacts__btn btn" href="feedback.html">Напишите нам</a>
+          <div class="contacts__map">
+            <iframe class="contacts__map-item" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.4923898988923!2d30.521080765938255!3d50.45055502947539!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4ce50f8b6e3c3%3A0xb528dc4d6dadc4f8!2z0JzQsNC50LTQsNC9INCd0LXQt9Cw0LLQuNGB0LjQvNC-0YHRgtC4LCDQmtC40LXQsiwgMDIwMDA!5e0!3m2!1sru!2sua!4v1577112111510!5m2!1sru!2sua"></iframe>
+          </div>
+<!--          <p class="contacts__map">-->
+<!--            <a class="contacts__map-link" href="map.html">-->
+<!--              <img class="contacts__map-image" src="img/map-small.jpg" width="560" height="222" alt="Наш офис по адресу: город Москва, улица Строителей, дом 15">-->
+<!--            </a>-->
+<!--          </p>-->
         </section>
       </div>
     </main>
@@ -286,12 +290,12 @@
           </a>
 
           <ul class="page-footer__user-menu user-menu user-menu--contrast">
-            <li class="user-menu__item">
-              <a class="user-menu__link user-menu__link--login" href="#">Войти</a>
-            </li>
-            <li class="user-menu__item">
-              <a class="user-menu__link user-menu__link--compare" href="#">Сравнить</a>
-            </li>
+<!--            <li class="user-menu__item">-->
+<!--              <a class="user-menu__link user-menu__link&#45;&#45;login" href="#">Войти</a>-->
+<!--            </li>-->
+<!--            <li class="user-menu__item">-->
+<!--              <a class="user-menu__link user-menu__link&#45;&#45;compare" href="#">Сравнить</a>-->
+<!--            </li>-->
             <li class="user-menu__item">
               <a class="user-menu__link user-menu__link--cart" href="#">Корзина</a>
             </li>
@@ -299,7 +303,7 @@
         </div>
 
         <div class="page-footer__middle">
-          <p class="page-footer__contacts">г. Москва, ул. Строителей, 15</p>
+          <p class="page-footer__contacts">г. Киев, Майдан Независимости, 1</p>
           <ul class="page-footer__conditions-menu site-menu">
             <li class="site-menu__item">
               <a class="site-menu__link" href="#">Доставка</a>
@@ -311,7 +315,7 @@
               <a class="site-menu__link" href="#">Контакты</a>
             </li>
           </ul>
-          <p class="page-footer__contacts">Тел.: +7 (495) 495-95-95</p>
+          <p class="page-footer__contacts">Тел.: +3 (803) 495-95-95</p>
         </div>
 
         <div class="page-footer__bottom">
@@ -370,7 +374,7 @@
         <span class="visually-hidden">Закрыть</span>
       </button>
     </section>
-
+    <script src="node_modules/"
     <script src="js/script.min.js"></script>
   </body>
 </html>
