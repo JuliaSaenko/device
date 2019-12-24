@@ -1,0 +1,124 @@
+.comment__form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+
+.comment__field {
+  width: 360px;
+  margin-top: 0;
+  margin-bottom: 33px;
+}
+
+.comment__field--message {
+  width: 100%;
+}
+
+.comment_label {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 7px;
+
+  font-family: "Gilroy", "Arial", sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.comment__input,
+.comment__textarea {
+  display: block;
+  width: 100%;
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  font: inherit;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #464646;
+
+  background-color: #f2f2f2;
+  border: 3px solid #f2f2f2;
+}
+
+.comment__input {
+  height: 50px;
+  padding-top: 7px;
+  padding-right: 16px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+}
+
+.comment__textarea {
+  height: 156px;
+  padding-top: 12px;
+  padding-right: 17px;
+  padding-bottom: 12px;
+  padding-left: 17px;
+
+  resize: none;
+}
+
+.comment__input:hover,
+.comment__textarea:hover {
+  background-color: #eaeaea;
+  border-color: #eaeaea;
+}
+
+.comment__input:focus,
+.comment__textarea:focus {
+  background-color: #ffffff;
+  border: 3px solid rgba(240, 197, 46, 0.5);
+  outline: none;
+}
+
+.comment__input:invalid,
+.comment__textarea:invalid {
+  background-color: #f6dada;
+  border-color: #f6dada;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.comment__input::-webkit-input-placeholder,
+.comment__textarea::-webkit-input-placeholder {
+  color: #464646;
+
+  opacity: 0.4;
+}
+
+.comment__input:-ms-input-placeholder,
+.comment__textarea:-ms-input-placeholder {
+  color: #464646;
+
+  opacity: 0.4;
+}
+
+.comment__input::-ms-input-placeholder,
+.comment__textarea::-ms-input-placeholder {
+  color: #464646;
+
+  opacity: 0.4;
+}
+
+.comment__input::placeholder,
+.comment__textarea::placeholder {
+  color: #464646;
+
+  opacity: 0.4;
+}
+
+.comment__btn {
+  min-width: 200px;
+  margin-top: 8px;
+}

@@ -1,4 +1,4 @@
-s@import "normalize";
+@import "normalize";
 @import "fonts";
 @import "scaffolding";
 @import "blocks/page";
@@ -30,6 +30,9 @@ s@import "normalize";
 @import "blocks/social";
 @import "blocks/modal";
 @import "blocks/write-us";
+@import "blocks/product-card";
+@import "blocks/comment";
+@import "blocks/cart";
 
 
 

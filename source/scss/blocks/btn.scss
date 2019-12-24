@@ -29,6 +29,31 @@
   -webkit-transition: color 0.1s ease-in-out;
   -o-transition: color 0.1s ease-in-out;
   transition: color 0.1s ease-in-out;
+
+    &--close {
+      position: absolute;
+      top: 79px;
+      right: 60px;
+      width: 21px;
+      height: 21px;
+      font-size: 0;
+      background-color: transparent;
+      border: 0;
+      outline: none;
+      background-image: url("../img/close-cross.svg");
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      cursor: pointer;
+      opacity: 1;
+
+      &:hover {
+        opacity: 0.7;
+      }
+
+      &:active {
+        opacity: 0.5;
+      }
+    }
 }
 
 .btn:active {
