@@ -2970,3 +2970,55 @@ body {
     margin-top: 20px; }
   .modal_container .delete_item:hover {
     color: red; }
+
+.order-form {
+  display: -webkit-box;
+  display: flex;
+  flex-wrap: wrap; }
+
+.order-form .productitem-in-trash {
+  display: -webkit-box;
+  display: flex;
+  margin: 20px 0px;
+  -webkit-box-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: justify;
+          justify-content: space-between; }
+
+.order-form .productitem-in-trash .product-name {
+  margin-left: 20px;
+  line-height: 24px;
+  font-size: 18px;
+  font-family: 'Gilroy';
+  font-weight: 800; }
+
+.order-form .productitem-in-trash .amount-of-produts {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+          align-items: center;
+  justify-content: space-around;
+  margin: 0px 15px; }
+
+.order-form .productitem-in-trash .amount-of-produts .amount {
+  line-height: 24px;
+  font-size: 18px;
+  font-family: 'Gilroy';
+  font-weight: 400; }
+
+.order-form .productitem-in-trash .amount-of-produts .btnPlus, .order-form .productitem-in-trash .amount-of-produts .btnMinus {
+  -webkit-box-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+          align-items: center;
+  border: none;
+  width: 22px;
+  height: 22px;
+  background-color: #f0c52e;
+  margin: 0px 10px 0px 10px; }
+
+.order-form .productitem-in-trash .amount-of-produts .amount {
+  margin-right: 10px; }
+
+.order-form .productitem-in-trash .amount-of-produts .product-price:after {
+  content: "$"; }
