@@ -3,8 +3,6 @@
   <head>
     <meta charset="utf-8">
     <title>Device — интернет-магазин гаджетов</title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="node_modules/swiper/css/swiper.min.css">
     <link rel="stylesheet" href="css/style.css">
   </head>
 
@@ -297,6 +295,12 @@
 <!--              <a class="user-menu__link user-menu__link&#45;&#45;compare" href="#">Сравнить</a>-->
 <!--            </li>-->
             <li class="user-menu__item">
+              <a class="user-menu__link user-menu__link--product" href="cart.html">МОДАЛКА КОРЗИНЫ</a>
+            </li>
+            <li class="user-menu__item">
+              <a class="user-menu__link user-menu__link--product" href="product-card.html">КАРТОЧКА ТОВАРА</a>
+            </li>
+            <li class="user-menu__item">
               <a class="user-menu__link user-menu__link--cart" href="#">Корзина</a>
             </li>
           </ul>
@@ -344,7 +348,7 @@
       </div>
     </footer>
 
-    <section class="write-us modal modal--write-us">
+    <section class="write-us modal modal--write-us hide   ">
       <h2 class="visually-hidden">Напишите нам</h2>
       <form class="write-us__form" action="https://echo.htmlacademy.ru" method="post">
         <p class="write-us__field">
@@ -366,7 +370,7 @@
       </button>
     </section>
 
-    <section class="map modal modal--map">
+    <section class="map modal modal--map hide">
       <h2 class="visually-hidden">Как нас найти</h2>
       <iframe class="map__iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2249.1125488779985!2d37.5274293162675!3d55.6870309805358!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46b54cf65f5c8955%3A0x694710ccd55501e!2sUlitsa+Stroiteley%2C+15%2C+Moskva%2C+119311!5e0!3m2!1sen!2sru!4v1536378753041" width="960" height="559" allowfullscreen></iframe>
       <img class="map__image" src="img/map-big.jpg" width="960" height="559" alt="Наш офис по адресу: город Москва, улица Строителей, дом 15">
@@ -374,7 +378,6 @@
         <span class="visually-hidden">Закрыть</span>
       </button>
     </section>
-    <script src="node_modules/"
-    <script src="js/script.min.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>
