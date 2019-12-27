@@ -31,6 +31,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.0.2",
     "gulp-svgstore": "^7.0.1",
+    "jquery": "^3.4.1",
     "plumber": "^0.4.8",
     "postcss": "^7.0.25",
     "rollup": "^1.27.14",
@@ -38,6 +39,7 @@
     "rollup-plugin-node-resolve-next": "^0.3.0",
     "rollup-plugin-uglify": "^6.0.4",
     "sass": "^1.24.0",
+    "scroll-to-element": "^2.0.3",
     "swiper": "^5.2.1"
   },
   "devDependencies": {
