@@ -1,0 +1,74 @@
+[
+    {
+        "type" : "Action Cam",
+        "brand" : "Sony",
+        "model" : "Tessar",
+        "img" : "img/content/actioncams/1.jpg",
+        "color" : "Black",
+        "price" : "12000 UAH"
+    },
+    {
+        "type" : "Action Cam",
+        "brand" : "Go Pro",
+        "model" : "Fusion",
+        "img" : "img/content/actioncams/2.jpg",
+        "color" : "Black",
+        "price" : "23000 UAH"
+    },
+    {
+        "type" : "Action Cam",
+        "brand" : "Pro Cam",
+        "model" : "Airon",
+        "img" : "img/content/actioncams/3.jpg",
+        "color" : "White",
+        "price" : "9000 UAH"
+    },
+    {
+        "type" : "Fitness Tracker",
+        "brand" : "Xiaomi",
+        "model" : "X1 Pro",
+        "img" : "img/content/fitness-trackers/1.jpg",
+        "color" : "Yellow & Black",
+        "price" : "5000 UAH"
+    },
+    {
+        "type" : "Fitness Tracker",
+        "brand" : "Xiaomi",
+        "model" : "Xiaomi Extra Watch",
+        "img" : "img/content/fitness-trackers/2.jpg",
+        "color" : "Yellow & Black",
+        "price" : "7500 UAH"
+    },
+    {
+        "type" : "Fitness Tracker",
+        "brand" : "Xiaomi",
+        "model" : "Mi Band",
+        "img" : "img/content/fitness-trackers/3.jpg",
+        "color" : "Black",
+        "price" : "2000 UAH"
+    },
+    {
+        "type" : "Quadrocopters",
+        "brand" : "ToyFactory",
+        "model" : "SuperFly 3.0",
+        "img" : "img/content/quadrocopters/1.jpg",
+        "color" : "Black & Red",
+        "price" : "7000 UAH"
+    },
+    {
+        "type" : "Quadrocopters",
+        "brand" : "Microsoft",
+        "model" : "Ultimate Copter",
+        "img" : "img/content/quadrocopters/2.jpg",
+        "color" : "White",
+        "price" : "14000 UAH"
+    },
+    {
+        "type" : "Quadrocopters",
+        "brand" : "ToyFactory",
+        "model" : "SuperFly 5",
+        "img" : "img/content/quadrocopters/3.jpg",
+        "color" : "Orange",
+        "price" : "15000 UAH"
+    }
+]
