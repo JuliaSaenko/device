@@ -1,36 +1,50 @@
-.order-form {
+.order-popup-container{
+  position: relative;
+  //top: 10%;
+  //left: 50%;
+  //margin-left: -480px;
+  width: 960px;
+  height: auto;
+  box-sizing: border-box;
+  padding: 75px 100px;
+  box-shadow: 0px 0px 22px -1px rgba(0, 0, 0, 0.75);
+  background-color: #fff;
+  z-index: 100;
   display: flex;
-  flex-wrap: wrap; }
-.order-form .productitem-in-trash {
-  display: flex;
-  margin: 20px 0px;
-  align-items: flex-start;
-  justify-content: space-between; }
-.order-form .productitem-in-trash .product-name {
-  margin-left: 20px;
-  line-height: 24px;
-  font-size: 18px;
-  font-family: 'Gilroy';
-  font-weight: 800; }
-.order-form .productitem-in-trash .amount-of-produts {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  margin: 0px 15px; }
-.order-form .productitem-in-trash .amount-of-produts .amount {
-  line-height: 24px;
-  font-size: 18px;
-  font-family: 'Gilroy';
-  font-weight: 400; }
-.order-form .productitem-in-trash .amount-of-produts .btnPlus, .order-form .productitem-in-trash .amount-of-produts .btnMinus {
-  justify-content: center;
-  align-items: center;
-  border: none;
-  width: 22px;
-  height: 22px;
-  background-color: #f0c52e;
-  margin: 0px 10px 0px 10px; }
-.order-form .productitem-in-trash .amount-of-produts .amount {
-  margin-right: 10px; }
-.order-form .productitem-in-trash .amount-of-produts .product-price:after {
-  content: "$"; }
+  flex-direction: column;
+  .edit-order-btn{
+    align-self: flex-end;
+    font-family: "Gilroy", "Arial", sans-serif;
+    font-size: 14px;
+    line-height: 24px;
+  }
+  .order-form{
+    display: flex;
+    justify-content: space-between;
+  }
+    .input-text-wraper{
+    display: flex;
+    flex-direction: column;
+    .popup-label{
+      width: 240px;
+      line-height: 24px;
+      font-family: 'Gilroy',sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+    }
+    input, select{
+      margin-bottom: 10px;
+      width: 240px;
+      background: #f2f2f2;
+      border: 2px solid transparent;
+      outline: none;
+      font-size: 14px;
+      line-height: 18px;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 4px;
+      margin-top: 10px;
+    }
+  }
+
+}

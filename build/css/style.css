@@ -2971,54 +2971,50 @@ body {
   .modal_container .delete_item:hover {
     color: red; }
 
-.order-form {
+.order-popup-container {
+  position: relative;
+  width: 960px;
+  height: auto;
+  box-sizing: border-box;
+  padding: 75px 100px;
+  box-shadow: 0px 0px 22px -1px rgba(0, 0, 0, 0.75);
+  background-color: #fff;
+  z-index: 100;
   display: -webkit-box;
   display: flex;
-  flex-wrap: wrap; }
-
-.order-form .productitem-in-trash {
-  display: -webkit-box;
-  display: flex;
-  margin: 20px 0px;
-  -webkit-box-align: start;
-          align-items: flex-start;
-  -webkit-box-pack: justify;
-          justify-content: space-between; }
-
-.order-form .productitem-in-trash .product-name {
-  margin-left: 20px;
-  line-height: 24px;
-  font-size: 18px;
-  font-family: 'Gilroy';
-  font-weight: 800; }
-
-.order-form .productitem-in-trash .amount-of-produts {
-  display: -webkit-box;
-  display: flex;
-  -webkit-box-align: center;
-          align-items: center;
-  justify-content: space-around;
-  margin: 0px 15px; }
-
-.order-form .productitem-in-trash .amount-of-produts .amount {
-  line-height: 24px;
-  font-size: 18px;
-  font-family: 'Gilroy';
-  font-weight: 400; }
-
-.order-form .productitem-in-trash .amount-of-produts .btnPlus, .order-form .productitem-in-trash .amount-of-produts .btnMinus {
-  -webkit-box-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-          align-items: center;
-  border: none;
-  width: 22px;
-  height: 22px;
-  background-color: #f0c52e;
-  margin: 0px 10px 0px 10px; }
-
-.order-form .productitem-in-trash .amount-of-produts .amount {
-  margin-right: 10px; }
-
-.order-form .productitem-in-trash .amount-of-produts .product-price:after {
-  content: "$"; }
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column; }
+  .order-popup-container .edit-order-btn {
+    align-self: flex-end;
+    font-family: "Gilroy", "Arial", sans-serif;
+    font-size: 14px;
+    line-height: 24px; }
+  .order-popup-container .order-form {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+            justify-content: space-between; }
+  .order-popup-container .input-text-wraper {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+            flex-direction: column; }
+    .order-popup-container .input-text-wraper .popup-label {
+      width: 240px;
+      line-height: 24px;
+      font-family: 'Gilroy',sans-serif;
+      font-size: 14px;
+      font-weight: 900; }
+    .order-popup-container .input-text-wraper input, .order-popup-container .input-text-wraper select {
+      margin-bottom: 10px;
+      width: 240px;
+      background: #f2f2f2;
+      border: 2px solid transparent;
+      outline: none;
+      font-size: 14px;
+      line-height: 18px;
+      box-sizing: border-box;
+      padding: 4px;
+      margin-top: 10px; }
