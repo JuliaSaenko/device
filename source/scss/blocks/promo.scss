@@ -108,11 +108,11 @@
 }
 
 .promo__info::after {
-  counter-increment: promo;
-  content: "0" counter(promo);
+  //counter-increment: promo;
+  //content: "0" counter(promo);
 
   position: absolute;
-  top: -11px;
+  top: -21px;
   right: 48px;
   z-index: -1;
 
@@ -123,6 +123,24 @@
   letter-spacing: 0.36px;
 
   color: #ffffff;
+}
+
+.promo__item--one {
+    .promo__info::after {
+      content: "01";
+    }
+  }
+
+.promo__item--two {
+  .promo__info::after {
+    content: "02";
+  }
+}
+
+.promo__item--three {
+  .promo__info::after {
+    content: "03";
+  }
 }
 
 .promo__lead {
