@@ -11090,11 +11090,117 @@
     }
   });
 
+  function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+      var info = gen[key](arg);
+      var value = info.value;
+    } catch (error) {
+      reject(error);
+      return;
+    }
+
+    if (info.done) {
+      resolve(value);
+    } else {
+      Promise.resolve(value).then(_next, _throw);
+    }
+  }
+
+  function _asyncToGenerator(fn) {
+    return function () {
+      var self = this,
+          args = arguments;
+      return new Promise(function (resolve, reject) {
+        var gen = fn.apply(self, args);
+
+        function _next(value) {
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+        }
+
+        function _throw(err) {
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+        }
+
+        _next(undefined);
+      });
+    };
+  }
+
+  var products = (function () {
+    var productList = document.querySelector('.catalog__list');
+
+    var requestData =
+    /*#__PURE__*/
+    function () {
+      var _ref = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        var products, data;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return fetch("products.json");
+
+              case 2:
+                products = _context.sent;
+
+                if (products.ok) {
+                  _context.next = 5;
+                  break;
+                }
+
+                throw new Error("Can not fetch ".concat(products.url));
+
+              case 5:
+                _context.next = 7;
+                return products.json();
+
+              case 7:
+                data = _context.sent;
+                return _context.abrupt("return", {
+                  data: data
+                });
+
+              case 9:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function requestData() {
+        return _ref.apply(this, arguments);
+      };
+    }(); //Show data on page
+
+
+    var showData = function showData() {
+      requestData().then(function (response) {
+        createCards(response);
+      })["catch"](function (error) {
+        productList.innerHTML = "\n        <p class = \"item__error\">\n            Too many requests, try again in 1 minute...\n        </p>\n        ";
+      });
+    };
+
+    function createCards(response) {
+      console.log(1);
+      response.data.forEach(function (item) {
+        productList.innerHTML = "\n        <li class=\"catalog__item\">\n            <a class=\"catalog__link\" href=\"#\">\n                <h3 class=\"catalog__title\">".concat(item.brand, " ").concat(item.model, "</h3>\n            </a>\n            <p class=\"catalog__price\">").concat(item.price, "</p>\n            <div class=\"catalog__wrapper\">\n                <img class=\"catalog__image\" src=\"").concat(item.img, "\" width=\"360\" height=\"380\" alt=\"\u041B\u044E\u0431\u0438\u0442\u0435\u043B\u044C\u0441\u043A\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430\">\n                <p class=\"catalog__actions\">\n                <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                </p>\n            </div>\n        </li>\n        ");
+      });
+    }
+
+    showData();
+  });
+
   sliders();
   services();
   contacts();
   aboutUs();
   commentForm();
+  products();
 
 }());
 //# sourceMappingURL=app.js.map
