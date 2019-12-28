@@ -26,19 +26,17 @@ export default () => {
         `
       })
   }
-  function createCards(response) {
-    console.log(1);
-    
+  function createCards(response) {    
     
     response.data.forEach(item => {
       productList.innerHTML = `
         <li class="catalog__item">
             <a class="catalog__link" href="#">
-                <h3 class="catalog__title">${item.brand} ${item.model}</h3>
+                <h3 class="catalog__title">${item.name}</h3>
             </a>
             <p class="catalog__price">${item.price}</p>
             <div class="catalog__wrapper">
-                <img class="catalog__image" src="${item.img}" width="360" height="380" alt="Любительская селфи-палка">
+                <img class="catalog__image" src="${item.img}" width="360" height="380">
                 <p class="catalog__actions">
                 <button class="catalog__btn btn" type="button">В корзину</button>
                 <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>

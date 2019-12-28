@@ -1,10 +1,138 @@
 [
     {   
-        "category": "Cameras",
+        "category": "Action cameras",
+        "name": "Sony Tessar",
+        "color": "Черный",
+        "brand" : "Sony",
+        "img": "../img/content/actioncams/1.jpg",
+        "price": "9000"
+    },
+    {   
+        "category": "Action cameras",
         "name": "GO PRO Fusion",
-        "color": "Black",
+        "color": "Черный",
         "brand" : "Go Pro",
-        "img": "GoPro Fusion (CHDHZ-103).jpg",
-        "price": "1000"
+        "img": "../img/content/actioncams/2.jpg",
+        "price": "15000"
+    },
+    {   
+        "category": "Action cameras",
+        "name": "Airon ProCam",
+        "color": "Белый",
+        "brand" : "Airon",
+        "img": "../img/content/actioncams/3.jpg",
+        "price": "7000"
+    },
+    {   
+        "category": "Fitness tracker",
+        "name": "Xiaomi X10Pro",
+        "color": "Черный",
+        "brand" : "Xiaomi",
+        "img": "../img/content/fitness-trackers/1.jpg",
+        "price": "4000"
+    },
+    {   
+        "category": "Fitness tracker",
+        "name": "Apple wartch 5 Series",
+        "color": "Черный",
+        "brand" : "Apple",
+        "img": "../img/content/fitness-trackers/2.jpg",
+        "price": "17000"
+    },
+    {   
+        "category": "Fitness tracker",
+        "name": "Xiaomi MiBand",
+        "color": "Черный",
+        "brand" : "Xiaomi",
+        "img": "../img/content/fitness-trackers/3.jpg",
+        "price": "3000"
+    },
+    {   
+        "category": "Quadrocopters",
+        "name": "Ultimate Fly",
+        "color": "Красный",
+        "brand" : "QuadroSport",
+        "img": "../img/content/quadrocopters/1.jpg",
+        "price": "13000"
+    },
+    {   
+        "category": "Quadrocopters",
+        "name": "Double Fly",
+        "color": "Белый",
+        "brand" : "Future GEN",
+        "img": "../img/content/quadrocopters/2.jpg",
+        "price": "7000"
+    },
+    {   
+        "category": "Quadrocopters",
+        "name": "Orange Fly",
+        "color": "Оранжевый",
+        "brand" : "Flying beasts",
+        "img": "../img/content/quadrocopters/3.jpg",
+        "price": "24000"
+    },
+    {   
+        "category": "SelfieSticks",
+        "name": "Monopod XR5609",
+        "color": "Черный",
+        "brand" : "Super Pods",
+        "img": "../img/content/selfie-sticks/1.jpg",
+        "price": "6000"
+    },
+    {   
+        "category": "SelfieSticks",
+        "name": "Monopod Small",
+        "color": "Черный",
+        "brand" : "Super Pods",
+        "img": "../img/content/selfie-sticks/2.jpg",
+        "price": "4000"
+    },
+    {   
+        "category": "Watches",
+        "name": "Apple Watch Series 3",
+        "color": "Черный",
+        "brand" : "Apple",
+        "img": "../img/content/smart-watch/1.jpg",
+        "price": "9000"
+    },
+    {   
+        "category": "Watches",
+        "name": "Samsung Supreme Watch 3",
+        "color": "Черный",
+        "brand" : "Samsung",
+        "img": "../img/content/smart-watch/2.jpg",
+        "price": "11000"
+    },
+    {   
+        "category": "Watches",
+        "name": "Apple Watch Series 5",
+        "color": "Розовый",
+        "brand" : "Apple",
+        "img": "../img/content/smart-watch/3.jpg",
+        "price": "15000"
+    },
+    {   
+        "category": "VR/AR",
+        "name": "Sony VR for PS4",
+        "color": "Белый",
+        "brand" : "Sony",
+        "img": "../img/content/vr/1.jpg",
+        "price": "15000"
+    },
+    {   
+        "category": "VR/AR",
+        "name": "FibRum NewAge 2.0",
+        "color": "Черный",
+        "brand" : "FibRum",
+        "img": "../img/content/vr/2.jpg",
+        "price": "7000"
+    },
+    {   
+        "category": "VR/AR",
+        "name": "HTC BeHero 5",
+        "color": "Черный",
+        "brand" : "HTC",
+        "img": "../img/content/vr/3.jpg",
+        "price": "22000"
     }
 ]
