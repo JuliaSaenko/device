@@ -11048,6 +11048,7 @@
           } else {
             if (contactFormPopup.classList.contains(errorClass)) {
               contactFormPopup.classList.remove(errorClass);
+              void contactFormPopup.offsetWidth;
               contactFormPopup.classList.add(errorClass);
             }
           }

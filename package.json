@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/JuliaSaenko/device#readme",
   "dependencies": {
+    "@babel/polyfill": "^7.7.0",
     "autoprefixer": "^9.7.3",
     "browser-sync": "^2.26.7",
     "del": "^5.1.0",
