@@ -69,10 +69,12 @@ export default () => {
       return valid
     };
 
-    contactPopupOpenBtn.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      showContactFormPopup();
-    });
+      contactPopupOpenBtn.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        showContactFormPopup();
+      });
+
+
   }
 
 }
