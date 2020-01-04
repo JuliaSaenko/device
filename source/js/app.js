@@ -1,13 +1,18 @@
-import commentForm from './modules/comment-form';
-import sliders from './modules/sliders';
-import services from './modules/services';
-import contacts from './modules/contacts';
-import aboutUs from './modules/about-us';
-import products from './modules/products'
+import polyfill from './modules/polyfill';
+import pagesRender  from './modules/pages-rendering';
+// import commentForm from './modules/comment-form';
+// import sliders from './modules/sliders';
+// import services from './modules/services';
+// import contacts from './modules/contacts';
+// import aboutUs from './modules/about-us';
+//import products from './modules/products';
 
-sliders();
-services();
-contacts();
-aboutUs();
-commentForm();
-products();
+pagesRender();
+
+
+// sliders();
+// services();
+// contacts();
+// aboutUs();
+// commentForm();
+    //products();
