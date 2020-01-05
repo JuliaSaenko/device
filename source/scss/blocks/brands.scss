@@ -4,14 +4,12 @@
 }
 
 .brands__list {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: flex-start;
+  //-ms-flex-wrap: wrap;
+  //flex-wrap: wrap;
+  //-webkit-box-align: start;
+  //-ms-flex-align: start;
+  //align-items: flex-start;
 
   margin-top: 0;
   margin-bottom: -24px;
@@ -23,10 +21,17 @@
 .brands__item {
   margin-right: 40px;
   margin-bottom: 24px;
+  width: 260px;
 }
 
-.brands__item:nth-child(4n) {
-  margin-right: 0;
+.brands__scrollbar {
+  margin-top: 20px;
+  height: 2px;
+  background-color: #ffc600;
+}
+
+.brands__scrollbar .swiper-scrollbar-drag {
+  background: rgba(0, 0, 0, 1);
 }
 
 .brands__logo {

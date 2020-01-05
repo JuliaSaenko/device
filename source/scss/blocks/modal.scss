@@ -4,7 +4,7 @@
   left: 50%;
   z-index: 100;
 
-  display: block;
+  display: none;
 
   color: #000000;
 
@@ -22,12 +22,11 @@
   animation-duration: 0.6s;
 }
 
-.modal.hide{
-  display: none;
+.modal.show {
+  display: block;
 }
 
-.modal--invalid {
-  -webkit-animation-name: shake;
+.error {
   animation-name: shake;
 }
 
@@ -39,6 +38,7 @@
   padding-left: 100px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  transform: translate(-50%, -50%);
 }
 
 .modal--map {

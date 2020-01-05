@@ -1,3 +1,4 @@
+@import "vendor/swiper";
 @import "normalize";
 @import "fonts";
 @import "scaffolding";
@@ -35,6 +36,8 @@
 @import "blocks/cart";
 @import "blocks/main-trash";
 @import "blocks/order-popup";
+@import "blocks/pagination-bullets";
+@import "blocks/success-message";
 
 
 

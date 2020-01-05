@@ -5,16 +5,12 @@ import browserSync from 'browser-sync';
 import plumber from 'gulp-plumber';
 import sass from 'gulp-sass';
 import postcss from 'gulp-postcss';
-//import posthtml from 'gulp-posthtml';
-//import include from 'posthtml-include';
 import csso from 'gulp-csso';
 import svgstore from 'gulp-svgstore';
 import rename from 'gulp-rename';
 import babel from 'rollup-plugin-babel';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-//import concat from 'gulp-concat';
-//import terser from 'gulp-terser';
 import { uglify } from 'rollup-plugin-uglify';
 
 const imagemin = require('gulp-imagemin');
@@ -54,6 +50,7 @@ gulp.task('clean', () => del('build'));
 gulp.task('copy', () => gulp.src([
   'source/fonts/**/*.{woff,woff2}',
   'source/img/**/*',
+  'source/data/**/*',
   '!source/img/sprite',
   '!source/img/sprite/*',
 ], {
@@ -65,6 +62,7 @@ gulp.task('copy-build', () => gulp.src([
   'source/fonts/**/*.{woff,woff2}',
   'source/img/**/*.webp',
   'source/img/**/*',
+  'source/data/**/*',
   '!source/img/sprite',
   '!source/img/sprite/*',
 ], {
@@ -90,41 +88,6 @@ gulp.task('sprite', () => gulp.src('source/img/sprite/*.svg')
   }))
   .pipe(rename('sprite.svg'))
   .pipe(gulp.dest('build/img')));
-
-
-// gulp.task('js-vendor-modules', () => rollup.rollup({
-//   input: './source/js/vendor.js',
-//   plugins: [
-//     resolve({
-//       mainFields: ['jsnext', 'main'],
-//       browser: true,
-//     }),
-//     commonjs(),
-//     babel(),
-//   ],
-// }).then(bundle => bundle.write({
-//   file: './build/js/vendor.js',
-//   format: 'iife',
-//   name: 'vendor',
-//   sourcemap: false,
-// })));
-
-// gulp.task('js-libs', () => gulp.src([
-//     './source/js/vendor/libs/**/*.js',
-//     './build/js/vendor.js'
-//   ])
-//     .pipe(concat('vendor.js'))
-//     .pipe(gulp.dest('build/js'))
-// );
-
-// gulp.task('js-libs-build', () => gulp.src([
-//     './source/js/vendor/libs/**/*.js',
-//     './build/js/vendor.js'
-//   ])
-//     .pipe(concat('vendor.js'))
-//     .pipe(terser())
-//     .pipe(gulp.dest('build/js'))
-// );
 
 // Без uglify.
 gulp.task('js', () => rollup.rollup({
@@ -182,8 +145,6 @@ gulp.task('refresh', (done) => {
 
 gulp.task('build', gulp.series(
   'clean',
-  //'js-vendor-modules',
-  //'js-libs-build',
   'js-build',
   gulp.parallel(
     'copy-build',
@@ -196,8 +157,6 @@ gulp.task('build', gulp.series(
 
 gulp.task('start', gulp.series(
   'clean',
-  //js-vendor-modules',
-  //'js-libs',
   'js',
   gulp.parallel(
     'copy',
