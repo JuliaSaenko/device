@@ -3540,6 +3540,82 @@ body {
   background-color: #f0c52e;
   margin: 0px 10px 0px 10px; }
 
+.modal_container {
+  position: fixed;
+  align-self: center;
+  display: -webkit-box;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  padding: 50px;
+  margin: 0px auto;
+  width: 1200px;
+  z-index: 100;
+  display: flex;
+  color: #000000;
+  background-color: #ffffff;
+  box-shadow: 0 10px 20px rgba(4, 6, 6, 0.2);
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-animation-duration: 0.6s;
+          animation-duration: 0.6s; }
+  .modal_container .finalPrice-container {
+    width: 1200px;
+    -webkit-box-pack: justify;
+            justify-content: space-between; }
+  .modal_container .delete_item {
+    margin-top: 20px; }
+  .modal_container .delete_item:hover {
+    color: red; }
+
+.order-popup-container {
+  position: relative;
+  width: 960px;
+  height: auto;
+  box-sizing: border-box;
+  padding: 75px 100px;
+  box-shadow: 0px 0px 22px -1px rgba(0, 0, 0, 0.75);
+  background-color: #fff;
+  z-index: 100;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column; }
+  .order-popup-container .edit-order-btn {
+    align-self: flex-end;
+    font-family: "Gilroy", "Arial", sans-serif;
+    font-size: 14px;
+    line-height: 24px; }
+  .order-popup-container .order-form {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+            justify-content: space-between; }
+  .order-popup-container .input-text-wraper {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+            flex-direction: column; }
+    .order-popup-container .input-text-wraper .popup-label {
+      width: 240px;
+      line-height: 24px;
+      font-family: 'Gilroy',sans-serif;
+      font-size: 14px;
+      font-weight: 900; }
+    .order-popup-container .input-text-wraper input, .order-popup-container .input-text-wraper select {
+      margin-bottom: 10px;
+      width: 240px;
+      background: #f2f2f2;
+      border: 2px solid transparent;
+      outline: none;
+      font-size: 14px;
+      line-height: 18px;
+      box-sizing: border-box;
+      padding: 4px;
+      margin-top: 10px; }
+
 .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets {
   position: absolute;
   left: auto;
