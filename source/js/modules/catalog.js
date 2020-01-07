@@ -4,6 +4,7 @@ import contacts from "./contacts";
 import aboutUs from "./about-us";
 import commentForm from "./comment-form";
 import products from './products';
+import fillter from './fillter';
 
 let catalogPage = {
   render : async () => {
@@ -83,28 +84,32 @@ let catalogPage = {
                 </div>
               </fieldset>
 
-              <fieldset class="filter__section">
-                <legend class="filter__section-title">Цвет</legend>
+              <fieldset class="filter__section filter__category">
+                <legend class="filter__section-title">Категория</legend>
                 <ul class="filter__options">
                   <li>
-                    <input class="filter__option visually-hidden" id="color-black" type="checkbox" name="color_black" checked>
-                    <label class="filter__option-label filter__option-label--check" for="color-black">Черный</label>
+                    <input class="filter__option visually-hidden" id="actionCamera" type="checkbox" name="actionCamera">
+                    <label class="filter__option-label filter__option-label--check" for="actionCamera">Экшн камеры</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="color-white" type="checkbox" name="color_white">
-                    <label class="filter__option-label filter__option-label--check" for="color-white">Белый</label>
+                    <input class="filter__option visually-hidden" id="fitnessTracker" type="checkbox" name="fitnessTracker">
+                    <label class="filter__option-label filter__option-label--check" for="fitnessTracker">Фитнес трекеры</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="color-blue" type="checkbox" name="color_blue" checked>
-                    <label class="filter__option-label filter__option-label--check" for="color-blue">Синий</label>
+                    <input class="filter__option visually-hidden" id="quadrocopters" type="checkbox" name="quadrocopters">
+                    <label class="filter__option-label filter__option-label--check" for="quadrocopters">Квадрокоптеры</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="color-red" type="checkbox" name="color_red" checked>
-                    <label class="filter__option-label filter__option-label--check" for="color-red">Красный</label>
+                    <input class="filter__option visually-hidden" id="selfieSticks" type="checkbox" name="selfieSticks">
+                    <label class="filter__option-label filter__option-label--check" for="selfieSticks">Селфи палки</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="color-pink" type="checkbox" name="color_pink">
-                    <label class="filter__option-label filter__option-label--check" for="color-pink">Розовый</label>
+                    <input class="filter__option visually-hidden" id="watches" type="checkbox" name="watches">
+                    <label class="filter__option-label filter__option-label--check" for="watches">Часы</label>
+                  </li>
+                  <li>
+                    <input class="filter__option visually-hidden" id="vr" type="checkbox" name="vr">
+                    <label class="filter__option-label filter__option-label--check" for="vr">VR/AR</label>
                   </li>
                 </ul>
               </fieldset>
@@ -131,7 +136,7 @@ let catalogPage = {
             <h2 class="visually-hidden">Каталог</h2>
             <ul class="catalog__list">
             </ul>
-            
+
             <div class="pagination">
               <div class="pagination__wrapper">
                 <a class="pagination__link pagination__link--back">Назад</a>
@@ -161,6 +166,7 @@ let catalogPage = {
   }
   , after_render: async () => {
     products();
+    fillter();
   }
 
 };
