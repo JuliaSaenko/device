@@ -21534,18 +21534,75 @@
     window.addEventListener('load', router);
   };
 
-  // import sliders from './modules/sliders';
-  // import services from './modules/services';
-  // import contacts from './modules/contacts';
-  // import aboutUs from './modules/about-us';
-  //import products from './modules/products';
+  var products = (function () {
+    var productList = document.querySelector('.catalog__list');
+    console.log(productList);
+
+    var requestData =
+    /*#__PURE__*/
+    function () {
+      var _ref = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        var products, data;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return fetch("./data/products.json");
+
+              case 2:
+                products = _context.sent;
+
+                if (products.ok) {
+                  _context.next = 5;
+                  break;
+                }
+
+                throw new Error("Can not fetch ".concat(products.url));
+
+              case 5:
+                _context.next = 7;
+                return products.json();
+
+              case 7:
+                data = _context.sent;
+                return _context.abrupt("return", {
+                  data: data
+                });
+
+              case 9:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function requestData() {
+        return _ref.apply(this, arguments);
+      };
+    }(); //Show data on page
+
+
+    var showData = function showData() {
+      requestData().then(function (response) {
+      })["catch"](function (error) {
+        productList.innerHTML = "\n        <p class = \"item__error\">\n            Too many requests, try again in 1 minute...\n        </p>\n        ";
+      });
+    };
+
+    showData();
+  });
 
   pagesRender(); // sliders();
   // services();
   // contacts();
   // aboutUs();
   // commentForm();
-  //products();
+
+  products();
 
 }());
 //# sourceMappingURL=app.js.map
