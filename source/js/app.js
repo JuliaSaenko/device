@@ -5,7 +5,7 @@ import pagesRender  from './modules/pages-rendering';
 // import services from './modules/services';
 // import contacts from './modules/contacts';
 // import aboutUs from './modules/about-us';
-import products from './modules/products';
+// import products from './modules/products';
 
 pagesRender();
 
@@ -15,4 +15,4 @@ pagesRender();
 // contacts();
 // aboutUs();
 // commentForm();
-    products();
+//products();

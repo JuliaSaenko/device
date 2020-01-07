@@ -2505,8 +2505,8 @@ body {
 
 .catalog__image {
   display: block;
-  width: 100%;
-  height: auto; }
+  width: 360px;
+  height: 380px; }
 
 .catalog__actions {
   position: absolute;

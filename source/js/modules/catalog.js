@@ -3,6 +3,7 @@ import services from "./services";
 import contacts from "./contacts";
 import aboutUs from "./about-us";
 import commentForm from "./comment-form";
+import products from './products';
 
 let catalogPage = {
   render : async () => {
@@ -129,60 +130,8 @@ let catalogPage = {
           <section class="catalog-columns__wide catalog">
             <h2 class="visually-hidden">Каталог</h2>
             <ul class="catalog__list">
-              <li class="catalog__item">
-                <a class="catalog__link" href="#">
-                  <h3 class="catalog__title">Любительская селфи-палка</h3>
-                </a>
-                <p class="catalog__price">500 руб.</p>
-                <div class="catalog__wrapper">
-                  <img class="catalog__image" src="img/product-1.jpg" width="360" height="380" alt="Любительская селфи-палка">
-                  <p class="catalog__actions">
-                    <button class="catalog__btn btn" type="button">В корзину</button>
-                    <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>
-                  </p>
-                </div>
-              </li>
-              <li class="catalog__item">
-                <a class="catalog__link" href="#">
-                  <h3 class="catalog__title">Профессиональная<br> селфи-палка</h3>
-                </a>
-                <p class="catalog__price">1 500 руб.</p>
-                <div class="catalog__wrapper">
-                  <img class="catalog__image" src="img/product-2.jpg" width="360" height="380" alt="Профессиональная селфи-палка">
-                  <p class="catalog__actions">
-                    <button class="catalog__btn btn" type="button">В корзину</button>
-                    <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>
-                  </p>
-                </div>
-              </li>
-              <li class="catalog__item">
-                <a class="catalog__link" href="#">
-                  <h3 class="catalog__title">Непотопляемая селфи-палка</h3>
-                </a>
-                <p class="catalog__price">2 500 руб.</p>
-                <div class="catalog__wrapper">
-                  <img class="catalog__image" src="img/product-3.jpg" width="360" height="380" alt="Непотопляемая селфи-палка">
-                  <p class="catalog__actions">
-                    <button class="catalog__btn btn" type="button">В корзину</button>
-                    <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>
-                  </p>
-                </div>
-              </li>
-              <li class="catalog__item catalog__item--new">
-                <a class="catalog__link" href="#">
-                  <h3 class="catalog__title">Селфи-палка «Следуй за мной»</h3>
-                </a>
-                <p class="catalog__price">4 900 руб.</p>
-                <div class="catalog__wrapper">
-                  <img class="catalog__image" src="img/product-4.jpg" width="360" height="380" alt="Селфи-палка «Следуй за мной»">
-                  <p class="catalog__actions">
-                    <button class="catalog__btn btn" type="button">В корзину</button>
-                    <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>
-                  </p>
-                </div>
-              </li>
             </ul>
-
+            
             <div class="pagination">
               <div class="pagination__wrapper">
                 <a class="pagination__link pagination__link--back">Назад</a>
@@ -211,6 +160,7 @@ let catalogPage = {
     return view
   }
   , after_render: async () => {
+    products();
   }
 
 };
