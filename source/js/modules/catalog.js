@@ -84,31 +84,31 @@ let catalogPage = {
                 </div>
               </fieldset>
 
-              <fieldset class="filter__section filter__category">
+              <fieldset class="filter__section">
                 <legend class="filter__section-title">Категория</legend>
-                <ul class="filter__options">
+                <ul class="filter__options filter__category">
                   <li>
-                    <input class="filter__option visually-hidden" id="actionCamera" type="checkbox" name="actionCamera">
+                    <input class="category__filter filter__option visually-hidden" id="actionCamera" type="checkbox" name="actionCamera">
                     <label class="filter__option-label filter__option-label--check" for="actionCamera">Экшн камеры</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="fitnessTracker" type="checkbox" name="fitnessTracker">
+                    <input class="category__filter filter__option visually-hidden" id="fitnessTracker" type="checkbox" name="fitnessTracker">
                     <label class="filter__option-label filter__option-label--check" for="fitnessTracker">Фитнес трекеры</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="quadrocopters" type="checkbox" name="quadrocopters">
+                    <input class="category__filter filter__option visually-hidden" id="quadrocopters" type="checkbox" name="quadrocopters">
                     <label class="filter__option-label filter__option-label--check" for="quadrocopters">Квадрокоптеры</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="selfieSticks" type="checkbox" name="selfieSticks">
+                    <input class="category__filter filter__option visually-hidden" id="selfieSticks" type="checkbox" name="selfieSticks">
                     <label class="filter__option-label filter__option-label--check" for="selfieSticks">Селфи палки</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="watches" type="checkbox" name="watches">
+                    <input class="category__filter filter__option visually-hidden" id="watches" type="checkbox" name="watches">
                     <label class="filter__option-label filter__option-label--check" for="watches">Часы</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="vr" type="checkbox" name="vr">
+                    <input class="category__filter filter__option visually-hidden" id="vr" type="checkbox" name="vr">
                     <label class="filter__option-label filter__option-label--check" for="vr">VR/AR</label>
                   </li>
                 </ul>
