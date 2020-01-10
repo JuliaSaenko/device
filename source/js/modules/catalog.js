@@ -32,7 +32,7 @@ let catalogPage = {
           <section class="catalog-columns__wide sort">
             <h2 class="catalog-columns__title sort__title">Сортировка:</h2>
             <ul class="sort__type-list">
-              <li class="sort__type-item">
+              <li class="sort__type-item sort__price">
                 <a class="sort__type-link sort__type-link--current">По цене</a>
               </li>
               <li class="sort__type-item">
