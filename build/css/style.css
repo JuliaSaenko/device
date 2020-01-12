@@ -3541,16 +3541,16 @@ body {
   margin: 0px 10px 0px 10px; }
 
 .modal_container {
-  position: fixed;
+  top: 200px;
+  position: relative;
   align-self: center;
   display: -webkit-box;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  padding: 50px;
+  padding: 20px;
   margin: 0px auto;
-  width: 1200px;
-  z-index: 100;
+  width: 1120px;
   display: flex;
   color: #000000;
   background-color: #ffffff;
@@ -3560,17 +3560,15 @@ body {
   -webkit-animation-duration: 0.6s;
           animation-duration: 0.6s; }
   .modal_container .finalPrice-container {
-    width: 1200px;
+    width: 1160px;
     -webkit-box-pack: justify;
             justify-content: space-between; }
-  .modal_container .delete_item {
-    margin-top: 20px; }
-  .modal_container .delete_item:hover {
-    color: red; }
+  .modal_container #make-order {
+    margin-right: 20px; }
 
 .order-popup-container {
-  position: relative;
-  width: 960px;
+  margin: 0 auto;
+  width: 1160px;
   height: auto;
   box-sizing: border-box;
   padding: 75px 100px;
@@ -3582,11 +3580,17 @@ body {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
           flex-direction: column; }
-  .order-popup-container .edit-order-btn {
-    align-self: flex-end;
-    font-family: "Gilroy", "Arial", sans-serif;
-    font-size: 14px;
-    line-height: 24px; }
+  .order-popup-container .products-list-in-cart .cart__product-price::after {
+    content: "$"; }
+  .order-popup-container .products-list-in-cart li {
+    list-style: none; }
+  .order-popup-container .products-list-in-cart .product-mini {
+    display: -webkit-box;
+    display: flex; }
+  .order-popup-container .products-list-in-cart .delete_item {
+    margin-top: 20px; }
+  .order-popup-container .products-list-in-cart .delete_item:hover {
+    color: red; }
   .order-popup-container .order-form {
     display: -webkit-box;
     display: flex;
@@ -3604,9 +3608,11 @@ body {
       font-family: 'Gilroy',sans-serif;
       font-size: 14px;
       font-weight: 900; }
+    .order-popup-container .input-text-wraper .alert {
+      border: 1px solid red; }
     .order-popup-container .input-text-wraper input, .order-popup-container .input-text-wraper select {
       margin-bottom: 10px;
-      width: 240px;
+      width: 290px;
       background: #f2f2f2;
       border: 2px solid transparent;
       outline: none;
@@ -3615,6 +3621,32 @@ body {
       box-sizing: border-box;
       padding: 4px;
       margin-top: 10px; }
+
+.success-order-message {
+  border-radius: 25px;
+  border: 10px solid green;
+  height: 50%; }
+  .success-order-message .success-used-data {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+            flex-direction: column; }
+    .success-order-message .success-used-data img {
+      align-self: center; }
+    .success-order-message .success-used-data h3 {
+      align-self: center;
+      font-size: 24px; }
+    .success-order-message .success-used-data p {
+      font-size: 16px;
+      align-self: center; }
+    .success-order-message .success-used-data .to-main-page {
+      text-decoration: none;
+      font-size: 16px;
+      padding: 20px 0px; }
+
+.hide {
+  display: none; }
 
 .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets {
   position: absolute;

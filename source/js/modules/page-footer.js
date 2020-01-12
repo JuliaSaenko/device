@@ -21,8 +21,12 @@ let pageFooter = {
               <a class="user-menu__link user-menu__link--product" href="product-card.html">КАРТОЧКА ТОВАРА</a>
             </li>
             <li class="user-menu__item">
+              <a class="user-menu__link user-menu__link--product" href="#/order">Оформление заказа</a>
+            </li>
+            <li class="user-menu__item">
               <a class="user-menu__link user-menu__link--cart" href="#">Корзина</a>
             </li>
+            
           </ul>
         </div>
 

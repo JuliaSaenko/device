@@ -1,3 +1,5 @@
+import order from './order';
+
 let pageHeader = {
   render: async () => {
     let view = `       <nav class="main-nav">
@@ -22,7 +24,7 @@ let pageHeader = {
 <!--            <a class="user-menu__link user-menu__link--compare" href="#">Сравнить</a>-->
 <!--          </li>-->
           <li class="user-menu__item">
-            <a class="user-menu__link user-menu__link--cart" href="#">Корзина</a>
+            <a class="user-menu__link user-menu__link--cart">Корзина</a>
           </li>
         </ul>
 
@@ -58,7 +60,9 @@ let pageHeader = {
 `;
     return view
   },
-  after_render: async () => { }
+  after_render: async () => {
+
+  }
 };
 
 export default pageHeader;

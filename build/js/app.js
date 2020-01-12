@@ -1,7 +1,5 @@
-(function (scrollToElement) {
+(function () {
   'use strict';
-
-  scrollToElement = scrollToElement && scrollToElement.hasOwnProperty('default') ? scrollToElement['default'] : scrollToElement;
 
   function _typeof(obj) {
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -20355,6 +20353,647 @@
     }
   });
 
+  var ease = createCommonjsModule(function (module, exports) {
+    // easing functions from "Tween.js"
+    exports.linear = function (n) {
+      return n;
+    };
+
+    exports.inQuad = function (n) {
+      return n * n;
+    };
+
+    exports.outQuad = function (n) {
+      return n * (2 - n);
+    };
+
+    exports.inOutQuad = function (n) {
+      n *= 2;
+      if (n < 1) return 0.5 * n * n;
+      return -0.5 * (--n * (n - 2) - 1);
+    };
+
+    exports.inCube = function (n) {
+      return n * n * n;
+    };
+
+    exports.outCube = function (n) {
+      return --n * n * n + 1;
+    };
+
+    exports.inOutCube = function (n) {
+      n *= 2;
+      if (n < 1) return 0.5 * n * n * n;
+      return 0.5 * ((n -= 2) * n * n + 2);
+    };
+
+    exports.inQuart = function (n) {
+      return n * n * n * n;
+    };
+
+    exports.outQuart = function (n) {
+      return 1 - --n * n * n * n;
+    };
+
+    exports.inOutQuart = function (n) {
+      n *= 2;
+      if (n < 1) return 0.5 * n * n * n * n;
+      return -0.5 * ((n -= 2) * n * n * n - 2);
+    };
+
+    exports.inQuint = function (n) {
+      return n * n * n * n * n;
+    };
+
+    exports.outQuint = function (n) {
+      return --n * n * n * n * n + 1;
+    };
+
+    exports.inOutQuint = function (n) {
+      n *= 2;
+      if (n < 1) return 0.5 * n * n * n * n * n;
+      return 0.5 * ((n -= 2) * n * n * n * n + 2);
+    };
+
+    exports.inSine = function (n) {
+      return 1 - Math.cos(n * Math.PI / 2);
+    };
+
+    exports.outSine = function (n) {
+      return Math.sin(n * Math.PI / 2);
+    };
+
+    exports.inOutSine = function (n) {
+      return .5 * (1 - Math.cos(Math.PI * n));
+    };
+
+    exports.inExpo = function (n) {
+      return 0 == n ? 0 : Math.pow(1024, n - 1);
+    };
+
+    exports.outExpo = function (n) {
+      return 1 == n ? n : 1 - Math.pow(2, -10 * n);
+    };
+
+    exports.inOutExpo = function (n) {
+      if (0 == n) return 0;
+      if (1 == n) return 1;
+      if ((n *= 2) < 1) return .5 * Math.pow(1024, n - 1);
+      return .5 * (-Math.pow(2, -10 * (n - 1)) + 2);
+    };
+
+    exports.inCirc = function (n) {
+      return 1 - Math.sqrt(1 - n * n);
+    };
+
+    exports.outCirc = function (n) {
+      return Math.sqrt(1 - --n * n);
+    };
+
+    exports.inOutCirc = function (n) {
+      n *= 2;
+      if (n < 1) return -0.5 * (Math.sqrt(1 - n * n) - 1);
+      return 0.5 * (Math.sqrt(1 - (n -= 2) * n) + 1);
+    };
+
+    exports.inBack = function (n) {
+      var s = 1.70158;
+      return n * n * ((s + 1) * n - s);
+    };
+
+    exports.outBack = function (n) {
+      var s = 1.70158;
+      return --n * n * ((s + 1) * n + s) + 1;
+    };
+
+    exports.inOutBack = function (n) {
+      var s = 1.70158 * 1.525;
+      if ((n *= 2) < 1) return 0.5 * (n * n * ((s + 1) * n - s));
+      return 0.5 * ((n -= 2) * n * ((s + 1) * n + s) + 2);
+    };
+
+    exports.inBounce = function (n) {
+      return 1 - exports.outBounce(1 - n);
+    };
+
+    exports.outBounce = function (n) {
+      if (n < 1 / 2.75) {
+        return 7.5625 * n * n;
+      } else if (n < 2 / 2.75) {
+        return 7.5625 * (n -= 1.5 / 2.75) * n + 0.75;
+      } else if (n < 2.5 / 2.75) {
+        return 7.5625 * (n -= 2.25 / 2.75) * n + 0.9375;
+      } else {
+        return 7.5625 * (n -= 2.625 / 2.75) * n + 0.984375;
+      }
+    };
+
+    exports.inOutBounce = function (n) {
+      if (n < .5) return exports.inBounce(n * 2) * .5;
+      return exports.outBounce(n * 2 - 1) * .5 + .5;
+    };
+
+    exports.inElastic = function (n) {
+      var s,
+          a = 0.1,
+          p = 0.4;
+      if (n === 0) return 0;
+      if (n === 1) return 1;
+
+      if (!a || a < 1) {
+        a = 1;
+        s = p / 4;
+      } else s = p * Math.asin(1 / a) / (2 * Math.PI);
+
+      return -(a * Math.pow(2, 10 * (n -= 1)) * Math.sin((n - s) * (2 * Math.PI) / p));
+    };
+
+    exports.outElastic = function (n) {
+      var s,
+          a = 0.1,
+          p = 0.4;
+      if (n === 0) return 0;
+      if (n === 1) return 1;
+
+      if (!a || a < 1) {
+        a = 1;
+        s = p / 4;
+      } else s = p * Math.asin(1 / a) / (2 * Math.PI);
+
+      return a * Math.pow(2, -10 * n) * Math.sin((n - s) * (2 * Math.PI) / p) + 1;
+    };
+
+    exports.inOutElastic = function (n) {
+      var s,
+          a = 0.1,
+          p = 0.4;
+      if (n === 0) return 0;
+      if (n === 1) return 1;
+
+      if (!a || a < 1) {
+        a = 1;
+        s = p / 4;
+      } else s = p * Math.asin(1 / a) / (2 * Math.PI);
+
+      if ((n *= 2) < 1) return -0.5 * (a * Math.pow(2, 10 * (n -= 1)) * Math.sin((n - s) * (2 * Math.PI) / p));
+      return a * Math.pow(2, -10 * (n -= 1)) * Math.sin((n - s) * (2 * Math.PI) / p) * 0.5 + 1;
+    }; // aliases
+
+
+    exports['in-quad'] = exports.inQuad;
+    exports['out-quad'] = exports.outQuad;
+    exports['in-out-quad'] = exports.inOutQuad;
+    exports['in-cube'] = exports.inCube;
+    exports['out-cube'] = exports.outCube;
+    exports['in-out-cube'] = exports.inOutCube;
+    exports['in-quart'] = exports.inQuart;
+    exports['out-quart'] = exports.outQuart;
+    exports['in-out-quart'] = exports.inOutQuart;
+    exports['in-quint'] = exports.inQuint;
+    exports['out-quint'] = exports.outQuint;
+    exports['in-out-quint'] = exports.inOutQuint;
+    exports['in-sine'] = exports.inSine;
+    exports['out-sine'] = exports.outSine;
+    exports['in-out-sine'] = exports.inOutSine;
+    exports['in-expo'] = exports.inExpo;
+    exports['out-expo'] = exports.outExpo;
+    exports['in-out-expo'] = exports.inOutExpo;
+    exports['in-circ'] = exports.inCirc;
+    exports['out-circ'] = exports.outCirc;
+    exports['in-out-circ'] = exports.inOutCirc;
+    exports['in-back'] = exports.inBack;
+    exports['out-back'] = exports.outBack;
+    exports['in-out-back'] = exports.inOutBack;
+    exports['in-bounce'] = exports.inBounce;
+    exports['out-bounce'] = exports.outBounce;
+    exports['in-out-bounce'] = exports.inOutBounce;
+    exports['in-elastic'] = exports.inElastic;
+    exports['out-elastic'] = exports.outElastic;
+    exports['in-out-elastic'] = exports.inOutElastic;
+  });
+  var ease_1 = ease.linear;
+  var ease_2 = ease.inQuad;
+  var ease_3 = ease.outQuad;
+  var ease_4 = ease.inOutQuad;
+  var ease_5 = ease.inCube;
+  var ease_6 = ease.outCube;
+  var ease_7 = ease.inOutCube;
+  var ease_8 = ease.inQuart;
+  var ease_9 = ease.outQuart;
+  var ease_10 = ease.inOutQuart;
+  var ease_11 = ease.inQuint;
+  var ease_12 = ease.outQuint;
+  var ease_13 = ease.inOutQuint;
+  var ease_14 = ease.inSine;
+  var ease_15 = ease.outSine;
+  var ease_16 = ease.inOutSine;
+  var ease_17 = ease.inExpo;
+  var ease_18 = ease.outExpo;
+  var ease_19 = ease.inOutExpo;
+  var ease_20 = ease.inCirc;
+  var ease_21 = ease.outCirc;
+  var ease_22 = ease.inOutCirc;
+  var ease_23 = ease.inBack;
+  var ease_24 = ease.outBack;
+  var ease_25 = ease.inOutBack;
+  var ease_26 = ease.inBounce;
+  var ease_27 = ease.outBounce;
+  var ease_28 = ease.inOutBounce;
+  var ease_29 = ease.inElastic;
+  var ease_30 = ease.outElastic;
+  var ease_31 = ease.inOutElastic;
+
+  var emitter = createCommonjsModule(function (module) {
+    function Emitter(obj) {
+      if (obj) return mixin(obj);
+    }
+
+    function mixin(obj) {
+      for (var key in Emitter.prototype) {
+        obj[key] = Emitter.prototype[key];
+      }
+
+      return obj;
+    }
+
+    Emitter.prototype.on = Emitter.prototype.addEventListener = function (event, fn) {
+      this._callbacks = this._callbacks || {};
+      (this._callbacks['$' + event] = this._callbacks['$' + event] || []).push(fn);
+      return this;
+    };
+
+    Emitter.prototype.once = function (event, fn) {
+      function on() {
+        this.off(event, on);
+        fn.apply(this, arguments);
+      }
+
+      on.fn = fn;
+      this.on(event, on);
+      return this;
+    };
+
+    Emitter.prototype.off = Emitter.prototype.removeListener = Emitter.prototype.removeAllListeners = Emitter.prototype.removeEventListener = function (event, fn) {
+      this._callbacks = this._callbacks || {}; // all
+
+      if (0 == arguments.length) {
+        this._callbacks = {};
+        return this;
+      } // specific event
+
+
+      var callbacks = this._callbacks['$' + event];
+      if (!callbacks) return this; // remove all handlers
+
+      if (1 == arguments.length) {
+        delete this._callbacks['$' + event];
+        return this;
+      } // remove specific handler
+
+
+      var cb;
+
+      for (var i = 0; i < callbacks.length; i++) {
+        cb = callbacks[i];
+
+        if (cb === fn || cb.fn === fn) {
+          callbacks.splice(i, 1);
+          break;
+        }
+      } // Remove event specific arrays for event types that no
+      // one is subscribed for to avoid memory leak.
+
+
+      if (callbacks.length === 0) {
+        delete this._callbacks['$' + event];
+      }
+
+      return this;
+    };
+
+    Emitter.prototype.emit = function (event) {
+      this._callbacks = this._callbacks || {};
+      var args = [].slice.call(arguments, 1),
+          callbacks = this._callbacks['$' + event];
+
+      if (callbacks) {
+        callbacks = callbacks.slice(0);
+
+        for (var i = 0, len = callbacks.length; i < len; ++i) {
+          callbacks[i].apply(this, args);
+        }
+      }
+
+      return this;
+    };
+
+    Emitter.prototype.listeners = function (event) {
+      this._callbacks = this._callbacks || {};
+      return this._callbacks['$' + event] || [];
+    };
+
+    Emitter.prototype.hasListeners = function (event) {
+      return !!this.listeners(event).length;
+    };
+
+    {
+      module.exports = Emitter;
+    }
+  });
+
+  function extend(obj, src) {
+    for (var key in src) {
+      if (src.hasOwnProperty(key)) obj[key] = src[key];
+    }
+
+    return obj;
+  }
+
+  function Tween(obj) {
+    if (!(this instanceof Tween)) return new Tween(obj);
+    this._from = obj;
+    this.ease('linear');
+    this.duration(500);
+  }
+
+  emitter(Tween.prototype);
+
+  Tween.prototype.reset = function () {
+    this.isArray = Object.prototype.toString.call(this._from) === '[object Array]';
+    this._curr = extend({}, this._from);
+    this._done = false;
+    this._start = Date.now();
+    return this;
+  };
+
+  Tween.prototype.to = function (obj) {
+    this.reset();
+    this._to = obj;
+    return this;
+  };
+
+  Tween.prototype.duration = function (ms) {
+    this._duration = ms;
+    return this;
+  };
+
+  Tween.prototype.ease = function (fn) {
+    fn = 'function' == typeof fn ? fn : ease[fn];
+    if (!fn) throw new TypeError('invalid easing function');
+    this._ease = fn;
+    return this;
+  };
+
+  Tween.prototype.stop = function () {
+    this.stopped = true;
+    this._done = true;
+    this.emit('stop');
+    this.emit('end');
+    return this;
+  };
+
+  Tween.prototype.step = function () {
+    if (this._done) return;
+    var duration = this._duration;
+    var now = Date.now();
+    var delta = now - this._start;
+    var done = delta >= duration;
+
+    if (done) {
+      this._from = this._to;
+
+      this._update(this._to);
+
+      this._done = true;
+      this.emit('end');
+      return this;
+    }
+
+    var from = this._from;
+    var to = this._to;
+    var curr = this._curr;
+    var fn = this._ease;
+    var p = (now - this._start) / duration;
+    var n = fn(p);
+
+    if (this.isArray) {
+      for (var i = 0; i < from.length; ++i) {
+        curr[i] = from[i] + (to[i] - from[i]) * n;
+      }
+
+      this._update(curr);
+
+      return this;
+    }
+
+    for (var k in from) {
+      curr[k] = from[k] + (to[k] - from[k]) * n;
+    }
+
+    this._update(curr);
+
+    return this;
+  };
+
+  Tween.prototype.update = function (fn) {
+    if (0 == arguments.length) return this.step();
+    this._update = fn;
+    return this;
+  };
+
+  var tween = Tween;
+
+  var performanceNow = createCommonjsModule(function (module) {
+    // Generated by CoffeeScript 1.12.2
+    (function () {
+      var getNanoSeconds, hrtime, loadTime, moduleLoadTime, nodeLoadTime, upTime;
+
+      if (typeof performance !== "undefined" && performance !== null && performance.now) {
+        module.exports = function () {
+          return performance.now();
+        };
+      } else if (typeof process !== "undefined" && process !== null && process.hrtime) {
+        module.exports = function () {
+          return (getNanoSeconds() - nodeLoadTime) / 1e6;
+        };
+
+        hrtime = process.hrtime;
+
+        getNanoSeconds = function () {
+          var hr;
+          hr = hrtime();
+          return hr[0] * 1e9 + hr[1];
+        };
+
+        moduleLoadTime = getNanoSeconds();
+        upTime = process.uptime() * 1e9;
+        nodeLoadTime = moduleLoadTime - upTime;
+      } else if (Date.now) {
+        module.exports = function () {
+          return Date.now() - loadTime;
+        };
+
+        loadTime = Date.now();
+      } else {
+        module.exports = function () {
+          return new Date().getTime() - loadTime;
+        };
+
+        loadTime = new Date().getTime();
+      }
+    }).call(commonjsGlobal);
+  });
+
+  var root = typeof window === 'undefined' ? commonjsGlobal : window,
+      vendors = ['moz', 'webkit'],
+      suffix = 'AnimationFrame',
+      raf = root['request' + suffix],
+      caf = root['cancel' + suffix] || root['cancelRequest' + suffix];
+
+  for (var i = 0; !raf && i < vendors.length; i++) {
+    raf = root[vendors[i] + 'Request' + suffix];
+    caf = root[vendors[i] + 'Cancel' + suffix] || root[vendors[i] + 'CancelRequest' + suffix];
+  } // Some versions of FF have rAF but not cAF
+
+
+  if (!raf || !caf) {
+    var last = 0,
+        id = 0,
+        queue = [],
+        frameDuration = 1000 / 60;
+
+    raf = function (callback) {
+      if (queue.length === 0) {
+        var _now = performanceNow(),
+            next = Math.max(0, frameDuration - (_now - last));
+
+        last = next + _now;
+        setTimeout(function () {
+          var cp = queue.slice(0); // Clear queue here to prevent
+          // callbacks from appending listeners
+          // to the current frame's queue
+
+          queue.length = 0;
+
+          for (var i = 0; i < cp.length; i++) {
+            if (!cp[i].cancelled) {
+              try {
+                cp[i].callback(last);
+              } catch (e) {
+                setTimeout(function () {
+                  throw e;
+                }, 0);
+              }
+            }
+          }
+        }, Math.round(next));
+      }
+
+      queue.push({
+        handle: ++id,
+        callback: callback,
+        cancelled: false
+      });
+      return id;
+    };
+
+    caf = function (handle) {
+      for (var i = 0; i < queue.length; i++) {
+        if (queue[i].handle === handle) {
+          queue[i].cancelled = true;
+        }
+      }
+    };
+  }
+
+  var raf_1 = function (fn) {
+    // Wrap in a new function to prevent
+    // `cancel` potentially being assigned
+    // to the native rAF function
+    return raf.call(root, fn);
+  };
+
+  var cancel = function () {
+    caf.apply(root, arguments);
+  };
+
+  var polyfill$1 = function (object) {
+    if (!object) {
+      object = root;
+    }
+
+    object.requestAnimationFrame = raf;
+    object.cancelAnimationFrame = caf;
+  };
+  raf_1.cancel = cancel;
+  raf_1.polyfill = polyfill$1;
+
+  function scroll() {
+    var y = window.pageYOffset || document.documentElement.scrollTop;
+    var x = window.pageXOffset || document.documentElement.scrollLeft;
+    return {
+      top: y,
+      left: x
+    };
+  }
+
+  function scrollTo(x, y, options) {
+    options = options || {}; // start position
+
+    var start = scroll(); // setup tween
+
+    var tween$1 = tween(start).ease(options.ease || 'out-circ').to({
+      top: y,
+      left: x
+    }).duration(options.duration || 1000); // scroll
+
+    tween$1.update(function (o) {
+      window.scrollTo(o.left | 0, o.top | 0);
+    }); // handle end
+
+    tween$1.on('end', function () {
+      animate = function () {};
+    }); // animate
+
+    function animate() {
+      raf_1(animate);
+      tween$1.update();
+    }
+
+    animate();
+    return tween$1;
+  }
+
+  var scrollTo_1 = scrollTo;
+
+  function calculateScrollOffset(elem, additionalOffset, alignment) {
+    var body = document.body,
+        html = document.documentElement;
+    var elemRect = elem.getBoundingClientRect();
+    var clientHeight = html.clientHeight;
+    var documentHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    additionalOffset = additionalOffset || 0;
+    var scrollPosition;
+
+    if (alignment === 'bottom') {
+      scrollPosition = elemRect.bottom - clientHeight;
+    } else if (alignment === 'middle') {
+      scrollPosition = elemRect.bottom - clientHeight / 2 - elemRect.height / 2;
+    } else {
+      // top and default
+      scrollPosition = elemRect.top;
+    }
+
+    var maxScrollPosition = documentHeight - clientHeight;
+    return Math.min(scrollPosition + additionalOffset + window.pageYOffset, maxScrollPosition);
+  }
+
+  var scrollToElement = function (elem, options) {
+    options = options || {};
+    if (typeof elem === 'string') elem = document.querySelector(elem);
+    if (elem) return scrollTo_1(0, calculateScrollOffset(elem, options.offset, options.align), options);
+  };
+
   var services = (function () {
     var services = document.querySelector(".services");
 
@@ -20569,7 +21208,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "\n              <h1 class=\"visually-hidden\">\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D \u0433\u0430\u0434\u0436\u0435\u0442\u043E\u0432 \xAB\u0414\u0435\u0432\u0430\u0439\u0441\xBB</h1>\n\n      <section class=\"promo page__section page__wrapper\">\n        <h2 class=\"visually-hidden\">\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u043C\u044B\u0435 \u0442\u043E\u0432\u0430\u0440\u044B</h2>\n\n        <div class=\"slider main-slider swiper-container\">\n\n          <ol class=\"promo__list slider__list swiper-wrapper\">\n            <li class=\"promo__item promo__item--one slider__item swiper-slide\">\n              <h3 class=\"visually-hidden\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434</h3>\n              <div class=\"promo__image-wrapper\">\n                <img class=\"promo__image\" src=\"img/promo-1.png\" width=\"560\" height=\"524\" alt=\"\u041F\u0430\u043B\u043A\u0430 \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438\">\n              </div>\n              <div class=\"promo__info\">\n                <b class=\"promo__lead\">\u0414\u0435\u043B\u0430\u0439 \u0441\u0435\u043B\u0444\u0438,<br> \u043A\u0430\u043A \u0411\u0435\u043D \u0421\u0442\u0438\u043B\u043B\u0435\u0440!</b>\n                <p class=\"promo__description\">\u0421\u0430\u043C\u0430\u044F \u0434\u043B\u0438\u043D\u043D\u0430\u044F \u043F\u0430\u043B\u043A\u0430 \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430 \u0432 \u043D\u0430\u0448\u0435\u043C \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0435. \u0412\u043E\u0441\u0435\u043C\u044C (\u0412\u043E\u0441\u0435\u043C\u044C, \u041A\u0430\u0440\u043B!) \u043C\u0435\u0442\u0440\u043E\u0432 \u0434\u043B\u0438\u043D\u043E\u0439 \u0438 \u0432\u0435\u0441\u043E\u043C \u0432\u0441\u0435\u0433\u043E 5 \u043A\u0438\u043B\u043E\u0433\u0440\u0430\u043C\u043C.</p>\n                <a class=\"promo__btn btn\" href=\"#\">\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435</a>\n                <table class=\"parameters\">\n                  <caption class=\"visually-hidden\">\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0442\u043E\u0432\u0430\u0440\u0430</caption>\n                  <thead class=\"parameters__header\">\n                    <tr>\n                      <th class=\"parameters__name\">\u0414\u043B\u0438\u043D\u0430 \u043F\u0430\u043B\u043A\u0438</th>\n                      <th class=\"parameters__name\">\u0412\u0435\u0441 \u043F\u0430\u043B\u043A\u0438</th>\n                      <th class=\"parameters__name\">\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B</th>\n                    </tr>\n                  </thead>\n                  <tbody>\n                    <tr>\n                      <td class=\"parameters__value\">8,5 \u043C</td>\n                      <td class=\"parameters__value\">5 \u043A\u0433</td>\n                      <td class=\"parameters__value\">\u041A\u0430\u0440\u0431\u043E\u043D</td>\n                    </tr>\n                  </tbody>\n                </table>\n              </div>\n            </li>\n            <li class=\"promo__item promo__item--two slider__item swiper-slide\">\n              <h3 class=\"visually-hidden\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442</h3>\n              <div class=\"promo__image-wrapper\">\n                <img class=\"promo__image\" src=\"img/promo-2.png\" width=\"560\" height=\"524\" alt=\"\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\">\n              </div>\n              <div class=\"promo__info\">\n                <b class=\"promo__lead\">\u0425\u0443\u0434\u0435\u0435\u043C<br> \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E!</b>\n                <p class=\"promo__description\">\u041C\u043E\u0442\u0438\u0432\u0438\u0440\u0443\u044E\u0449\u0438\u0435 \u0444\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B \u043F\u043E\u043C\u043E\u0433\u0443\u0442 \u043D\u0430\u0439\u0442\u0438 \u0432 \u0441\u0435\u0431\u0435 \u0441\u0438\u043B\u044B \u043D\u0435&nbsp;\u043F\u0440\u043E\u043F\u0443\u0441\u043A\u0430\u0442\u044C \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u0438 \u0441\u043E\u0431\u043B\u044E\u0434\u0430\u0442\u044C \u0434\u0438\u0435\u0442\u0443.</p>\n                <a class=\"promo__btn btn\" href=\"#\">\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435</a>\n                <table class=\"parameters\">\n                  <caption class=\"visually-hidden\">\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0442\u043E\u0432\u0430\u0440\u0430</caption>\n                  <thead class=\"parameters__header\">\n                    <tr>\n                      <th class=\"parameters__name\">\u0411\u0435\u0437 \u043F\u043E\u0434\u0437\u0430\u0440\u044F\u0434\u043A\u0438</th>\n                    </tr>\n                  </thead>\n                  <tbody>\n                    <tr>\n                      <td class=\"parameters__value\">48 \u0447\u0430\u0441\u043E\u0432</td>\n                    </tr>\n                  </tbody>\n                </table>\n              </div>\n            </li>\n            <li class=\"promo__item promo__item--three slider__item swiper-slide\">\n              <h3 class=\"visually-hidden\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440</h3>\n              <div class=\"promo__image-wrapper\">\n                <img class=\"promo__image\" src=\"img/promo-3.png\" width=\"560\" height=\"524\" alt=\"\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\">\n              </div>\n              <div class=\"promo__info\">\n                <b class=\"promo__lead\">\u041F\u043E\u0440\u0445\u0430\u0435\u0442 \u043A\u0430\u043A \u0431\u0430\u0431\u043E\u0447\u043A\u0430, \u0436\u0430\u043B\u0438\u0442 \u043A\u0430\u043A \u043F\u0447\u0435\u043B\u0430!</b>\n                <p class=\"promo__description\">\u042D\u0442\u043E\u0442 \u043E\u0431\u044B\u0447\u043D\u044B\u0439, \u043D\u0430 \u043F\u0435\u0440\u0432\u044B\u0439 \u0432\u0437\u0433\u043B\u044F\u0434, \u043A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440 \u043E\u0441\u043D\u0430\u0449\u0435\u043D \u043C\u043E\u0449\u043D\u044B\u043C&nbsp;\u043B\u0430\u0437\u0435\u0440\u043E\u043C, \u0437\u0430\u043C\u0430\u0441\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u043C \u043F\u043E\u0434 \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0443\u044E \u043A\u0430\u043C\u0435\u0440\u0443.</p>\n                <a class=\"promo__btn btn\" href=\"#\">\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435</a>\n                <table class=\"parameters\">\n                  <caption class=\"visually-hidden\">\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0442\u043E\u0432\u0430\u0440\u0430</caption>\n                  <thead class=\"parameters__header\">\n                    <tr>\n                      <th class=\"parameters__name\">\u0414\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u043F\u043E\u043B\u0435\u0442\u0430</th>\n                      <th class=\"parameters__name\">\u0420\u0430\u0434\u0438\u0443\u0441 \u043F\u043E\u0440\u0430\u0436\u0435\u043D\u0438\u044F</th>\n                    </tr>\n                  </thead>\n                  <tbody>\n                    <tr>\n                      <td class=\"parameters__value\">800 \u043C</td>\n                      <td class=\"parameters__value\">50 \u043C</td>\n                    </tr>\n                  </tbody>\n                </table>\n              </div>\n            </li>\n          </ol>\n          <div class=\"promo__controls pagination-bullets\"></div>\n        </div>\n      </section>\n\n      <section class=\"categories page__wrapper\">\n        <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n        <ul class=\"categories__list\">\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--virtual\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a>\n          </li>\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--monopod\" href=\"catalog.html\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F&nbsp;\u0441\u0435\u043B\u0444\u0438</a>\n          </li>\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--camera\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a>\n          </li>\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--fitness\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a>\n          </li>\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--watches\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a>\n          </li>\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--copter\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a>\n          </li>\n        </ul>\n      </section>\n\n      <section class=\"services page__section\" id=\"services\">\n        <h2 class=\"visually-hidden\">\u0423\u0441\u043B\u0443\u0433\u0438</h2>\n        <div class=\"services__slider slider page__wrapper\">\n          <div class=\"services__controls\">\n            <button type=\"button\" class=\"services__btn services__btn--delivery btn services__btn--active\" >\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</button>\n            <button type=\"button\" class=\"services__btn services__btn--warranty btn\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</button>\n            <button type=\"button\" class=\"services__btn services__btn--credit btn\">\u041A\u0440\u0435\u0434\u0438\u0442</button>\n          </div>\n\n          <ul class=\"services__list slider__list\">\n            <li class=\"services__item services__item--delivery\">\n              <h3 class=\"services__title\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</h3>\n              <p class=\"services__description\">\u041C\u044B \u0441 \u0443\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u0438\u0435\u043C \u0434\u043E\u0441\u0442\u0430\u0432\u0438\u043C \u0432\u0430\u0448 \u0442\u043E\u0432\u0430\u0440 \u043F\u0440\u044F\u043C\u043E \u043A \u0432\u0430\u0448\u0435\u043C\u0443 \u043F\u043E\u0434\u044A\u0435\u0437\u0434\u0443 \u0441\u043E\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u043E \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E! \u0412\u0435\u0434\u044C \u043C\u044B \u043D\u0435\u043F\u043B\u043E\u0445\u043E \u0437\u0430\u0440\u0430\u0431\u043E\u0442\u0430\u0435\u043C, \u043F\u043E\u0434\u043D\u0438\u043C\u0430\u044F \u0435\u0433\u043E \u043D\u0430 \u0432\u0430\u0448 \u044D\u0442\u0430\u0436.</p>\n            </li>\n            <li class=\"services__item services__item--warranty services__item--hidden \">\n              <h3 class=\"services__title\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</h3>\n              <p class=\"services__description\">\u0415\u0441\u043B\u0438 \u0438\u0437-\u0437\u0430 \u0432\u043E\u0437\u0433\u043E\u0440\u0430\u043D\u0438\u044F \u043A\u0443\u043F\u043B\u0435\u043D\u043D\u043E\u0433\u043E \u0443 \u043D\u0430\u0441 \u0442\u043E\u0432\u0430\u0440\u0430 \u0443 \u0432\u0430\u0441 \u0441\u0433\u043E\u0440\u0438\u0442 \u0434\u043E\u043C \u2014 \u043D\u0435 \u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u0439\u0442\u0435, \u043C\u044B \u0432\u044B\u0434\u0430\u0434\u0438\u043C \u0432\u0430\u043C \u043D\u043E\u0432\u044B\u0439.<br> \u0422\u043E\u0432\u0430\u0440, \u043D\u0435 \u0434\u043E\u043C, \u043A\u043E\u043D\u0435\u0447\u043D\u043E \u0436\u0435.</p>\n            </li>\n            <li class=\"services__item services__item--credit services__item--hidden \">\n              <h3 class=\"services__title\">\u041A\u0440\u0435\u0434\u0438\u0442</h3>\n              <p class=\"services__description\">\u0417\u0430\u043B\u0435\u0437\u0442\u044C \u0432 \u0434\u043E\u043B\u0433\u043E\u0432\u0443\u044E \u044F\u043C\u0443 \u0441\u0442\u0430\u043B\u043E \u043F\u0440\u043E\u0449\u0435! \u041A\u0440\u0435\u0434\u0438\u0442\u043D\u044B\u0435 \u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u043D\u0442\u044B \u043F\u043E\u0434\u0431\u0435\u0440\u0443\u0442 \u0434\u043B\u044F \u0432\u0430\u0441 \u043D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u0432\u044B\u0433\u043E\u0434\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u043A\u0440\u0435\u0434\u0438\u0442\u0430. \u0412\u044B\u0433\u043E\u0434\u043D\u044B\u0435 \u0434\u043B\u044F \u043D\u0430\u0448\u0435\u0433\u043E \u0431\u0430\u043D\u043A\u0430, \u0440\u0430\u0437\u0443\u043C\u0435\u0435\u0442\u0441\u044F.</p>\n            </li>\n          </ul>\n        </div>\n      </section>\n\n      <section class=\"brands page__wrapper\">\n        <h2 class=\"visually-hidden\">\u041F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u044B\u0435 \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u0438</h2>\n        <div class=\"brands__list-wrapper swiper-container\">\n          <ul class=\"brands__list swiper-wrapper\">\n            <li class=\"brands__item swiper-slide\">\n              <a class=\"brands__logo\" href=\"#\">\n                <img class=\"brands__logo-image\" src=\"img/logo-dji.png\" width=\"260\" height=\"100\" alt=\"DJI\">\n              </a>\n            </li>\n            <li class=\"brands__item swiper-slide\">\n              <a class=\"brands__logo\" href=\"#\">\n                <img class=\"brands__logo-image\" src=\"img/logo-sp-gadgets.png\" width=\"260\" height=\"100\" alt=\"SP Gadgets\">\n              </a>\n            </li>\n            <li class=\"brands__item swiper-slide\">\n              <a class=\"brands__logo\" href=\"#\">\n                <img class=\"brands__logo-image\" src=\"img/logo-go-pro.png\" width=\"260\" height=\"100\" alt=\"Go Pro\">\n              </a>\n            </li>\n            <li class=\"brands__item swiper-slide\">\n              <a class=\"brands__logo\" href=\"#\">\n                <img class=\"brands__logo-image\" src=\"img/logo-vive.png\" width=\"260\" height=\"100\" alt=\"Vive\">\n              </a>\n            </li>\n          </ul>\n          <div class=\"brands__scrollbar\"></div>\n        </div>\n      </section>\n\n      <div class=\"columns page__wrapper\">\n        <section class=\"about-us columns__item\">\n          <h2 class=\"columns__title\">\u041E \u043D\u0430\u0441</h2>\n          <p class=\"about-us__text\">\u041E\u0433\u0440\u043E\u043C\u043D\u044B\u0439 \u0432\u044B\u0431\u043E\u0440 \u0433\u0430\u0434\u0436\u0435\u0442\u043E\u0432 \u043D\u0435 \u043E\u0441\u0442\u0430\u0432\u0438\u0442 \u0440\u0430\u0432\u043D\u043E\u0434\u0443\u0448\u043D\u044B\u043C \u0433\u0438\u043A\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0439&nbsp;\u0435\u0441\u0442\u044C \u0432&nbsp;\u043A\u0430\u0436\u0434\u043E\u043C \u0438\u0437&nbsp;\u043D\u0430\u0441.</p>\n          <p class=\"about-us__text\">\u041C\u044B \u043C\u043E\u0436\u0435\u043C \u0434\u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u0432\u0430\u0448 \u0442\u043E\u0432\u0430\u0440 \u0432 \u0441\u0430\u043C\u044B\u0435 \u043E\u0442\u0434\u0430\u043B\u0435\u043D\u043D\u044B\u0435 \u0442\u043E\u0447\u043A\u0438 \u0420\u043E\u0441\u0441\u0438\u0438! DEVICE \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0441\u043E \u043C\u043D\u043E\u0433\u0438\u043C\u0438 \u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442\u043D\u044B\u043C\u0438 \u043A\u043E\u043C\u043F\u0430\u043D\u0438\u044F\u043C\u0438:</p>\n          <ul class=\"about-us__list\">\n            <li class=\"about-us__list-item\">\u0414\u0435\u043B\u043E\u0432\u044B\u0435 \u041B\u0438\u043D\u0438\u0438</li>\n            <li class=\"about-us__list-item\">\u0410\u0432\u0442\u043E\u0442\u0440\u0435\u0439\u0434\u0438\u043D\u0433</li>\n            <li class=\"about-us__list-item\">\u0416\u0435\u043B\u0414\u043E\u0440\u042D\u043A\u0441\u043F\u0435\u0434\u0438\u0446\u0438\u044F</li>\n          </ul>\n<!--          <a class=\"btn\" href=\"#\">\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435 \u043E \u043D\u0430\u0441</a>-->\n          <button type=\"button\" class=\"contacts__btn btn\">\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u043D\u0430\u043C</button>\n        </section>\n\n        <section class=\"contacts columns__item\">\n          <h2 class=\"columns__title\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</h2>\n          <p class=\"contacts__text\">\u0412\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u0437\u0430\u0431\u0440\u0430\u0442\u044C \u0442\u043E\u0432\u0430\u0440 \u0441\u0430\u043C\u0438, \u0437\u0430\u0435\u0445\u0430\u0432 \u0432 \u043D\u0430\u0448 \u043E\u0444\u0438\u0441. \u0417\u0430\u043E\u0434\u043D\u043E, \u0432\u044B \u0441\u043C\u043E\u0436\u0435\u0442\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u043E\u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C \u043F\u043E\u043A\u0443\u043F\u043A\u0438. \u0412\u0441\u044F\u043A\u043E\u0435 \u0431\u044B\u0432\u0430\u0435\u0442.</p>\n          <div class=\"contacts__map\">\n            <iframe class=\"contacts__map-item\" src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.4923898988923!2d30.521080765938255!3d50.45055502947539!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4ce50f8b6e3c3%3A0xb528dc4d6dadc4f8!2z0JzQsNC50LTQsNC9INCd0LXQt9Cw0LLQuNGB0LjQvNC-0YHRgtC4LCDQmtC40LXQsiwgMDIwMDA!5e0!3m2!1sru!2sua!4v1577112111510!5m2!1sru!2sua\"></iframe>\n          </div>\n        </section>\n      </div>\n        ";
+                view = "\n              <h1 class=\"visually-hidden\">\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D \u0433\u0430\u0434\u0436\u0435\u0442\u043E\u0432 \xAB\u0414\u0435\u0432\u0430\u0439\u0441\xBB</h1>\n\n      <section class=\"promo page__section page__wrapper\">\n        <h2 class=\"visually-hidden\">\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u043C\u044B\u0435 \u0442\u043E\u0432\u0430\u0440\u044B</h2>\n\n        <div class=\"slider main-slider swiper-container\">\n\n          <ol class=\"promo__list slider__list swiper-wrapper\">\n            <li class=\"promo__item promo__item--one slider__item swiper-slide\">\n              <h3 class=\"visually-hidden\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434</h3>\n              <div class=\"promo__image-wrapper\">\n                <img class=\"promo__image\" src=\"img/promo-1.png\" width=\"560\" height=\"524\" alt=\"\u041F\u0430\u043B\u043A\u0430 \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438\">\n              </div>\n              <div class=\"promo__info\">\n                <b class=\"promo__lead\">\u0414\u0435\u043B\u0430\u0439 \u0441\u0435\u043B\u0444\u0438,<br> \u043A\u0430\u043A \u0411\u0435\u043D \u0421\u0442\u0438\u043B\u043B\u0435\u0440!</b>\n                <p class=\"promo__description\">\u0421\u0430\u043C\u0430\u044F \u0434\u043B\u0438\u043D\u043D\u0430\u044F \u043F\u0430\u043B\u043A\u0430 \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430 \u0432 \u043D\u0430\u0448\u0435\u043C \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0435. \u0412\u043E\u0441\u0435\u043C\u044C (\u0412\u043E\u0441\u0435\u043C\u044C, \u041A\u0430\u0440\u043B!) \u043C\u0435\u0442\u0440\u043E\u0432 \u0434\u043B\u0438\u043D\u043E\u0439 \u0438 \u0432\u0435\u0441\u043E\u043C \u0432\u0441\u0435\u0433\u043E 5 \u043A\u0438\u043B\u043E\u0433\u0440\u0430\u043C\u043C.</p>\n                <a class=\"promo__btn btn\" href=\"#\">\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435</a>\n                <table class=\"parameters\">\n                  <caption class=\"visually-hidden\">\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0442\u043E\u0432\u0430\u0440\u0430</caption>\n                  <thead class=\"parameters__header\">\n                    <tr>\n                      <th class=\"parameters__name\">\u0414\u043B\u0438\u043D\u0430 \u043F\u0430\u043B\u043A\u0438</th>\n                      <th class=\"parameters__name\">\u0412\u0435\u0441 \u043F\u0430\u043B\u043A\u0438</th>\n                      <th class=\"parameters__name\">\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B</th>\n                    </tr>\n                  </thead>\n                  <tbody>\n                    <tr>\n                      <td class=\"parameters__value\">8,5 \u043C</td>\n                      <td class=\"parameters__value\">5 \u043A\u0433</td>\n                      <td class=\"parameters__value\">\u041A\u0430\u0440\u0431\u043E\u043D</td>\n                    </tr>\n                  </tbody>\n                </table>\n              </div>\n            </li>\n            <li class=\"promo__item promo__item--two slider__item swiper-slide\">\n              <h3 class=\"visually-hidden\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442</h3>\n              <div class=\"promo__image-wrapper\">\n                <img class=\"promo__image\" src=\"img/promo-2.png\" width=\"560\" height=\"524\" alt=\"\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\">\n              </div>\n              <div class=\"promo__info\">\n                <b class=\"promo__lead\">\u0425\u0443\u0434\u0435\u0435\u043C<br> \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E!</b>\n                <p class=\"promo__description\">\u041C\u043E\u0442\u0438\u0432\u0438\u0440\u0443\u044E\u0449\u0438\u0435 \u0444\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B \u043F\u043E\u043C\u043E\u0433\u0443\u0442 \u043D\u0430\u0439\u0442\u0438 \u0432 \u0441\u0435\u0431\u0435 \u0441\u0438\u043B\u044B \u043D\u0435&nbsp;\u043F\u0440\u043E\u043F\u0443\u0441\u043A\u0430\u0442\u044C \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u0438 \u0441\u043E\u0431\u043B\u044E\u0434\u0430\u0442\u044C \u0434\u0438\u0435\u0442\u0443.</p>\n                <a class=\"promo__btn btn\" href=\"#\">\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435</a>\n                <table class=\"parameters\">\n                  <caption class=\"visually-hidden\">\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0442\u043E\u0432\u0430\u0440\u0430</caption>\n                  <thead class=\"parameters__header\">\n                    <tr>\n                      <th class=\"parameters__name\">\u0411\u0435\u0437 \u043F\u043E\u0434\u0437\u0430\u0440\u044F\u0434\u043A\u0438</th>\n                    </tr>\n                  </thead>\n                  <tbody>\n                    <tr>\n                      <td class=\"parameters__value\">48 \u0447\u0430\u0441\u043E\u0432</td>\n                    </tr>\n                  </tbody>\n                </table>\n              </div>\n            </li>\n            <li class=\"promo__item promo__item--three slider__item swiper-slide\">\n              <h3 class=\"visually-hidden\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440</h3>\n              <div class=\"promo__image-wrapper\">\n                <img class=\"promo__image\" src=\"img/promo-3.png\" width=\"560\" height=\"524\" alt=\"\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\">\n              </div>\n              <div class=\"promo__info\">\n                <b class=\"promo__lead\">\u041F\u043E\u0440\u0445\u0430\u0435\u0442 \u043A\u0430\u043A \u0431\u0430\u0431\u043E\u0447\u043A\u0430, \u0436\u0430\u043B\u0438\u0442 \u043A\u0430\u043A \u043F\u0447\u0435\u043B\u0430!</b>\n                <p class=\"promo__description\">\u042D\u0442\u043E\u0442 \u043E\u0431\u044B\u0447\u043D\u044B\u0439, \u043D\u0430 \u043F\u0435\u0440\u0432\u044B\u0439 \u0432\u0437\u0433\u043B\u044F\u0434, \u043A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440 \u043E\u0441\u043D\u0430\u0449\u0435\u043D \u043C\u043E\u0449\u043D\u044B\u043C&nbsp;\u043B\u0430\u0437\u0435\u0440\u043E\u043C, \u0437\u0430\u043C\u0430\u0441\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u043C \u043F\u043E\u0434 \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0443\u044E \u043A\u0430\u043C\u0435\u0440\u0443.</p>\n                <a class=\"promo__btn btn\" href=\"#\">\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435</a>\n                <table class=\"parameters\">\n                  <caption class=\"visually-hidden\">\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0442\u043E\u0432\u0430\u0440\u0430</caption>\n                  <thead class=\"parameters__header\">\n                    <tr>\n                      <th class=\"parameters__name\">\u0414\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u043F\u043E\u043B\u0435\u0442\u0430</th>\n                      <th class=\"parameters__name\">\u0420\u0430\u0434\u0438\u0443\u0441 \u043F\u043E\u0440\u0430\u0436\u0435\u043D\u0438\u044F</th>\n                    </tr>\n                  </thead>\n                  <tbody>\n                    <tr>\n                      <td class=\"parameters__value\">800 \u043C</td>\n                      <td class=\"parameters__value\">50 \u043C</td>\n                    </tr>\n                  </tbody>\n                </table>\n              </div>\n            </li>\n          </ol>\n          <div class=\"promo__controls pagination-bullets\"></div>\n        </div>\n      </section>\n\n      <section class=\"categories page__wrapper\">\n        <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n        <ul class=\"categories__list\">\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--virtual\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a>\n          </li>\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--monopod\" href=\"catalog.html\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F&nbsp;\u0441\u0435\u043B\u0444\u0438</a>\n          </li>\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--camera\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a>\n          </li>\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--fitness\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a>\n          </li>\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--watches\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a>\n          </li>\n          <li class=\"categories__item\">\n            <a class=\"categories__link categories__link--copter\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a>\n          </li>\n        </ul>\n      </section>\n\n      <section class=\"services page__section\" id=\"services\">\n        <h2 class=\"visually-hidden\">\u0423\u0441\u043B\u0443\u0433\u0438</h2>\n        <div class=\"services__slider slider page__wrapper\">\n          <div class=\"services__controls\">\n            <button type=\"button\" class=\"services__btn services__btn--delivery btn services__btn--active\" >\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</button>\n            <button type=\"button\" class=\"services__btn services__btn--warranty btn\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</button>\n            <button type=\"button\" class=\"services__btn services__btn--credit btn\">\u041A\u0440\u0435\u0434\u0438\u0442</button>\n          </div>\n\n          <ul class=\"services__list slider__list\">\n            <li class=\"services__item services__item--delivery\">\n              <h3 class=\"services__title\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</h3>\n              <p class=\"services__description\">\u041C\u044B \u0441 \u0443\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u0438\u0435\u043C \u0434\u043E\u0441\u0442\u0430\u0432\u0438\u043C \u0432\u0430\u0448 \u0442\u043E\u0432\u0430\u0440 \u043F\u0440\u044F\u043C\u043E \u043A \u0432\u0430\u0448\u0435\u043C\u0443 \u043F\u043E\u0434\u044A\u0435\u0437\u0434\u0443 \u0441\u043E\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u043E \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E! \u0412\u0435\u0434\u044C \u043C\u044B \u043D\u0435\u043F\u043B\u043E\u0445\u043E \u0437\u0430\u0440\u0430\u0431\u043E\u0442\u0430\u0435\u043C, \u043F\u043E\u0434\u043D\u0438\u043C\u0430\u044F \u0435\u0433\u043E \u043D\u0430 \u0432\u0430\u0448 \u044D\u0442\u0430\u0436.</p>\n            </li>\n            <li class=\"services__item services__item--warranty services__item--hidden \">\n              <h3 class=\"services__title\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</h3>\n              <p class=\"services__description\">\u0415\u0441\u043B\u0438 \u0438\u0437-\u0437\u0430 \u0432\u043E\u0437\u0433\u043E\u0440\u0430\u043D\u0438\u044F \u043A\u0443\u043F\u043B\u0435\u043D\u043D\u043E\u0433\u043E \u0443 \u043D\u0430\u0441 \u0442\u043E\u0432\u0430\u0440\u0430 \u0443 \u0432\u0430\u0441 \u0441\u0433\u043E\u0440\u0438\u0442 \u0434\u043E\u043C \u2014 \u043D\u0435 \u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u0439\u0442\u0435, \u043C\u044B \u0432\u044B\u0434\u0430\u0434\u0438\u043C \u0432\u0430\u043C \u043D\u043E\u0432\u044B\u0439.<br> \u0422\u043E\u0432\u0430\u0440, \u043D\u0435 \u0434\u043E\u043C, \u043A\u043E\u043D\u0435\u0447\u043D\u043E \u0436\u0435.</p>\n            </li>\n            <li class=\"services__item services__item--credit services__item--hidden \">\n              <h3 class=\"services__title\">\u041A\u0440\u0435\u0434\u0438\u0442</h3>\n              <p class=\"services__description\">\u0417\u0430\u043B\u0435\u0437\u0442\u044C \u0432 \u0434\u043E\u043B\u0433\u043E\u0432\u0443\u044E \u044F\u043C\u0443 \u0441\u0442\u0430\u043B\u043E \u043F\u0440\u043E\u0449\u0435! \u041A\u0440\u0435\u0434\u0438\u0442\u043D\u044B\u0435 \u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u043D\u0442\u044B \u043F\u043E\u0434\u0431\u0435\u0440\u0443\u0442 \u0434\u043B\u044F \u0432\u0430\u0441 \u043D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u0432\u044B\u0433\u043E\u0434\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u043A\u0440\u0435\u0434\u0438\u0442\u0430. \u0412\u044B\u0433\u043E\u0434\u043D\u044B\u0435 \u0434\u043B\u044F \u043D\u0430\u0448\u0435\u0433\u043E \u0431\u0430\u043D\u043A\u0430, \u0440\u0430\u0437\u0443\u043C\u0435\u0435\u0442\u0441\u044F.</p>\n            </li>\n          </ul>\n        </div>\n      </section>\n\n      <section class=\"brands page__wrapper\">\n        <h2 class=\"visually-hidden\">\u041F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u044B\u0435 \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u0438</h2>\n        <div class=\"brands__list-wrapper swiper-container\">\n          <ul class=\"brands__list swiper-wrapper\">\n            <li class=\"brands__item swiper-slide\">\n              <a class=\"brands__logo\" href=\"#\">\n                <img class=\"brands__logo-image\" src=\"img/logo-dji.png\" width=\"260\" height=\"100\" alt=\"DJI\">\n              </a>\n            </li>\n            <li class=\"brands__item swiper-slide\">\n              <a class=\"brands__logo\" href=\"#\">\n                <img class=\"brands__logo-image\" src=\"img/logo-sp-gadgets.png\" width=\"260\" height=\"100\" alt=\"SP Gadgets\">\n              </a>\n            </li>\n            <li class=\"brands__item swiper-slide\">\n              <a class=\"brands__logo\" href=\"#\">\n                <img class=\"brands__logo-image\" src=\"img/logo-go-pro.png\" width=\"260\" height=\"100\" alt=\"Go Pro\">\n              </a>\n            </li>\n            <li class=\"brands__item swiper-slide\">\n              <a class=\"brands__logo\" href=\"#\">\n                <img class=\"brands__logo-image\" src=\"img/logo-vive.png\" width=\"260\" height=\"100\" alt=\"Vive\">\n              </a>\n            </li>\n          </ul>\n          <div class=\"brands__scrollbar\"></div>\n        </div>\n      </section>\n\n      <div class=\"columns page__wrapper\">\n        <section class=\"about-us columns__item\">\n          <h2 class=\"columns__title\">\u041E \u043D\u0430\u0441</h2>\n          <p class=\"about-us__text\">\u041E\u0433\u0440\u043E\u043C\u043D\u044B\u0439 \u0432\u044B\u0431\u043E\u0440 \u0433\u0430\u0434\u0436\u0435\u0442\u043E\u0432 \u043D\u0435 \u043E\u0441\u0442\u0430\u0432\u0438\u0442 \u0440\u0430\u0432\u043D\u043E\u0434\u0443\u0448\u043D\u044B\u043C \u0433\u0438\u043A\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0439&nbsp;\u0435\u0441\u0442\u044C \u0432&nbsp;\u043A\u0430\u0436\u0434\u043E\u043C \u0438\u0437&nbsp;\u043D\u0430\u0441.</p>\n          <p class=\"about-us__text\">\u041C\u044B \u043C\u043E\u0436\u0435\u043C \u0434\u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u0432\u0430\u0448 \u0442\u043E\u0432\u0430\u0440 \u0432 \u0441\u0430\u043C\u044B\u0435 \u043E\u0442\u0434\u0430\u043B\u0435\u043D\u043D\u044B\u0435 \u0442\u043E\u0447\u043A\u0438 \u0420\u043E\u0441\u0441\u0438\u0438! DEVICE \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0441\u043E \u043C\u043D\u043E\u0433\u0438\u043C\u0438 \u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442\u043D\u044B\u043C\u0438 \u043A\u043E\u043C\u043F\u0430\u043D\u0438\u044F\u043C\u0438:</p>\n          <ul class=\"about-us__list\">\n            <li class=\"about-us__list-item\">\u0414\u0435\u043B\u043E\u0432\u044B\u0435 \u041B\u0438\u043D\u0438\u0438</li>\n            <li class=\"about-us__list-item\">\u0410\u0432\u0442\u043E\u0442\u0440\u0435\u0439\u0434\u0438\u043D\u0433</li>\n            <li class=\"about-us__list-item\">\u0416\u0435\u043B\u0414\u043E\u0440\u042D\u043A\u0441\u043F\u0435\u0434\u0438\u0446\u0438\u044F</li>\n          </ul>\n<!--          <a class=\"btn\" href=\"#\">\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435 \u043E \u043D\u0430\u0441</a>-->\n          <button type=\"button\" class=\"contacts__btn btn\">\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u043D\u0430\u043C</button>\n        </section>\n\n        <section class=\"contacts columns__item\">\n          <h2 class=\"columns__title\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</h2>\n          <p class=\"contacts__text\">\u0412\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u0437\u0430\u0431\u0440\u0430\u0442\u044C \u0442\u043E\u0432\u0430\u0440 \u0441\u0430\u043C\u0438, \u0437\u0430\u0435\u0445\u0430\u0432 \u0432 \u043D\u0430\u0448 \u043E\u0444\u0438\u0441. \u0417\u0430\u043E\u0434\u043D\u043E, \u0432\u044B \u0441\u043C\u043E\u0436\u0435\u0442\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u043E\u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C \u043F\u043E\u043A\u0443\u043F\u043A\u0438. \u0412\u0441\u044F\u043A\u043E\u0435 \u0431\u044B\u0432\u0430\u0435\u0442.</p>\n          <div class=\"contacts__map\">\n            <iframe class=\"contacts__map-item\" src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.4923898988923!2d30.521080765938255!3d50.45055502947539!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4ce50f8b6e3c3%3A0xb528dc4d6dadc4f8!2z0JzQsNC50LTQsNC9INCd0LXQt9Cw0LLQuNGB0LjQvNC-0YHRgtC4LCDQmtC40LXQsiwgMDIwMDA!5e0!3m2!1sru!2sua!4v1577112111510!5m2!1sru!2sua\"></iframe>\n          </div>\n        </section>\n      </div>\n      \n        ";
                 return _context.abrupt("return", view);
 
               case 2:
@@ -20626,7 +21265,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "\n    <div class=\"page__wrapper\">\n        <h1 class=\"page__title\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</h1>\n\n        <ul class=\"page__breadcrumbs breadcrumbs\">\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"index.html\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"catalog.html\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a>\n          </li>\n        </ul>\n      </div>\n\n      <div class=\"catalog-columns--header\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <p class=\"catalog-columns__narrow catalog-columns__title\">\u0424\u0438\u043B\u044C\u0442\u0440:</p>\n\n          <section class=\"catalog-columns__wide sort\">\n            <h2 class=\"catalog-columns__title sort__title\">\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:</h2>\n            <ul class=\"sort__type-list\">\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link sort__type-link--current\">\u041F\u043E \u0446\u0435\u043D\u0435</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u0442\u0438\u043F\u0443</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438</a>\n              </li>\n            </ul>\n            <ul class=\"sort__order-list\">\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--up\" href=\"#\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--down sort__order-link--current\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n            </ul>\n          </section>\n        </div>\n      </div>\n\n      <div class=\"catalog-columns\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <section class=\"catalog-columns__narrow filter\">\n            <h2 class=\"visually-hidden\">\u0424\u0438\u043B\u044C\u0442\u0440 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n            <form class=\"filter__form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C</legend>\n                <div class=\"filter__range range\">\n                  <div class=\"range__selected\"></div>\n                  <button class=\"range__slider range__slider--min\" type=\"button\" aria-label=\"\u041E\u0442\">\n                    <span class=\"range__label range__label--min\">\u043E\u0442 0</span>\n                  </button>\n                  <button class=\"range__slider range__slider--max\" type=\"button\" aria-label=\"\u0414\u043E\">\n                    <span class=\"range__label range__label--max\">\u0434\u043E 5000</span>\n                  </button>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_min\" value=\"0\">\n                  </label>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_max\" value=\"5000\">\n                  </label>\n                </div>\n              </fieldset>\n\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u0426\u0432\u0435\u0442</legend>\n                <ul class=\"filter__options\">\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-black\" type=\"checkbox\" name=\"color_black\" checked>\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-black\">\u0427\u0435\u0440\u043D\u044B\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-white\" type=\"checkbox\" name=\"color_white\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-white\">\u0411\u0435\u043B\u044B\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-blue\" type=\"checkbox\" name=\"color_blue\" checked>\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-blue\">\u0421\u0438\u043D\u0438\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-red\" type=\"checkbox\" name=\"color_red\" checked>\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-red\">\u041A\u0440\u0430\u0441\u043D\u044B\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-pink\" type=\"checkbox\" name=\"color_pink\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-pink\">\u0420\u043E\u0437\u043E\u0432\u044B\u0439</label>\n                  </li>\n                </ul>\n              </fieldset>\n\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">Bluetooth</legend>\n                <ul class=\"filter__options\">\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"bluetooth-yes\" type=\"radio\" name=\"bluetooth\" value=\"yes\" checked>\n                    <label class=\"filter__option-label filter__option-label--radio\" for=\"bluetooth-yes\">\u0415\u0441\u0442\u044C</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"bluetooth-no\" type=\"radio\" name=\"bluetooth\" value=\"no\">\n                    <label class=\"filter__option-label filter__option-label--radio\" for=\"bluetooth-no\">\u041D\u0435\u0442</label>\n                  </li>\n                </ul>\n              </fieldset>\n\n              <button class=\"filter__btn btn\" type=\"submit\">\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C</button>\n            </form>\n          </section>\n\n          <section class=\"catalog-columns__wide catalog\">\n            <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433</h2>\n            <ul class=\"catalog__list\">\n              <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u041B\u044E\u0431\u0438\u0442\u0435\u043B\u044C\u0441\u043A\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430</h3>\n                </a>\n                <p class=\"catalog__price\">500 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-1.jpg\" width=\"360\" height=\"380\" alt=\"\u041B\u044E\u0431\u0438\u0442\u0435\u043B\u044C\u0441\u043A\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n              <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F<br> \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430</h3>\n                </a>\n                <p class=\"catalog__price\">1 500 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-2.jpg\" width=\"360\" height=\"380\" alt=\"\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n              <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u041D\u0435\u043F\u043E\u0442\u043E\u043F\u043B\u044F\u0435\u043C\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430</h3>\n                </a>\n                <p class=\"catalog__price\">2 500 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-3.jpg\" width=\"360\" height=\"380\" alt=\"\u041D\u0435\u043F\u043E\u0442\u043E\u043F\u043B\u044F\u0435\u043C\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n              <li class=\"catalog__item catalog__item--new\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u0421\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430 \xAB\u0421\u043B\u0435\u0434\u0443\u0439 \u0437\u0430 \u043C\u043D\u043E\u0439\xBB</h3>\n                </a>\n                <p class=\"catalog__price\">4 900 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-4.jpg\" width=\"360\" height=\"380\" alt=\"\u0421\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430 \xAB\u0421\u043B\u0435\u0434\u0443\u0439 \u0437\u0430 \u043C\u043D\u043E\u0439\xBB\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n            </ul>\n\n            <div class=\"pagination\">\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--back\">\u041D\u0430\u0437\u0430\u0434</a>\n              </div>\n              <ul class=\"pagination__list\">\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page pagination__link--current\">1</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">2</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">3</a>\n                </li>\n              </ul>\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--next\" href=\"#\">\u0412\u043F\u0435\u0440\u0435\u0434</a>\n              </div>\n            </div>\n          </section>\n        </div>\n      </div>\n    ";
+                view = "\n    <div class=\"page__wrapper\">\n        <h1 class=\"page__title\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</h1>\n\n        <ul class=\"page__breadcrumbs breadcrumbs\">\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"index.html\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"catalog.html\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a>\n          </li>\n        </ul>\n      </div>\n\n      <div class=\"catalog-columns--header\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <p class=\"catalog-columns__narrow catalog-columns__title\">\u0424\u0438\u043B\u044C\u0442\u0440:</p>\n\n          <section class=\"catalog-columns__wide sort\">\n            <h2 class=\"catalog-columns__title sort__title\">\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:</h2>\n            <ul class=\"sort__type-list\">\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link sort__type-link--current\">\u041F\u043E \u0446\u0435\u043D\u0435</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u0442\u0438\u043F\u0443</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438</a>\n              </li>\n            </ul>\n            <ul class=\"sort__order-list\">\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--up\" href=\"#\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--down sort__order-link--current\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n            </ul>\n          </section>\n        </div>\n      </div>\n\n      <div class=\"catalog-columns\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <section class=\"catalog-columns__narrow filter\">\n            <h2 class=\"visually-hidden\">\u0424\u0438\u043B\u044C\u0442\u0440 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n            <form class=\"filter__form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C</legend>\n                <div class=\"filter__range range\">\n                  <div class=\"range__selected\"></div>\n                  <button class=\"range__slider range__slider--min\" type=\"button\" aria-label=\"\u041E\u0442\">\n                    <span class=\"range__label range__label--min\">\u043E\u0442 0</span>\n                  </button>\n                  <button class=\"range__slider range__slider--max\" type=\"button\" aria-label=\"\u0414\u043E\">\n                    <span class=\"range__label range__label--max\">\u0434\u043E 5000</span>\n                  </button>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_min\" value=\"0\">\n                  </label>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_max\" value=\"5000\">\n                  </label>\n                </div>\n              </fieldset>\n\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u0426\u0432\u0435\u0442</legend>\n                <ul class=\"filter__options\">\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-black\" type=\"checkbox\" name=\"color_black\" checked>\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-black\">\u0427\u0435\u0440\u043D\u044B\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-white\" type=\"checkbox\" name=\"color_white\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-white\">\u0411\u0435\u043B\u044B\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-blue\" type=\"checkbox\" name=\"color_blue\" checked>\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-blue\">\u0421\u0438\u043D\u0438\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-red\" type=\"checkbox\" name=\"color_red\" checked>\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-red\">\u041A\u0440\u0430\u0441\u043D\u044B\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-pink\" type=\"checkbox\" name=\"color_pink\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-pink\">\u0420\u043E\u0437\u043E\u0432\u044B\u0439</label>\n                  </li>\n                </ul>\n              </fieldset>\n\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">Bluetooth</legend>\n                <ul class=\"filter__options\">\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"bluetooth-yes\" type=\"radio\" name=\"bluetooth\" value=\"yes\" checked>\n                    <label class=\"filter__option-label filter__option-label--radio\" for=\"bluetooth-yes\">\u0415\u0441\u0442\u044C</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"bluetooth-no\" type=\"radio\" name=\"bluetooth\" value=\"no\">\n                    <label class=\"filter__option-label filter__option-label--radio\" for=\"bluetooth-no\">\u041D\u0435\u0442</label>\n                  </li>\n                </ul>\n              </fieldset>\n\n              <button class=\"filter__btn btn\" type=\"submit\">\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C</button>\n            </form>\n          </section>\n\n          <section class=\"catalog-columns__wide catalog\">\n            <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433</h2>\n            <ul class=\"catalog__list\">\n              <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u041B\u044E\u0431\u0438\u0442\u0435\u043B\u044C\u0441\u043A\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430</h3>\n                </a>\n                <p class=\"catalog__price\">5500 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-1.jpg\" width=\"360\" height=\"380\" alt=\"\u041B\u044E\u0431\u0438\u0442\u0435\u043B\u044C\u0441\u043A\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n              <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F<br> \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430</h3>\n                </a>\n                <p class=\"catalog__price\">1 500 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-2.jpg\" width=\"360\" height=\"380\" alt=\"\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n              <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u041D\u0435\u043F\u043E\u0442\u043E\u043F\u043B\u044F\u0435\u043C\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430</h3>\n                </a>\n                <p class=\"catalog__price\">2 500 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-3.jpg\" width=\"360\" height=\"380\" alt=\"\u041D\u0435\u043F\u043E\u0442\u043E\u043F\u043B\u044F\u0435\u043C\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n              <li class=\"catalog__item catalog__item--new\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u0421\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430 \xAB\u0421\u043B\u0435\u0434\u0443\u0439 \u0437\u0430 \u043C\u043D\u043E\u0439\xBB</h3>\n                </a>\n                <p class=\"catalog__price\">4 900 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-4.jpg\" width=\"360\" height=\"380\" alt=\"\u0421\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430 \xAB\u0421\u043B\u0435\u0434\u0443\u0439 \u0437\u0430 \u043C\u043D\u043E\u0439\xBB\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n            </ul>\n\n            <div class=\"pagination\">\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--back\">\u041D\u0430\u0437\u0430\u0434</a>\n              </div>\n              <ul class=\"pagination__list\">\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page pagination__link--current\">1</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">2</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">3</a>\n                </li>\n              </ul>\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--next\" href=\"#\">\u0412\u043F\u0435\u0440\u0435\u0434</a>\n              </div>\n            </div>\n          </section>\n        </div>\n      </div>\n    ";
                 return _context.abrupt("return", view);
 
               case 2:
@@ -20651,6 +21290,184 @@
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      function after_render() {
+        return _after_render.apply(this, arguments);
+      }
+
+      return after_render;
+    }()
+  };
+
+  var order = (function () {
+    (function () {
+      // if($('.city').val()!=0){
+      //    $('#delivery-option').removeClass('hide');
+      // }
+      document.querySelector('#city').addEventListener('click', function () {
+        if (document.querySelector('#city').value != 0) {
+          document.querySelector('#delivery-option').classList.remove('hide');
+        } else {
+          document.querySelector('#delivery-option').classList.add('hide');
+        }
+      });
+      document.querySelector('#delivery-option').addEventListener('click', function () {
+        if (document.querySelector('#delivery-option select').options.selectedIndex === 1) {
+          document.querySelector('#NP-number').classList.remove('hide');
+          document.querySelector('#user-adress').classList.add('hide');
+        } else if (document.querySelector('#delivery-option select').options.selectedIndex === 2) {
+          document.querySelector('#user-adress').classList.remove('hide');
+          document.querySelector('#NP-number').classList.add('hide');
+        }
+
+        document.querySelector('#payment-option').classList.remove('hide');
+      });
+      document.querySelector('#payment-option').addEventListener('click', function () {
+        if (document.querySelector('#payment-option select').options.selectedIndex === 2) {
+          document.querySelector('#credit-card').classList.remove('hide');
+        } else {
+          document.querySelector('#credit-card').classList.add('hide');
+        }
+      });
+      var name = popupform.user_name;
+      var tel = popupform.tel;
+      var email = popupform.email;
+      var city = popupform.city_select;
+      var delivery = popupform.delivery;
+      var postNumber = popupform.number;
+      var paymantOption = popupform.payment_option; // let cardPattern = new RegExp("^[0-9]{16}$");
+      //тут прикольные пробелым в инпуте номера карты
+
+      var cardNumber = popupform.creditcard;
+      cardNumber.addEventListener('input', function () {
+        var digitst = this.value.replace(/[^\d]/g, '').substring(0, 16);
+        digitst = digitst.match(/.{1,4}/g).join(' ');
+        this.value = digitst;
+      }); //валидация
+
+      var orderValidation = function orderValidation() {
+        var res = true; // let namePattern = new RegExp("^[А-ЯЁ][а-яё]+ [А-ЯЁ][а-яё]+$");
+
+        var telPattern = new RegExp("^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$");
+        var emailPattern = new RegExp("^\\w+[.!#$%&'*+/=?^_`{|}~-]*?\\w*?@[a-z]+?\\.[a-z]{2,4}$");
+        var NPnumber = new RegExp("^\\d{1,2}|300$");
+        var cardPattern = new RegExp("^[0-9]{4}\\s[0-9]{4}\\s[0-9]{4}\\s[0-9]{4}$");
+
+        if (name.value) {
+          name.classList.remove('alert');
+        } else {
+          name.classList.add('alert');
+          name.classList.add('error');
+          res = false;
+        }
+
+        if (telPattern.test(tel.value)) {
+          tel.classList.remove('alert');
+        } else {
+          res = false;
+          tel.classList.add('alert');
+        }
+
+        if (emailPattern.test(email.value)) {
+          email.classList.remove('alert');
+        } else {
+          res = false;
+          email.classList.add('alert');
+        }
+
+        if (city.value !== 0) {
+          document.querySelector('#city').classList.remove('alert');
+        } else {
+          res = false;
+          document.querySelector('#city').classList.add('alert');
+        }
+
+        if (delivery.options.selectedIndex === 1) {
+          delivery.classList.remove('alert');
+
+          if (NPnumber.test(postNumber.value)) {
+            postNumber.classList.remove('alert');
+          } else {
+            res = false;
+            postNumber.classList.add('alert');
+          }
+        } else if (delivery.options.selectedIndex === 2) {
+          delivery.classList.remove('alert');
+        } else {
+          res = false;
+          delivery.classList.add('alert');
+        }
+
+        if (paymantOption.options.selectedIndex === 1 || paymantOption.options.selectedIndex === 2 && cardPattern.test(cardNumber.value)) {
+          paymantOption.classList.remove('alert');
+        } else {
+          paymantOption.classList.add('alert');
+          res = false;
+        }
+
+        if (!cardNumber.value) {
+          cardNumber.classList.add('alert');
+          res = false;
+        } else {
+          cardNumber.classList.remove('alert');
+        }
+
+        return res;
+      };
+
+      var confirmOrderBtn = document.querySelector('.confirm-order-btn');
+      confirmOrderBtn.addEventListener('click', function () {
+        if (orderValidation()) {
+          document.querySelector('.order-popup-container').innerHTML = "\n        <div class=\"success-order-message\">\n            <div class=\"success-used-data\">  \n                <img src=\"img/High-contrast-face-smile.svg\" width=\"560\" height=\"560\">\n                <h3>\u0421\u043F\u0430\u0441\u0438\u0431\u043E!</h3>\n                <p>\u0412\u0430\u0448 \u0437\u0430\u043A\u0430\u0437 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0444\u0440\u043C\u043B\u0435\u043D! \u041D\u0430\u0448 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440 \u0441\u043A\u043E\u0440\u043E \u0441 \u0412\u0430\u043C\u0438 \u0441\u0432\u044F\u0436\u0435\u0442\u0441\u044F =)</p>\n                <a class=\"to-main-page btn\" href=\"/#/\">\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043D\u0430 \u0433\u043B\u0430\u0432\u043D\u0443\u044E</a>\n            </div>\n        </div>\n        ";
+        }
+      });
+    })();
+  });
+
+  var orderPage = {
+    render: function () {
+      var _render = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        var view;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                view = "\n<div class=\"order-popup-container\">\n  <h3>\u0412\u0430\u0448 \u0437\u0430\u043A\u0430\u0437</h3>\n\n  <form name=\"popupform\" action=\"#\" class=\"popup-form order-form\">\n    <div class=\"input-text-wraper\">\n      <label for=\"user_name\" class=\"popup-label\">\n        \u0412\u0430\u0448\u0435 \u0438\u043C\u044F:\n        <input type=\"text\" name=\"user_name\" placeholder=\"\u0418\u043C\u044F \u0424\u0430\u043C\u0438\u043B\u0430\u044F\">\n      </label>\n      <label for=\"tel\" class=\"popup-label\">\n        \u041D\u043E\u043C\u0435\u0440 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430:\n        <input type=\"tel\" name=\"tel\" placeholder=\"+38 000 00 00\">\n      </label>\n      <label class=\"popup-label\">\n        \u0412\u0430\u0448 email:\n        <input type=\"text\" name=\"email\" placeholder=\"example@mail.com\">\n      </label>\n      <label for=\"city\" class=\"popup-label\">\n          \u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0433\u043E\u0440\u043E\u0434:\n        <select id=\"city\" name=\"city_select\">\n          <option value=\"0\">...</option>\n          <option value=\"1\">\u041A\u0438\u0435\u0432</option>\n          <option value=\"2\">\u0425\u0430\u0440\u044C\u043A\u043E\u0432</option>\n          <option value=\"3\">\u041E\u0434\u0435\u0441\u0441\u0430</option>\n          <option value=\"4\">\u041B\u044C\u0432\u043E\u0432</option>\n          <option value=\"5\">\u0414\u043D\u0435\u043F\u0440</option>\n        </select>\n      </label>\n      <label for=\"delivery-option\" id=\"delivery-option\" class=\"popup-label hide\">\n            \u0421\u043F\u043E\u0441\u043E\u0431 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438:\n        <select name=\"delivery\">\n          <option value=\"0\">...</option>\n          <option value=\"1\">\u041E\u0442\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u041D\u041F</option>\n          <option value=\"2\">\u0410\u0434\u0440\u0435\u0441\u043D\u0430\u044F \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430</option>\n        </select>\n      </label>\n      <label for=\"NP-number\" class=\"popup-label hide\" id=\"NP-number\"  placeholder=\"1 - 130\">\n        \u041E\u0442\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u041D\u041F:\n        <input type=\"number\" name=\"number\" min=\"1\">\n      </label>\n      <label class=\"popup-label hide\" id=\"user-adress\">\n        \u0410\u0434\u0440\u0435\u0441:\n        <input type=\"text\" name=email\" placeholder=\"\u0430\u0434\u0440\u0435\u0441\">\n      </label>\n      <label for=\"payment-option\" id=\"payment-option\" class=\"popup-label hide\">\n        \u0421\u043F\u043E\u0441\u043E\u0431 \u043E\u043F\u043B\u0430\u0442\u044B:\n        <select name=\"payment_option\">\n          <option value=\"0\">...</option>\n          <option value=\"1\">\u041D\u0430\u043B\u0438\u0447\u043D\u044B\u043C\u0438 \u043F\u0440\u0438 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0438</option>\n          <option value=\"2\">\u041F\u0435\u0440\u0435\u0432\u043E\u0434 \u043D\u0430 \u043A\u0430\u0440\u0442\u0443</option>\n        </select>\n      </label>\n      <label for=\"creditcard\" class=\"popup-label hide\" id=\"credit-card\">\n        \u041D\u043E\u043C\u0435\u0440 \u043A\u0430\u0440\u0442\u044B:\n        <input type=\"text\"  name=\"creditcard\" placeholder=\"XXXX XXXX XXXX XXXX\">\n      </label>\n    </div>\n    <ul class=\"products-list-in-cart\">   <!-- \u0442\u0443\u0442 \u0441\u043F\u0438\u0441\u043E\u043A \u0442\u043E\u0432\u0430\u0440\u043E\u0432 \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0435 -->\n \n      <li>\n        <div class=\"cart__product\">\n            <div class=\"cart__product-img\">\n              <img src=\"#\" width=\"130\" height=\"130\">\n            </div>\n            <div class=\"cart__product-info\">\n              <div class=\"cart__product-name product-name\"> \u0442\u043E\u0432\u0430\u0440 1 </div>\n              <div class=\"amount-of-produts\">\n                <span class=\"amount\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E: </span>\n                <button class=\"btnMinus\">-</button>\n                <span class=\"number-of-amount\">1</span>\n                <button class=\"btnPlus\">+</button>\n                <p class=\"cart__product-price\">\u0426\u0435\u043D\u0430: <span class=\"product-price\">2000</span></p>\n              </div>\n              <div class=\"delete_item\">\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u043A\u043E\u0440\u0437\u0438\u043D\u044B</div>\n            </div>\n          </div>\n      </li>\n \n    </ul>\n    <div class=\"finalPrice-container\">\n      <div>\n        <span>\u0412\u0441\u0435\u0433\u043E:</span>\n        <span class=\"finalPrice\">2000</span>\n      </div>\n      <button type=\"button\" class=\"btn confirm-order-btn\">\u0417\u0430\u043A\u0430\u0437 \u043F\u0440\u0438\u043D\u0438\u043C\u0430\u044E</button>\n    </div>\n\n  </form>\n<!--  <button disabled type=\"button \" class=\"cart__close modal__close\"></button>-->\n</div>\n\n\n\n        ";
+                return _context.abrupt("return", view);
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      function render() {
+        return _render.apply(this, arguments);
+      }
+
+      return render;
+    }(),
+    after_render: function () {
+      var _after_render = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee2() {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                order();
+
+              case 1:
               case "end":
                 return _context2.stop();
             }
@@ -20728,7 +21545,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "       <nav class=\"main-nav\">\n        <a class=\"page-header__logo main-nav__logo logo\" href=\"/#/\">\n          <img class=\"logo__image\" src=\"img/logo-device.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n        </a>\n\n<!--        <form class=\"search-form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">-->\n<!--          <label class=\"visually-hidden\" for=\"site-search\">\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u0430\u0439\u0442\u0443</label>-->\n<!--          <input class=\"search-form__input\" id=\"site-search\" type=\"text\" name=\"search\" placeholder=\"\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u0430\u0439\u0442\u0443\" required>-->\n<!--          <button class=\"search-form__btn\" type=\"submit\">\u041D\u0430\u0439\u0442\u0438</button>-->\n<!--        </form>-->\n\n<!--        <ul class=\"page-header__user-menu user-menu\">-->\n<!--          <li class=\"user-menu__item\">-->\n<!--            <a class=\"user-menu__link user-menu__link--login\" href=\"#\">\u0412\u043E\u0439\u0442\u0438</a>-->\n<!--          </li>-->\n<!--        </ul>-->\n\n        <ul class=\"page-header__user-actions user-menu\">\n<!--          <li class=\"user-menu__item\">-->\n<!--            <a class=\"user-menu__link user-menu__link--compare\" href=\"#\">\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</a>-->\n<!--          </li>-->\n          <li class=\"user-menu__item\">\n            <a class=\"user-menu__link user-menu__link--cart\" href=\"#\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n          </li>\n        </ul>\n\n        <ul class=\"page-header__site-menu site-menu\">\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--dropdown\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n            <div class=\"page-header__catalog-dropdown dropdown\">\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"catalog.html\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a></li>\n              </ul>\n            </div>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--delivery\"\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--warranty\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--contacts\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>\n          </li>\n        </ul>\n      </nav>\n";
+                view = "       <nav class=\"main-nav\">\n        <a class=\"page-header__logo main-nav__logo logo\" href=\"/#/\">\n          <img class=\"logo__image\" src=\"img/logo-device.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n        </a>\n\n<!--        <form class=\"search-form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">-->\n<!--          <label class=\"visually-hidden\" for=\"site-search\">\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u0430\u0439\u0442\u0443</label>-->\n<!--          <input class=\"search-form__input\" id=\"site-search\" type=\"text\" name=\"search\" placeholder=\"\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u0430\u0439\u0442\u0443\" required>-->\n<!--          <button class=\"search-form__btn\" type=\"submit\">\u041D\u0430\u0439\u0442\u0438</button>-->\n<!--        </form>-->\n\n<!--        <ul class=\"page-header__user-menu user-menu\">-->\n<!--          <li class=\"user-menu__item\">-->\n<!--            <a class=\"user-menu__link user-menu__link--login\" href=\"#\">\u0412\u043E\u0439\u0442\u0438</a>-->\n<!--          </li>-->\n<!--        </ul>-->\n\n        <ul class=\"page-header__user-actions user-menu\">\n<!--          <li class=\"user-menu__item\">-->\n<!--            <a class=\"user-menu__link user-menu__link--compare\" href=\"#\">\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</a>-->\n<!--          </li>-->\n          <li class=\"user-menu__item\">\n            <a class=\"user-menu__link user-menu__link--cart\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n          </li>\n        </ul>\n\n        <ul class=\"page-header__site-menu site-menu\">\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--dropdown\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n            <div class=\"page-header__catalog-dropdown dropdown\">\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"catalog.html\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a></li>\n              </ul>\n            </div>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--delivery\"\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--warranty\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--contacts\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>\n          </li>\n        </ul>\n      </nav>\n";
                 return _context.abrupt("return", view);
 
               case 2:
@@ -20778,7 +21595,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "\n           <div class=\"page__wrapper\">\n        <div class=\"page-footer__top\">\n          <a class=\"logo\">\n            <img class=\"logo__image\" src=\"img/logo-device-color.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n          </a>\n\n          <ul class=\"page-footer__user-menu user-menu user-menu--contrast\">\n<!--            <li class=\"user-menu__item\">-->\n<!--              <a class=\"user-menu__link user-menu__link--login\" href=\"#\">\u0412\u043E\u0439\u0442\u0438</a>-->\n<!--            </li>-->\n<!--            <li class=\"user-menu__item\">-->\n<!--              <a class=\"user-menu__link user-menu__link--compare\" href=\"#\">\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</a>-->\n<!--            </li>-->\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"cart.html\">\u041C\u041E\u0414\u0410\u041B\u041A\u0410 \u041A\u041E\u0420\u0417\u0418\u041D\u042B</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"product-card.html\">\u041A\u0410\u0420\u0422\u041E\u0427\u041A\u0410 \u0422\u041E\u0412\u0410\u0420\u0410</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--cart\" href=\"#\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n            </li>\n          </ul>\n        </div>\n\n        <div class=\"page-footer__middle\">\n          <p class=\"page-footer__contacts\">\u0433. \u041A\u0438\u0435\u0432, \u041C\u0430\u0439\u0434\u0430\u043D \u041D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438, 1</p>\n<!--          <ul class=\"page-footer__conditions-menu site-menu\">-->\n<!--            <li class=\"site-menu__item\">-->\n<!--              <a class=\"site-menu__link\" href=\"#\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</a>-->\n<!--            </li>-->\n<!--            <li class=\"site-menu__item\">-->\n<!--              <a class=\"site-menu__link\" href=\"#\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</a>-->\n<!--            </li>-->\n<!--            <li class=\"site-menu__item\">-->\n<!--              <a class=\"site-menu__link\" href=\"#\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>-->\n<!--            </li>-->\n<!--          </ul>-->\n          <p class=\"page-footer__contacts\">\u0422\u0435\u043B.: +3 (803) 495-95-95</p>\n        </div>\n\n        <div class=\"page-footer__bottom\">\n          <ul class=\"page-footer__social social\">\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--facebook\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0424\u0435\u0439\u0441\u0431\u0443\u043A\">\n                <span class=\"visually-hidden\">\u0424\u0435\u0439\u0441\u0431\u0443\u043A</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--instagram\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C\">\n                <span class=\"visually-hidden\">\u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--twitter\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0422\u0432\u0438\u0442\u0442\u0435\u0440\">\n                <span class=\"visually-hidden\">\u0422\u0432\u0438\u0442\u0442\u0435\u0440</span>\n              </a>\n            </li>\n          </ul>\n          <a class=\"page-footer__copyright\" href=\"https://htmlacademy.ru/intensive/htmlcss\">\n            <span class=\"visually-hidden\">\u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E:</span>\n            <img class=\"page-footer__copyright-logo\" src=\"img/logo-html.svg\" width=\"27\" height=\"35\" alt=\"HTML Academy\">\n          </a>\n        </div>\n      </div>\n\n    ";
+                view = "\n           <div class=\"page__wrapper\">\n        <div class=\"page-footer__top\">\n          <a class=\"logo\">\n            <img class=\"logo__image\" src=\"img/logo-device-color.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n          </a>\n\n          <ul class=\"page-footer__user-menu user-menu user-menu--contrast\">\n<!--            <li class=\"user-menu__item\">-->\n<!--              <a class=\"user-menu__link user-menu__link--login\" href=\"#\">\u0412\u043E\u0439\u0442\u0438</a>-->\n<!--            </li>-->\n<!--            <li class=\"user-menu__item\">-->\n<!--              <a class=\"user-menu__link user-menu__link--compare\" href=\"#\">\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</a>-->\n<!--            </li>-->\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"cart.html\">\u041C\u041E\u0414\u0410\u041B\u041A\u0410 \u041A\u041E\u0420\u0417\u0418\u041D\u042B</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"product-card.html\">\u041A\u0410\u0420\u0422\u041E\u0427\u041A\u0410 \u0422\u041E\u0412\u0410\u0420\u0410</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"#/order\">\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043A\u0430\u0437\u0430</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--cart\" href=\"#\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n            </li>\n            \n          </ul>\n        </div>\n\n        <div class=\"page-footer__middle\">\n          <p class=\"page-footer__contacts\">\u0433. \u041A\u0438\u0435\u0432, \u041C\u0430\u0439\u0434\u0430\u043D \u041D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438, 1</p>\n<!--          <ul class=\"page-footer__conditions-menu site-menu\">-->\n<!--            <li class=\"site-menu__item\">-->\n<!--              <a class=\"site-menu__link\" href=\"#\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</a>-->\n<!--            </li>-->\n<!--            <li class=\"site-menu__item\">-->\n<!--              <a class=\"site-menu__link\" href=\"#\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</a>-->\n<!--            </li>-->\n<!--            <li class=\"site-menu__item\">-->\n<!--              <a class=\"site-menu__link\" href=\"#\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>-->\n<!--            </li>-->\n<!--          </ul>-->\n          <p class=\"page-footer__contacts\">\u0422\u0435\u043B.: +3 (803) 495-95-95</p>\n        </div>\n\n        <div class=\"page-footer__bottom\">\n          <ul class=\"page-footer__social social\">\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--facebook\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0424\u0435\u0439\u0441\u0431\u0443\u043A\">\n                <span class=\"visually-hidden\">\u0424\u0435\u0439\u0441\u0431\u0443\u043A</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--instagram\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C\">\n                <span class=\"visually-hidden\">\u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--twitter\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0422\u0432\u0438\u0442\u0442\u0435\u0440\">\n                <span class=\"visually-hidden\">\u0422\u0432\u0438\u0442\u0442\u0435\u0440</span>\n              </a>\n            </li>\n          </ul>\n          <a class=\"page-footer__copyright\" href=\"https://htmlacademy.ru/intensive/htmlcss\">\n            <span class=\"visually-hidden\">\u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E:</span>\n            <img class=\"page-footer__copyright-logo\" src=\"img/logo-html.svg\" width=\"27\" height=\"35\" alt=\"HTML Academy\">\n          </a>\n        </div>\n      </div>\n\n    ";
                 return _context.abrupt("return", view);
 
               case 2:
@@ -20822,7 +21639,8 @@
     // List of supported routes. Any url other than these routes will throw a 404 error
     var routes = {
       '/': mainPage,
-      '/catalog': catalogPage // , '/item/:id'      : Item
+      '/catalog': catalogPage,
+      '/order': orderPage // , '/item/:id'      : Item
       // , '/registration'   : Registration
 
     }; // The router code. Takes a URL, checks against the list of supported routes and then renders the corresponding content page.
@@ -20908,5 +21726,5 @@
   // commentForm();
   //products();
 
-}(scrollToElement));
+}());
 //# sourceMappingURL=app.js.map

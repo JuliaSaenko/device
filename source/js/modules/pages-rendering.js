@@ -4,6 +4,7 @@
 
 import mainPage from './main-page';
 import catalogPage from "./catalog";
+import orderPage from "./order-render";
 // import About        from './views/pages/About.js'
 // import Error404     from './views/pages/Error404.js'
 // import PostShow     from './views/pages/PostShow.js'
@@ -22,6 +23,8 @@ const pagesRender = () => {
   const routes = {
     '/'             : mainPage
     , '/catalog'      : catalogPage
+    , '/order'      : orderPage
+
     // , '/item/:id'      : Item
     // , '/registration'   : Registration
   };
