@@ -21323,6 +21323,12 @@
   });
 
   var fillter = (function () {
+    var productList = document.querySelector('.catalog__list');
+    var priceFilter = document.querySelector('.sort__price');
+    var categoryFiltersArray = Array.from(document.querySelectorAll('.category__filter'));
+    var filteredArray = [];
+    var priceFlag = 0;
+
     var requestData =
     /*#__PURE__*/
     function () {
@@ -21370,34 +21376,111 @@
       };
     }();
 
-    var productList = document.querySelector('.catalog__list');
-    var categoryFiltersArray = Array.from(document.querySelectorAll('.category__filter'));
-    var filteredArray = [];
-    categoryFiltersArray.forEach(function (item) {
-      item.addEventListener('click', function (e) {
-        productList.innerHTML = "";
-        categoryFiltersArray.forEach(function (item) {
-          if (item.checked) {
-            requestData().then(function (response) {
-              response.data.forEach(function (product) {
-                if (item.id === product.category) {
-                  filteredArray.push(product);
-                  productList.innerHTML += "\n                                    <li class=\"catalog__item\" data-id = \"".concat(product.category, "\">\n                                        <a class=\"catalog__link\" href=\"#\">\n                                            <h3 class=\"catalog__title\">").concat(product.name, "</h3>\n                                        </a>\n                                        <p class=\"catalog__price\">").concat(product.price, " \u0433\u0440\u043D</p>\n                                        <div class=\"catalog__wrapper\">\n                                            <img class=\"catalog__image\" src=\"").concat(product.img, "\">\n                                            <p class=\"catalog__actions\">\n                                                <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                                                <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                                            </p>\n                                        </div>\n                                    </li>\n                                   ");
-                }
-              });
-            });
-          }
-        });
+    function createProductCard() {
+      filteredArray.forEach(function (item) {
+        productList.innerHTML += "\n            <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                    <h3 class=\"catalog__title\">".concat(item.name, "</h3>\n                </a>\n                <p class=\"catalog__price\">").concat(item.price, " \u0433\u0440\u043D</p>\n                <div class=\"catalog__wrapper\">\n                    <img class=\"catalog__image\" src=\"").concat(item.img, "\">\n                    <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                    </p>\n                </div>\n            </li>\n            ");
       });
-    }); //////////////////////
+    }
 
-    var priceFilter = document.querySelector('.sort__price');
-    priceFilter.addEventListener('click', function (e) {
+    function checkFiltersForChecked(JSONData) {
+      categoryFiltersArray.forEach(function (item) {
+        if (item.checked) {
+          JSONData.data.forEach(function (product) {
+            if (item.id === product.category) {
+              filteredArray.push(product);
+            }
+          });
+        }
+      });
+    }
+
+    function sortArrayByPrice() {
       filteredArray.sort(function (a, b) {
         return a.price - b.price;
       });
-      console.log(filteredArray);
-    });
+    }
+
+    function filterBycategory(JSONData) {
+      categoryFiltersArray.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          productList.innerHTML = '';
+
+          if (categoryFiltersArray.every(function (item) {
+            return !item.checked;
+          })) {
+            filteredArray = JSONData.data.slice();
+          } else {
+            filteredArray = [];
+            checkFiltersForChecked(JSONData);
+          }
+
+          if (priceFlag === 1) {
+            sortArrayByPrice();
+          }
+
+          createProductCard();
+        });
+      });
+    }
+
+    function sortByPrice(JSONData) {
+      priceFilter.addEventListener('click', function (e) {
+        productList.innerHTML = '';
+
+        if (priceFlag === 0) {
+          priceFlag = 1;
+          sortArrayByPrice();
+        } else if (priceFlag === 1) {
+          priceFlag = 0;
+          filteredArray = [];
+
+          if (categoryFiltersArray.every(function (item) {
+            return !item.checked;
+          })) {
+            filteredArray = JSONData.data.slice();
+          } else {
+            checkFiltersForChecked(JSONData);
+          }
+        }
+
+        createProductCard();
+      });
+    }
+
+    var showProducts =
+    /*#__PURE__*/
+    function () {
+      var _ref2 = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee2() {
+        var JSONData;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return requestData();
+
+              case 2:
+                JSONData = _context2.sent;
+                filteredArray = JSONData.data.slice();
+                filterBycategory(JSONData);
+                sortByPrice(JSONData);
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      return function showProducts() {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+
+    showProducts();
   });
 
   var catalogPage = {

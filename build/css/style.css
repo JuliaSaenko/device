@@ -2190,7 +2190,8 @@ body {
   line-height: 18px;
   text-decoration: none;
   color: #000000;
-  opacity: 0.3; }
+  opacity: 0.3;
+  cursor: pointer; }
 
 .sort__type-link[href]:hover,
 .sort__type-link:focus {
