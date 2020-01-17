@@ -1,10 +1,14 @@
 .product-wrapper {
   position: relative;
   display: flex;
-  justify-content: space-around;
-  margin: 0 auto;
+  //justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin: 0 auto 100px;
   padding: 100px 0;
   width: 1250px;
+  //height: 650px;
+  //min-height: 600px;
   //background-color: #efefef;
 
   &::before {
@@ -19,13 +23,21 @@
   }
 }
 
+
+
 .product-card__breadcrumbs {
   margin: 0 auto;
   width: 1150px;
+  padding-top: 44px;
+  padding-bottom: 0;
 }
 
 .product__gallery {
   box-shadow: 0 0 15px 0 rgba(black, 0.5);
+}
+
+.product__gallery.swiper-container {
+  margin: 0;
 }
 
 .product__slider {
@@ -38,6 +50,8 @@
   padding: 0 50px 0 75px;
   display: flex;
   flex-wrap: wrap;
+  max-width: 500px;
+  min-height: 650px;
 }
 
 .product__heading {
@@ -111,6 +125,68 @@
 .product__review-wrapper {
   width: 100%;
 }
+
+.product__description {
+  display: none;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  //width: 500px;
+  //margin-left: auto;
+  margin-right: 50px;
+  padding: 40px 15px 0 115px;
+}
+
+.product__description.show {
+  display: flex;
+}
+
+.product__description-title {
+  display: block;
+  margin: 0 0 30px;
+  padding: 0;
+  font-size: 30px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.product__description-text {
+  width: 50%;
+  display: block;
+  margin: 0 0 15px;
+  padding: 0;
+}
+
+.product__gallery-container {
+  width: 600px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.product__slider-small {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.product__gallery-small {
+  padding-top: 10px;
+  width: 360px;
+  // margin-left: 100px;
+}
+
+.product__slide-small.swiper-slide {
+  width: 100px !important;
+  height: 100px;
+  cursor: pointer;
+  border: 3px solid transparent;
+
+    &:hover {
+      border: 3px solid  #f0c52e;
+    }
+}
+
+
 
 #reviewStars-input {
   margin-top: 9px;
@@ -387,7 +463,3 @@
 .finalPrice-container .confirm-order-btn {
   margin-left: 20px; }
 
-//////ВРЕМЕННО
-.product__slide:not(:first-of-type) {
-  display: none;
-}

@@ -18,6 +18,15 @@
 .site-menu__item {
   margin-right: 34px;
   cursor: pointer;
+
+  &--dropdown {
+    margin-left: 0;
+    margin-right: auto;
+  }
+}
+
+.page-header__site-menu li:last-child.site-menu__item--dropdown {
+  margin-left: 0;
 }
 
 .site-menu__link {
@@ -52,6 +61,7 @@
 
 .site-menu__link--dropdown {
   position: relative;
+  margin-right: auto;
 
   padding-right: 28px;
 }
