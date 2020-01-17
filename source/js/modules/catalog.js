@@ -7,7 +7,7 @@ import products from './products';
 import fillter from './fillter';
 
 let catalogPage = {
-  render : async () => {
+  render: async () => {
     let view = `
     <div class="page__wrapper">
         <h1 class="page__title">Моноподы для селфи</h1>
@@ -84,7 +84,7 @@ let catalogPage = {
                 </div>
               </fieldset>
 
-              <fieldset class="filter__section">
+              <fieldset class="filter__section" id ="category">
                 <legend class="filter__section-title">Категория</legend>
                 <ul class="filter__options filter__category">
                   <li>
@@ -113,22 +113,7 @@ let catalogPage = {
                   </li>
                 </ul>
               </fieldset>
-
-              <fieldset class="filter__section">
-                <legend class="filter__section-title">Bluetooth</legend>
-                <ul class="filter__options">
-                  <li>
-                    <input class="filter__option visually-hidden" id="bluetooth-yes" type="radio" name="bluetooth" value="yes" checked>
-                    <label class="filter__option-label filter__option-label--radio" for="bluetooth-yes">Есть</label>
-                  </li>
-                  <li>
-                    <input class="filter__option visually-hidden" id="bluetooth-no" type="radio" name="bluetooth" value="no">
-                    <label class="filter__option-label filter__option-label--radio" for="bluetooth-no">Нет</label>
-                  </li>
-                </ul>
-              </fieldset>
-
-              <button class="filter__btn btn" type="submit">Показать</button>
+              <div id="brand"></div>
             </form>
           </section>
 

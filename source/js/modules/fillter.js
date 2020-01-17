@@ -1,6 +1,6 @@
 "use strict"
 
-import { async } from "./polyfill";
+import { async, values } from "./polyfill";
 import products from "./products";
 
 export default () => {
@@ -9,13 +9,51 @@ export default () => {
     const categoryFiltersArray = Array.from(document.querySelectorAll('.category__filter'));
     let filteredArray = [];
     let priceFlag = 0;
-    const requestData = async () => {
-        const products = await fetch(`./data/products.json`);
+    const requestData = async (path) => {
+        const products = await fetch(path);
         if (!products.ok) {
             throw new Error(`Can not fetch ${products.url}`)
         }
         const data = await products.json();
         return { data }
+    }
+    async function createBrandFilter() {
+        const brandBlock = document.getElementById('brand');
+        const brands = await requestData(`./data/categories.json`);
+        brandBlock.innerHTML = '';
+        brandBlock.innerHTML += `
+            <fieldset class="filter__section">
+                <legend class="filter__section-title">Бренд</legend>
+                    <ul class="filter__options filter__brand">
+                    </ul>
+                </legend>
+            </fieldset>
+        `;
+        const brandList = document.querySelector('.filter__brand');
+        const brandNames = Object.keys(brands.data);
+        let brandArray = [];
+
+        filteredArray.forEach(item => {
+            if (brandNames.includes(item.category)) {
+                brandArray.push(...brands.data[item.category]);
+            }
+        })
+        brandArray = [... new Set(brandArray)];
+
+        brandList.innerHTML = '';
+        brandArray.forEach(item => {
+            brandList.innerHTML += `
+            <li>
+                <input class="brand__filter filter__option visually-hidden" id="${item}" type="checkbox" name="${item}">
+                <label class="filter__option-label filter__option-label--check" for="${item}">${item}</label>
+            </li>
+        `;
+        })
+    }
+    function hideBrandFilter() {
+        const brandFilter = document.getElementById('brand');
+        // brandFilter.hide()
+        brandFilter.innerHTML = '';
     }
     function createProductCard() {
         filteredArray.forEach(item => {
@@ -50,26 +88,28 @@ export default () => {
     function sortArrayByPrice() {
         filteredArray.sort((a, b) => a.price - b.price);
     }
-    function filterBycategory(JSONData){
+    function filterBycategory(JSONData) {
         categoryFiltersArray.forEach(item => {
             item.addEventListener('click', e => {
                 productList.innerHTML = '';
 
                 if (categoryFiltersArray.every(item => !item.checked)) {
                     filteredArray = JSONData.data.slice();
+                    hideBrandFilter();
                 } else {
                     filteredArray = [];
-                    checkFiltersForChecked(JSONData)
+                    checkFiltersForChecked(JSONData);
+                    createBrandFilter(JSONData.data);
                 }
 
-                if(priceFlag === 1) {
+                if (priceFlag === 1) {
                     sortArrayByPrice();
                 }
                 createProductCard();
             })
         })
     }
-    function sortByPrice(JSONData){
+    function sortByPrice(JSONData) {
         priceFilter.addEventListener('click', e => {
             productList.innerHTML = '';
 
@@ -91,10 +131,10 @@ export default () => {
         });
     }
     const showProducts = async () => {
-        let JSONData = await requestData();
+        let JSONData = await requestData(`./data/products.json`);
         filteredArray = JSONData.data.slice();
         filterBycategory(JSONData);
         sortByPrice(JSONData);
     }
-    showProducts()
+    showProducts();
 }

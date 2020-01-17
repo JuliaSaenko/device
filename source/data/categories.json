@@ -1,0 +1,8 @@
+{
+    "actionCamera" : ["sony", "gopro", "airon"],
+    "fitnessTracker" : ["xiaomi" , "apple"],
+    "quadrocopters" : ["quadrosport", "futuregen", "flyingbeasts"],
+    "selfieSticks" : ["superpods"],
+    "watches" : ["apple", "samsung"],
+    "vr" : ["sony", "fibrum", "htc"]
+}
