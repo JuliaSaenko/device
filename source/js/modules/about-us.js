@@ -50,19 +50,16 @@ export default () => {
 
       if (!formName.value.match(nameValidate)) {
         contactFormPopup.classList.add(errorClass);
-        console.log(1);
         valid = false;
       }
 
       if (!formEmail.value.match(emailValidate)) {
         contactFormPopup.classList.add(errorClass);
-        console.log(2);
         valid = false;
       }
 
       if(!form.elements.contactMessage.value) {
         contactFormPopup.classList.add(errorClass);
-        console.log(3);
         valid = false;
       }
 
@@ -73,7 +70,6 @@ export default () => {
         evt.preventDefault();
         showContactFormPopup();
       });
-
 
   }
 

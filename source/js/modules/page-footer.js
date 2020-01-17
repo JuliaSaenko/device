@@ -8,37 +8,17 @@ let pageFooter = {
           </a>
 
           <ul class="page-footer__user-menu user-menu user-menu--contrast">
-<!--            <li class="user-menu__item">-->
-<!--              <a class="user-menu__link user-menu__link--login" href="#">Войти</a>-->
-<!--            </li>-->
-<!--            <li class="user-menu__item">-->
-<!--              <a class="user-menu__link user-menu__link--compare" href="#">Сравнить</a>-->
-<!--            </li>-->
             <li class="user-menu__item">
-              <a class="user-menu__link user-menu__link--product" href="cart.html">МОДАЛКА КОРЗИНЫ</a>
+              <a class="user-menu__link user-menu__link--product" href="/#/test-card-page">КАРТОЧКА ТОВАРА</a>
             </li>
             <li class="user-menu__item">
-              <a class="user-menu__link user-menu__link--product" href="product-card.html">КАРТОЧКА ТОВАРА</a>
-            </li>
-            <li class="user-menu__item">
-              <a class="user-menu__link user-menu__link--cart" href="#">Корзина</a>
+              <a class="user-menu__link user-menu__link--cart" href="/#/cart">Корзина</a>
             </li>
           </ul>
         </div>
 
         <div class="page-footer__middle">
           <p class="page-footer__contacts">г. Киев, Майдан Независимости, 1</p>
-<!--          <ul class="page-footer__conditions-menu site-menu">-->
-<!--            <li class="site-menu__item">-->
-<!--              <a class="site-menu__link" href="#">Доставка</a>-->
-<!--            </li>-->
-<!--            <li class="site-menu__item">-->
-<!--              <a class="site-menu__link" href="#">Гарантия</a>-->
-<!--            </li>-->
-<!--            <li class="site-menu__item">-->
-<!--              <a class="site-menu__link" href="#">Контакты</a>-->
-<!--            </li>-->
-<!--          </ul>-->
           <p class="page-footer__contacts">Тел.: +3 (803) 495-95-95</p>
         </div>
 

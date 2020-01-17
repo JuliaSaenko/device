@@ -16,6 +16,18 @@ export const showSuccessMassage = (messageHeading, messageText) => {
     });
   };
 
+export const hideSection = (section) => {
+  section.classList.remove(showClass);
+};
+
+export const showSection = (section) => {
+  section.classList.add(showClass);
+};
+
+export const toggleShowClass = (section) => {
+  section.classList.toggle(showClass);
+};
+
  const urlUtils = {
   // --------------------------------
   //  Parse a url and break it into resource, id and verb

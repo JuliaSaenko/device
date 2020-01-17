@@ -4,13 +4,13 @@
 
 import mainPage from './main-page';
 import catalogPage from "./catalog";
+import testCardPage from './testCardPage';
 // import About        from './views/pages/About.js'
 // import Error404     from './views/pages/Error404.js'
 // import PostShow     from './views/pages/PostShow.js'
 // import Register     from './views/pages/Register.js'
 
 import Error404     from './error404';
-
 import pageHeader       from './page-header';
 import pageFooter    from './page-footer';
 
@@ -20,14 +20,13 @@ const pagesRender = () => {
   // List of supported routes. Any url other than these routes will throw a 404 error
 
   const routes = {
-    '/'             : mainPage
-    , '/catalog'      : catalogPage
+    '/' : mainPage,
+    '/catalog': catalogPage,
+    //'/cart' : cartPage,
     // , '/item/:id'      : Item
     // , '/registration'   : Registration
+    '/test-card-page': testCardPage
   };
-
-
-
 
 
 // The router code. Takes a URL, checks against the list of supported routes and then renders the corresponding content page.
