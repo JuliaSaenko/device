@@ -21353,6 +21353,7 @@
     var priceFilter = document.querySelector('.sort__price');
     var categoryFiltersArray = Array.from(document.querySelectorAll('.category__filter'));
     var filteredArray = [];
+    var brandFilteredArray = [];
     var priceFlag = 0;
 
     var requestData =
@@ -21401,6 +21402,36 @@
         return _ref.apply(this, arguments);
       };
     }();
+    //////////
+
+
+    function addListenerOnBrands() {
+      var brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
+      brandFiltersArray.forEach(function (brand) {
+        brand.addEventListener('click', function (e) {
+          productList.innerHTML = '';
+
+          if (brand.checked) {
+            brandFilteredArray.push.apply(brandFilteredArray, _toConsumableArray(filteredArray.filter(function (item) {
+              return item.brand === brand.id;
+            })));
+          } else if (!brand.checked) {
+            brandFilteredArray.forEach(function (item) {
+              if (brand.id === item.brand) {
+                var index = brandFilteredArray.indexOf(item);
+                console.log(index);
+                brandFilteredArray.splice(index, 1); //remove(brandFilteredArray, index);
+                //console.log(index);
+                // brandFilteredArray.splice(index, 1);
+              } // brandFilteredArray.splice(index, 1);
+
+            });
+          }
+
+          createProductCard(brandFilteredArray);
+        });
+      });
+    }
 
     function createBrandFilter() {
       return _createBrandFilter.apply(this, arguments);
@@ -21438,8 +21469,9 @@
                 brandArray.forEach(function (item) {
                   brandList.innerHTML += "\n            <li>\n                <input class=\"brand__filter filter__option visually-hidden\" id=\"".concat(item, "\" type=\"checkbox\" name=\"").concat(item, "\">\n                <label class=\"filter__option-label filter__option-label--check\" for=\"").concat(item, "\">").concat(item, "</label>\n            </li>\n        ");
                 });
+                addListenerOnBrands();
 
-              case 13:
+              case 14:
               case "end":
                 return _context3.stop();
             }
@@ -21450,13 +21482,12 @@
     }
 
     function hideBrandFilter() {
-      var brandFilter = document.getElementById('brand'); // brandFilter.hide()
-
+      var brandFilter = document.getElementById('brand');
       brandFilter.innerHTML = '';
     }
 
-    function createProductCard() {
-      filteredArray.forEach(function (item) {
+    function createProductCard(array) {
+      array.forEach(function (item) {
         productList.innerHTML += "\n            <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                    <h3 class=\"catalog__title\">".concat(item.name, "</h3>\n                </a>\n                <p class=\"catalog__price\">").concat(item.price, " \u0433\u0440\u043D</p>\n                <div class=\"catalog__wrapper\">\n                    <img class=\"catalog__image\" src=\"").concat(item.img, "\">\n                    <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                    </p>\n                </div>\n            </li>\n            ");
       });
     }
@@ -21499,7 +21530,7 @@
             sortArrayByPrice();
           }
 
-          createProductCard();
+          createProductCard(filteredArray);
         });
       });
     }
@@ -21524,7 +21555,7 @@
           }
         }
 
-        createProductCard();
+        createProductCard(filteredArray);
       });
     }
 
