@@ -56,10 +56,6 @@
     }
 }
 
-.btn:active {
-  color: rgba(0, 0, 0, 0.3);
-}
-
 .btn:focus,
 .btn:active {
   outline: none;
@@ -85,8 +81,7 @@
   transition: all 0.1s ease-in-out;
 }
 
-.btn:hover::before,
-.btn:focus::before {
+.btn:hover::before{
   top: 0;
 
   height: 100%;

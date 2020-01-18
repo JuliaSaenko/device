@@ -21101,6 +21101,15 @@
       successMessage.classList.remove(showClass);
     });
   };
+  var hideSection = function hideSection(section) {
+    section.classList.remove(showClass);
+  };
+  var showSection = function showSection(section) {
+    section.classList.add(showClass);
+  };
+  var toggleShowClass = function toggleShowClass(section) {
+    section.classList.toggle(showClass);
+  };
   var urlUtils = {
     // --------------------------------
     //  Parse a url and break it into resource, id and verb
@@ -21172,19 +21181,16 @@
 
         if (!formName.value.match(nameValidate)) {
           contactFormPopup.classList.add(errorClass);
-          console.log(1);
           valid = false;
         }
 
         if (!formEmail.value.match(emailValidate)) {
           contactFormPopup.classList.add(errorClass);
-          console.log(2);
           valid = false;
         }
 
         if (!form.elements.contactMessage.value) {
           contactFormPopup.classList.add(errorClass);
-          console.log(3);
           valid = false;
         }
 
@@ -21255,6 +21261,234 @@
     }()
   };
 
+  var products = (function () {
+    var productList = document.querySelector('.catalog__list');
+
+    var requestData =
+    /*#__PURE__*/
+    function () {
+      var _ref = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        var products, data;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return fetch("./data/products.json");
+
+              case 2:
+                products = _context.sent;
+
+                if (products.ok) {
+                  _context.next = 5;
+                  break;
+                }
+
+                throw new Error("Can not fetch ".concat(products.url));
+
+              case 5:
+                _context.next = 7;
+                return products.json();
+
+              case 7:
+                data = _context.sent;
+                return _context.abrupt("return", {
+                  data: data
+                });
+
+              case 9:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function requestData() {
+        return _ref.apply(this, arguments);
+      };
+    }();
+
+    var showData = function showData() {
+      requestData().then(function (response) {
+        createCards(response);
+      })["catch"](function (error) {
+        productList.innerHTML = "\n        <p class = \"item__error\">\n            Too many requests, try again in 1 minute...\n        </p>\n        ";
+      });
+    };
+
+    function createCards(response) {
+      response.data.forEach(function (item) {
+        productList.innerHTML += "\n        <li class=\"catalog__item\">\n            <a class=\"catalog__link\" href=\"#\">\n                <h3 class=\"catalog__title\">".concat(item.name, "</h3>\n            </a>\n            <p class=\"catalog__price\">").concat(item.price, " \u0433\u0440\u043D</p>\n            <div class=\"catalog__wrapper\">\n                <img class=\"catalog__image\" src=\"").concat(item.img, "\">\n                <p class=\"catalog__actions\">\n                <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                </p>\n            </div>\n        </li>\n        ");
+      });
+    }
+
+    showData();
+  });
+
+  var fillter = (function () {
+    var productList = document.querySelector('.catalog__list');
+    var priceFilter = document.querySelector('.sort__price');
+    var categoryFiltersArray = Array.from(document.querySelectorAll('.category__filter'));
+    var filteredArray = [];
+    var priceFlag = 0;
+
+    var requestData =
+    /*#__PURE__*/
+    function () {
+      var _ref = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        var products, data;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return fetch("./data/products.json");
+
+              case 2:
+                products = _context.sent;
+
+                if (products.ok) {
+                  _context.next = 5;
+                  break;
+                }
+
+                throw new Error("Can not fetch ".concat(products.url));
+
+              case 5:
+                _context.next = 7;
+                return products.json();
+
+              case 7:
+                data = _context.sent;
+                return _context.abrupt("return", {
+                  data: data
+                });
+
+              case 9:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function requestData() {
+        return _ref.apply(this, arguments);
+      };
+    }();
+
+    function createProductCard() {
+      filteredArray.forEach(function (item) {
+        productList.innerHTML += "\n            <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                    <h3 class=\"catalog__title\">".concat(item.name, "</h3>\n                </a>\n                <p class=\"catalog__price\">").concat(item.price, " \u0433\u0440\u043D</p>\n                <div class=\"catalog__wrapper\">\n                    <img class=\"catalog__image\" src=\"").concat(item.img, "\">\n                    <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                    </p>\n                </div>\n            </li>\n            ");
+      });
+    }
+
+    function checkFiltersForChecked(JSONData) {
+      categoryFiltersArray.forEach(function (item) {
+        if (item.checked) {
+          JSONData.data.forEach(function (product) {
+            if (item.id === product.category) {
+              filteredArray.push(product);
+            }
+          });
+        }
+      });
+    }
+
+    function sortArrayByPrice() {
+      filteredArray.sort(function (a, b) {
+        return a.price - b.price;
+      });
+    }
+
+    function filterBycategory(JSONData) {
+      categoryFiltersArray.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          productList.innerHTML = '';
+
+          if (categoryFiltersArray.every(function (item) {
+            return !item.checked;
+          })) {
+            filteredArray = JSONData.data.slice();
+          } else {
+            filteredArray = [];
+            checkFiltersForChecked(JSONData);
+          }
+
+          if (priceFlag === 1) {
+            sortArrayByPrice();
+          }
+
+          createProductCard();
+        });
+      });
+    }
+
+    function sortByPrice(JSONData) {
+      priceFilter.addEventListener('click', function (e) {
+        productList.innerHTML = '';
+
+        if (priceFlag === 0) {
+          priceFlag = 1;
+          sortArrayByPrice();
+        } else if (priceFlag === 1) {
+          priceFlag = 0;
+          filteredArray = [];
+
+          if (categoryFiltersArray.every(function (item) {
+            return !item.checked;
+          })) {
+            filteredArray = JSONData.data.slice();
+          } else {
+            checkFiltersForChecked(JSONData);
+          }
+        }
+
+        createProductCard();
+      });
+    }
+
+    var showProducts =
+    /*#__PURE__*/
+    function () {
+      var _ref2 = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee2() {
+        var JSONData;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return requestData();
+
+              case 2:
+                JSONData = _context2.sent;
+                filteredArray = JSONData.data.slice();
+                filterBycategory(JSONData);
+                sortByPrice(JSONData);
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      return function showProducts() {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+
+    showProducts();
+  });
+
   var catalogPage = {
     render: function () {
       var _render = _asyncToGenerator(
@@ -21265,7 +21499,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "\n    <div class=\"page__wrapper\">\n        <h1 class=\"page__title\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</h1>\n\n        <ul class=\"page__breadcrumbs breadcrumbs\">\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"index.html\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"catalog.html\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a>\n          </li>\n        </ul>\n      </div>\n\n      <div class=\"catalog-columns--header\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <p class=\"catalog-columns__narrow catalog-columns__title\">\u0424\u0438\u043B\u044C\u0442\u0440:</p>\n\n          <section class=\"catalog-columns__wide sort\">\n            <h2 class=\"catalog-columns__title sort__title\">\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:</h2>\n            <ul class=\"sort__type-list\">\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link sort__type-link--current\">\u041F\u043E \u0446\u0435\u043D\u0435</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u0442\u0438\u043F\u0443</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438</a>\n              </li>\n            </ul>\n            <ul class=\"sort__order-list\">\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--up\" href=\"#\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--down sort__order-link--current\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n            </ul>\n          </section>\n        </div>\n      </div>\n\n      <div class=\"catalog-columns\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <section class=\"catalog-columns__narrow filter\">\n            <h2 class=\"visually-hidden\">\u0424\u0438\u043B\u044C\u0442\u0440 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n            <form class=\"filter__form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C</legend>\n                <div class=\"filter__range range\">\n                  <div class=\"range__selected\"></div>\n                  <button class=\"range__slider range__slider--min\" type=\"button\" aria-label=\"\u041E\u0442\">\n                    <span class=\"range__label range__label--min\">\u043E\u0442 0</span>\n                  </button>\n                  <button class=\"range__slider range__slider--max\" type=\"button\" aria-label=\"\u0414\u043E\">\n                    <span class=\"range__label range__label--max\">\u0434\u043E 5000</span>\n                  </button>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_min\" value=\"0\">\n                  </label>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_max\" value=\"5000\">\n                  </label>\n                </div>\n              </fieldset>\n\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u0426\u0432\u0435\u0442</legend>\n                <ul class=\"filter__options\">\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-black\" type=\"checkbox\" name=\"color_black\" checked>\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-black\">\u0427\u0435\u0440\u043D\u044B\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-white\" type=\"checkbox\" name=\"color_white\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-white\">\u0411\u0435\u043B\u044B\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-blue\" type=\"checkbox\" name=\"color_blue\" checked>\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-blue\">\u0421\u0438\u043D\u0438\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-red\" type=\"checkbox\" name=\"color_red\" checked>\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-red\">\u041A\u0440\u0430\u0441\u043D\u044B\u0439</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"color-pink\" type=\"checkbox\" name=\"color_pink\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"color-pink\">\u0420\u043E\u0437\u043E\u0432\u044B\u0439</label>\n                  </li>\n                </ul>\n              </fieldset>\n\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">Bluetooth</legend>\n                <ul class=\"filter__options\">\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"bluetooth-yes\" type=\"radio\" name=\"bluetooth\" value=\"yes\" checked>\n                    <label class=\"filter__option-label filter__option-label--radio\" for=\"bluetooth-yes\">\u0415\u0441\u0442\u044C</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"bluetooth-no\" type=\"radio\" name=\"bluetooth\" value=\"no\">\n                    <label class=\"filter__option-label filter__option-label--radio\" for=\"bluetooth-no\">\u041D\u0435\u0442</label>\n                  </li>\n                </ul>\n              </fieldset>\n\n              <button class=\"filter__btn btn\" type=\"submit\">\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C</button>\n            </form>\n          </section>\n\n          <section class=\"catalog-columns__wide catalog\">\n            <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433</h2>\n            <ul class=\"catalog__list\">\n              <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u041B\u044E\u0431\u0438\u0442\u0435\u043B\u044C\u0441\u043A\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430</h3>\n                </a>\n                <p class=\"catalog__price\">5500 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-1.jpg\" width=\"360\" height=\"380\" alt=\"\u041B\u044E\u0431\u0438\u0442\u0435\u043B\u044C\u0441\u043A\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n              <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F<br> \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430</h3>\n                </a>\n                <p class=\"catalog__price\">1 500 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-2.jpg\" width=\"360\" height=\"380\" alt=\"\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n              <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u041D\u0435\u043F\u043E\u0442\u043E\u043F\u043B\u044F\u0435\u043C\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430</h3>\n                </a>\n                <p class=\"catalog__price\">2 500 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-3.jpg\" width=\"360\" height=\"380\" alt=\"\u041D\u0435\u043F\u043E\u0442\u043E\u043F\u043B\u044F\u0435\u043C\u0430\u044F \u0441\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n              <li class=\"catalog__item catalog__item--new\">\n                <a class=\"catalog__link\" href=\"#\">\n                  <h3 class=\"catalog__title\">\u0421\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430 \xAB\u0421\u043B\u0435\u0434\u0443\u0439 \u0437\u0430 \u043C\u043D\u043E\u0439\xBB</h3>\n                </a>\n                <p class=\"catalog__price\">4 900 \u0440\u0443\u0431.</p>\n                <div class=\"catalog__wrapper\">\n                  <img class=\"catalog__image\" src=\"img/product-4.jpg\" width=\"360\" height=\"380\" alt=\"\u0421\u0435\u043B\u0444\u0438-\u043F\u0430\u043B\u043A\u0430 \xAB\u0421\u043B\u0435\u0434\u0443\u0439 \u0437\u0430 \u043C\u043D\u043E\u0439\xBB\">\n                  <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                  </p>\n                </div>\n              </li>\n            </ul>\n\n            <div class=\"pagination\">\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--back\">\u041D\u0430\u0437\u0430\u0434</a>\n              </div>\n              <ul class=\"pagination__list\">\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page pagination__link--current\">1</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">2</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">3</a>\n                </li>\n              </ul>\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--next\" href=\"#\">\u0412\u043F\u0435\u0440\u0435\u0434</a>\n              </div>\n            </div>\n          </section>\n        </div>\n      </div>\n    ";
+                view = "\n    <div class=\"page__wrapper\">\n        <h1 class=\"page__title\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</h1>\n        <ul class=\"page__breadcrumbs breadcrumbs\">\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"index.html\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"catalog.html\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a>\n          </li>\n        </ul>\n      </div>\n      <div class=\"catalog-columns--header\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <p class=\"catalog-columns__narrow catalog-columns__title\">\u0424\u0438\u043B\u044C\u0442\u0440:</p>\n          <section class=\"catalog-columns__wide sort\">\n            <h2 class=\"catalog-columns__title sort__title\">\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:</h2>\n            <ul class=\"sort__type-list\">\n              <li class=\"sort__type-item sort__price\">\n                <a class=\"sort__type-link sort__type-link--current\">\u041F\u043E \u0446\u0435\u043D\u0435</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u0442\u0438\u043F\u0443</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438</a>\n              </li>\n            </ul>\n            <ul class=\"sort__order-list\">\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--up\" href=\"#\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--down sort__order-link--current\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n            </ul>\n          </section>\n        </div>\n      </div>\n      <div class=\"catalog-columns\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <section class=\"catalog-columns__narrow filter\">\n            <h2 class=\"visually-hidden\">\u0424\u0438\u043B\u044C\u0442\u0440 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n            <form class=\"filter__form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C</legend>\n                <div class=\"filter__range range\">\n                  <div class=\"range__selected\"></div>\n                  <button class=\"range__slider range__slider--min\" type=\"button\" aria-label=\"\u041E\u0442\">\n                    <span class=\"range__label range__label--min\">\u043E\u0442 0</span>\n                  </button>\n                  <button class=\"range__slider range__slider--max\" type=\"button\" aria-label=\"\u0414\u043E\">\n                    <span class=\"range__label range__label--max\">\u0434\u043E 5000</span>\n                  </button>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_min\" value=\"0\">\n                  </label>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_max\" value=\"5000\">\n                  </label>\n                </div>\n              </fieldset>\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F</legend>\n                <ul class=\"filter__options filter__category\">\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"actionCamera\" type=\"checkbox\" name=\"actionCamera\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"actionCamera\">\u042D\u043A\u0448\u043D \u043A\u0430\u043C\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"fitnessTracker\" type=\"checkbox\" name=\"fitnessTracker\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"fitnessTracker\">\u0424\u0438\u0442\u043D\u0435\u0441 \u0442\u0440\u0435\u043A\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"quadrocopters\" type=\"checkbox\" name=\"quadrocopters\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"quadrocopters\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"selfieSticks\" type=\"checkbox\" name=\"selfieSticks\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"selfieSticks\">\u0421\u0435\u043B\u0444\u0438 \u043F\u0430\u043B\u043A\u0438</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"watches\" type=\"checkbox\" name=\"watches\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"watches\">\u0427\u0430\u0441\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"vr\" type=\"checkbox\" name=\"vr\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"vr\">VR/AR</label>\n                  </li>\n                </ul>\n              </fieldset>\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">Bluetooth</legend>\n                <ul class=\"filter__options\">\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"bluetooth-yes\" type=\"radio\" name=\"bluetooth\" value=\"yes\" checked>\n                    <label class=\"filter__option-label filter__option-label--radio\" for=\"bluetooth-yes\">\u0415\u0441\u0442\u044C</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"bluetooth-no\" type=\"radio\" name=\"bluetooth\" value=\"no\">\n                    <label class=\"filter__option-label filter__option-label--radio\" for=\"bluetooth-no\">\u041D\u0435\u0442</label>\n                  </li>\n                </ul>\n              </fieldset>\n              <button class=\"filter__btn btn\" type=\"submit\">\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C</button>\n            </form>\n          </section>\n          <section class=\"catalog-columns__wide catalog\">\n            <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433</h2>\n            <ul class=\"catalog__list\">\n            </ul>\n            <div class=\"pagination\">\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--back\">\u041D\u0430\u0437\u0430\u0434</a>\n              </div>\n              <ul class=\"pagination__list\">\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page pagination__link--current\">1</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">2</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">3</a>\n                </li>\n              </ul>\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--next\" href=\"#\">\u0412\u043F\u0435\u0440\u0435\u0434</a>\n              </div>\n            </div>\n          </section>\n        </div>\n      </div>\n    ";
                 return _context.abrupt("return", view);
 
               case 2:
@@ -21290,6 +21524,10 @@
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
+                products();
+                fillter();
+
+              case 2:
               case "end":
                 return _context2.stop();
             }
@@ -21482,6 +21720,93 @@
     }()
   };
 
+  var productSlider = (function () {
+    var productLargeSlider = document.querySelector('.product__gallery');
+    var productSmallSlider = document.querySelector(".product__gallery-small");
+
+    if (productLargeSlider) {
+      var galleryThumbs = new swiper(productSmallSlider, {
+        spaceBetween: 20,
+        slidesPerView: 3,
+        freeMode: true,
+        watchSlidesVisibility: true,
+        watchSlidesProgress: true
+      });
+      var galleryTop = new swiper(productLargeSlider, {
+        slidesPerView: 1,
+        // navigation: {
+        //   nextEl: '.swiper-button-next',
+        //   prevEl: '.swiper-button-prev',
+        // },
+        thumbs: {
+          swiper: galleryThumbs
+        }
+      });
+    }
+  });
+
+  var testCardPage = {
+    render: function () {
+      var _render = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        var view;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                view =
+                /*html*/
+                "\n           <div class=\"product-card-wrapper\">\n   <ul class=\"page__breadcrumbs breadcrumbs product-card__breadcrumbs\">\n     <li class=\"breadcrumbs__item\"><a class=\"breadcrumbs__link\"  href=\"/#/main\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a></li>\n     <li class=\"breadcrumbs__item\"><a class=\"breadcrumbs__link\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a></li>\n     <li class=\"breadcrumbs__item\"><a class=\"breadcrumbs__link\" href=\"#\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li> <!-- \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A \u0444\u0438\u043B\u044C\u0442\u0440\u0430\u0446\u0438\u0438 -->\n     <li class=\"breadcrumbs__item\">Beike QZSD Q999H</li>\n    </ul>\n\n  <div class=\"product-wrapper\">\n    <button type=\"button\" class=\"product__close btn--close\"><span class=\"visually-hidden\">\u0437\u0430\u043A\u0440\u044B\u0442\u044C</span></button>\n    <div class=\"product__gallery-container\">\n       <div class=\"product__gallery gallery-top swiper-container\">\n          <ul class=\"product__slider swiper-wrapper\">\n            <li class=\"product__slide swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-l.jpg\" width=\"600\" height=\"600\"></li>\n            <li class=\"product__slide swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-2-l.jpg\" width=\"600\" height=\"600\"></li>\n            <li class=\"product__slide swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-3-l.jpg\" width=\"600\" height=\"600\"></li>\n          </ul>\n       </div>\n       <div class=\"product__gallery-small swiper-container gallery-thumbs\">\n          <ul class=\"product__slider-small swiper-wrapper\">\n            <li class=\"product__slide-small swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-s.jpg\" width=\"100\" height=\"100\"></li>\n            <li class=\"product__slide-small swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-2-s.jpg\" width=\"100\" height=\"100\"></li>\n            <li class=\"product__slide-small swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-3-s.jpg\" width=\"100\" height=\"100\"></li>\n          </ul>\n        </div>\n      </div>\n      <div class=\"product__info\">\n        <div class=\"product__heading\">\n          <h1 class=\"product__title\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434 Beike QZSD Q999H</h1>\n          <p class=\"product__art\">\u0410\u0440\u0442\u0438\u043A\u0443\u043B: <span id=\"product-article\">#12345</span></p>\n          <div id=\"reviewStars-input\">\n            <input class=\"stars-rait\" type=\"checkbox\" id=\"st1\" value=\"1\">\n            <label for=\"st1\"></label>\n            <input class=\"stars-rait\" type=\"checkbox\" id=\"st2\" value=\"2\">\n            <label for=\"st2\"></label>\n            <input class=\"stars-rait\" type=\"checkbox\" id=\"st3\" value=\"3\">\n            <label for=\"st3\"></label>\n            <input class=\"stars-rait\" type=\"checkbox\" id=\"st4\" value=\"4\">\n            <label for=\"st4\"></label>\n            <input class=\"stars-rait\" type=\"checkbox\" id=\"st5\" value=\"5\">\n            <label for=\"st5\"></label>\n          </div>\n        </div>\n\n        <div class=\"product__about\">\n          <div class=\"product__price-wrapper inner-order-content\">\n            <p class=\"product__price price-title\">\u0426\u0435\u043D\u0430: <span id=\"productPrice\">$ 1000</span></p>\n          </div>\n          <button class=\"product__btn-buy main-buy-btn btn\">\uD83D\uDED2\u041A\u0443\u043F\u0438\u0442\u044C</button>\n          <div class=\"product__delivery-info\">\n            <p>\u041E\u0441\u0442\u0430\u043B\u043E\u0441\u044C \u0432 \u043D\u0430\u043B\u0438\u0447\u0438\u0438: 2</p>\n          </div>\n        </div>\n        <div class=\"product__brns\">\n          <button class=\"product__brn product__brn--description btn\">\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435</button>\n          <button class=\"product__brn product__brn--review btn\">\u041E\u0442\u0437\u044B\u0432\u044B</button>\n        </div>\n        <div class=\"product__review-wrapper\">\n          <a class=\"product__review\" id=\"feedback\">\u041E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043E\u0442\u0437\u044B\u0432</a>\n        </div>\n      </div>\n     <div class=\"product__description\">\n        <h2 class=\"product__description-title\">\u0420\u0430\u0441\u0448\u0438\u0440\u044F\u044E\u0449\u0438\u0439\u0441\u044F \u0433\u0438\u0434\u0440\u043E\u0434\u0438\u043D\u0430\u043C\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0443\u0434\u0430\u0440</h2>\n        <p class=\"product__description-text\">\n          \u041F\u0440\u0438\u0437\u043C\u0430 \u044D\u043A\u0441\u043F\u0435\u0440\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u043E \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u0443\u0435\u043C\u0430. \u0412 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0438 \u0441 \u043F\u0440\u0438\u043D\u0446\u0438\u043F\u043E\u043C \u043D\u0435\u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438, \u043F\u043B\u0430\u0437\u043C\u0435\u043D\u043D\u043E\u0435\n          \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u043A\u043E\u0433\u0435\u0440\u0435\u043D\u0442\u043D\u043E.\n          \u0412\u0435\u0449\u0435\u0441\u0442\u0432\u043E, \u0432\u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u0435 \u043A\u0432\u0430\u043D\u0442\u043E\u0432\u043E\u0433\u043E \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0430 \u044F\u0432\u043B\u0435\u043D\u0438\u044F, \u0437\u0435\u0440\u043A\u0430\u043B\u044C\u043D\u043E. \u041C\u043D\u043E\u0433\u043E\u0447\u0438\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0440\u0430\u0441\u0447\u0435\u0442\u044B \u043F\u0440\u0435\u0434\u0441\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442, \u0430\n          \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442, \u0447\u0442\u043E \u0433\u043E\u043C\u043E\u0433\u0435\u043D\u043D\u0430\u044F \u0441\u0440\u0435\u0434\u0430 \u0437\u0435\u0440\u043A\u0430\u043B\u044C\u043D\u043E \u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043A\u0432\u0430\u043D\u0442\u043E\u0432\u044B\u0439 \u0444\u043E\u0442\u043E\u043D.\n        </p>\n        <p class=\"product__description-text\">\n          \u0413\u0430\u043B\u0430\u043A\u0442\u0438\u043A\u0430 \u0441\u0436\u0438\u043C\u0430\u0435\u0442 \u0444\u043E\u0442\u043E\u043D.\n          \u041A\u0430\u043A \u043B\u0435\u0433\u043A\u043E \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0438\u0437 \u0441\u0430\u043C\u044B\u0445 \u043E\u0431\u0449\u0438\u0445 \u0441\u043E\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439, \u043F\u043E\u0432\u0435\u0440\u0445\u043D\u043E\u0441\u0442\u044C \u0438\u0437\u043E\u0442\u0435\u0440\u043C\u0438\u0447\u043D\u043E \u0438\u0441\u043A\u0430\u0436\u0430\u0435\u0442 \u0432\u0437\u0440\u044B\n          \u0412\u043E\u0437\u043C\u0443\u0449\u0435\u043D\u0438\u0435 \u043F\u043B\u043E\u0442\u043D\u043E\u0441\u0442\u0438, \u043A\u0430\u043A \u0442\u043E\u0433\u043E \u0442\u0440\u0435\u0431\u0443\u044E\u0442 \u0437\u0430\u043A\u043E\u043D\u044B \u0442\u0435\u0440\u043C\u043E\u0434\u0438\u043D\u0430\u043C\u0438\u043A\u0438, \u0440\u0430\u0441\u0442\u044F\u0433\u0438\u0432\u0430\u0435\u0442 \u0444\u043E\u0442\u043E\u043D. \u041C\u0438\u0448\u0435\u043D\u044C, \u0432 \u0440\u0430\u043C\u043A\u0430\u0445\n          \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439 \u043A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043C\u0435\u0445\u0430\u043D\u0438\u043A\u0438, \u0442\u0440\u0430\u043D\u0441\u0444\u043E\u0440\u043C\u0438\u0440\u0443\u0435\u0442 \u043F\u043E\u0442\u043E\u043A \u043F\u0440\u0438\n          \u043B\u044E\u0431\u043E\u043C \u0430\u0433\u0440\u0435\u0433\u0430\u0442\u043D\u043E\u043C \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0438 \u0441\u0440\u0435\u0434\u044B \u0432\u0437\u0430\u0438\u043C\u043E\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F.\n        </p>\n      </div>\n      <div class=\"products__reviews reviews\">\n       <ul class=\"reviews__list\">\n        <li class=\"reviews__item\">\n          <div class=\"reviews__heading\">\n            <b class=\"reviews__author\">\u041A\u043E\u043D\u0441\u0442\u0430\u043D\u0442\u0438\u043D \u041A\u043E\u043D\u0441\u0442\u0430\u043D\u0442\u0438\u043D\u043E\u043F\u043E\u043B\u044C\u0441\u043A\u0438\u0439</b>\n            <p class=\"reviews__publication\">\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E <span class=\"reviews__time\">20 \u0430\u043F\u0440\u0435\u043B\u044F 2019</span></p>\n          </div>\n          <div class=\"review__content\">\n              <blockquote>\n                \u0418\u0437\u043B\u0443\u0447\u0435\u043D\u0438\u0435 \u043E\u0431\u043B\u0443\u0447\u0430\u0435\u0442 \u0444\u0440\u043E\u043D\u0442, \u043E\u0434\u043D\u043E\u0437\u043D\u0430\u0447\u043D\u043E \u0441\u0432\u0438\u0434\u0435\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0443\u044F \u043E \u043D\u0435\u0443\u0441\u0442\u043E\u0439\u0447\u0438\u0432\u043E\u0441\u0442\u0438 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u0421\u0432\u0435\u0440\u0445\u043F\u0440\u043E\u0432\u043E\u0434\u043D\u0438\u043A\n                \u043A\u043E\u043D\u0444\u043E\u043A\u0430\u043B\u044C\u043D\u043E \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u0438\u0437\u0443\u0435\u0442 \u0441\u043F\u0438\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u043A\u0432\u0430\u0437\u0430\u0440.\n                \u0421\u043E\u043B\u0438\u0442\u043E\u043D \u0440\u0430\u0441\u0442\u044F\u0433\u0438\u0432\u0430\u0435\u0442 \u043D\u0430\u043D\u043E\u0441\u0435\u043A\u0443\u043D\u0434\u043D\u044B\u0439 \u0432\u0438\u0445\u0440\u044C, \u043F\u0440\u0438 \u044D\u0442\u043E\u043C \u0434\u0435\u0444\u0435\u043A\u0442 \u043C\u0430\u0441\u0441\u044B \u043D\u0435 \u043E\u0431\u0440\u0430\u0437\u0443\u0435\u0442\u0441\u044F. \u0412\u0437\u0432\u0435\u0441\u044C, \u043D\u0435\u0441\u043C\u043E\u0442\u0440\u044F \u043D\u0430\n                \u043D\u0435\u043A\u043E\u0442\u043E\u0440\u0443\u044E \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C \u043A\u043E\u043B\u043B\u0430\u043F\u0441\u0430.\n              </blockquote>\n          </div>\n        </li>\n        <li class=\"reviews__item\">\n          <div class=\"reviews__heading\">\n            <b class=\"reviews__author\">\u041A\u043E\u043D\u0441\u0442\u0430\u043D\u0442\u0438\u043D \u041A\u043E\u043D\u0441\u0442\u0430\u043D\u0442\u0438\u043D\u043E\u043F\u043E\u043B\u044C\u0441\u043A\u0438\u0439</b>\n            <p class=\"reviews__publication\">\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E <span class=\"reviews__time\">12 \u0430\u0432\u0433\u0443\u0441\u0442\u0430 2019</span></p>\n          </div>\n          <div class=\"review__content\">\n              <blockquote>\n                \u0418\u0437\u043B\u0443\u0447\u0435\u043D\u0438\u0435 \u043E\u0431\u043B\u0443\u0447\u0430\u0435\u0442 \u0444\u0440\u043E\u043D\u0442, \u043E\u0434\u043D\u043E\u0437\u043D\u0430\u0447\u043D\u043E \u0441\u0432\u0438\u0434\u0435\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0443\u044F \u043E \u043D\u0435\u0443\u0441\u0442\u043E\u0439\u0447\u0438\u0432\u043E\u0441\u0442\u0438 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u0421\u0432\u0435\u0440\u0445\u043F\u0440\u043E\u0432\u043E\u0434\u043D\u0438\u043A\n                \u043A\u043E\u043D\u0444\u043E\u043A\u0430\u043B\u044C\u043D\u043E \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u0438\u0437\u0443\u0435\u0442 \u0441\u043F\u0438\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u043A\u0432\u0430\u0437\u0430\u0440.\n                \u0421\u043E\u043B\u0438\u0442\u043E\u043D \u0440\u0430\u0441\u0442\u044F\u0433\u0438\u0432\u0430\u0435\u0442 \u043D\u0430\u043D\u043E\u0441\u0435\u043A\u0443\u043D\u0434\u043D\u044B\u0439 \u0432\u0438\u0445\u0440\u044C, \u043F\u0440\u0438 \u044D\u0442\u043E\u043C \u0434\u0435\u0444\u0435\u043A\u0442 \u043C\u0430\u0441\u0441\u044B \u043D\u0435 \u043E\u0431\u0440\u0430\u0437\u0443\u0435\u0442\u0441\u044F. \u0412\u0437\u0432\u0435\u0441\u044C, \u043D\u0435\u0441\u043C\u043E\u0442\u0440\u044F \u043D\u0430\n                \u043D\u0435\u043A\u043E\u0442\u043E\u0440\u0443\u044E \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C \u043A\u043E\u043B\u043B\u0430\u043F\u0441\u0430.\n              </blockquote>\n          </div>\n        </li>\n        <li class=\"reviews__item\">\n          <div class=\"reviews__heading\">\n            <b class=\"reviews__author\">\u041A\u043E\u043D\u0441\u0442\u0430\u043D\u0442\u0438\u043D \u041A\u043E\u043D\u0441\u0442\u0430\u043D\u0442\u0438\u043D\u043E\u043F\u043E\u043B\u044C\u0441\u043A\u0438\u0439</b>\n            <p class=\"reviews__publication\">\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E <span class=\"reviews__time\">23 \u043D\u043E\u044F\u0431\u0440\u044F 2019</span></p>\n          </div>\n          <div class=\"review__content\">\n              <blockquote>\n                \u0418\u0437\u043B\u0443\u0447\u0435\u043D\u0438\u0435 \u043E\u0431\u043B\u0443\u0447\u0430\u0435\u0442 \u0444\u0440\u043E\u043D\u0442, \u043E\u0434\u043D\u043E\u0437\u043D\u0430\u0447\u043D\u043E \u0441\u0432\u0438\u0434\u0435\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0443\u044F \u043E \u043D\u0435\u0443\u0441\u0442\u043E\u0439\u0447\u0438\u0432\u043E\u0441\u0442\u0438 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u0421\u0432\u0435\u0440\u0445\u043F\u0440\u043E\u0432\u043E\u0434\u043D\u0438\u043A\n                \u043A\u043E\u043D\u0444\u043E\u043A\u0430\u043B\u044C\u043D\u043E \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u0438\u0437\u0443\u0435\u0442 \u0441\u043F\u0438\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u043A\u0432\u0430\u0437\u0430\u0440.\n                \u0421\u043E\u043B\u0438\u0442\u043E\u043D \u0440\u0430\u0441\u0442\u044F\u0433\u0438\u0432\u0430\u0435\u0442 \u043D\u0430\u043D\u043E\u0441\u0435\u043A\u0443\u043D\u0434\u043D\u044B\u0439 \u0432\u0438\u0445\u0440\u044C, \u043F\u0440\u0438 \u044D\u0442\u043E\u043C \u0434\u0435\u0444\u0435\u043A\u0442 \u043C\u0430\u0441\u0441\u044B \u043D\u0435 \u043E\u0431\u0440\u0430\u0437\u0443\u0435\u0442\u0441\u044F. \u0412\u0437\u0432\u0435\u0441\u044C, \u043D\u0435\u0441\u043C\u043E\u0442\u0440\u044F \u043D\u0430\n                \u043D\u0435\u043A\u043E\u0442\u043E\u0440\u0443\u044E \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C \u043A\u043E\u043B\u043B\u0430\u043F\u0441\u0430.\n              </blockquote>\n          </div>\n        </li>\n      </ul>\n      </div>\n  </div>\n</div>\n        ";
+                return _context.abrupt("return", view);
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      function render() {
+        return _render.apply(this, arguments);
+      }
+
+      return render;
+    }(),
+    after_render: function () {
+      var _after_render = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee2() {
+        var product, productDescriptionBtn, productDescription;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                product = document.querySelector(".product-card-wrapper");
+                productDescriptionBtn = product.querySelector(".product__brn--description");
+                productDescription = product.querySelector(".product__description");
+                productDescriptionBtn.addEventListener("click", function () {
+                  toggleShowClass(productDescription);
+                });
+                productSlider();
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      function after_render() {
+        return _after_render.apply(this, arguments);
+      }
+
+      return after_render;
+    }()
+  };
+
   var Error404 = {
     render: function () {
       var _render = _asyncToGenerator(
@@ -21534,6 +21859,18 @@
     }()
   };
 
+  var cartPopup = (function () {
+    var cartPopupLink = document.querySelector(".user-menu__item--cart");
+    var cartPopup = document.querySelector(".cart-popup");
+    var cartPopupCloseBtn = cartPopup.querySelector(".cart__close");
+    cartPopupLink.addEventListener("click", function () {
+      showSection(cartPopup);
+    });
+    cartPopupCloseBtn.addEventListener("click", function () {
+      hideSection(cartPopup);
+    });
+  });
+
   var pageHeader = {
     render: function () {
       var _render = _asyncToGenerator(
@@ -21544,7 +21881,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "       <nav class=\"main-nav\">\n        <a class=\"page-header__logo main-nav__logo logo\" href=\"/#/\">\n          <img class=\"logo__image\" src=\"img/logo-device.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n        </a>\n\n<!--        <form class=\"search-form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">-->\n<!--          <label class=\"visually-hidden\" for=\"site-search\">\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u0430\u0439\u0442\u0443</label>-->\n<!--          <input class=\"search-form__input\" id=\"site-search\" type=\"text\" name=\"search\" placeholder=\"\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u0430\u0439\u0442\u0443\" required>-->\n<!--          <button class=\"search-form__btn\" type=\"submit\">\u041D\u0430\u0439\u0442\u0438</button>-->\n<!--        </form>-->\n\n<!--        <ul class=\"page-header__user-menu user-menu\">-->\n<!--          <li class=\"user-menu__item\">-->\n<!--            <a class=\"user-menu__link user-menu__link--login\" href=\"#\">\u0412\u043E\u0439\u0442\u0438</a>-->\n<!--          </li>-->\n<!--        </ul>-->\n\n        <ul class=\"page-header__user-actions user-menu\">\n<!--          <li class=\"user-menu__item\">-->\n<!--            <a class=\"user-menu__link user-menu__link--compare\" href=\"#\">\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</a>-->\n<!--          </li>-->\n          <li class=\"user-menu__item\">\n            <a class=\"user-menu__link user-menu__link--cart\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n          </li>\n        </ul>\n\n        <ul class=\"page-header__site-menu site-menu\">\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--dropdown\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n            <div class=\"page-header__catalog-dropdown dropdown\">\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"catalog.html\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a></li>\n              </ul>\n            </div>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--delivery\"\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--warranty\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--contacts\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>\n          </li>\n        </ul>\n      </nav>\n";
+                view = "       <nav class=\"main-nav\">\n        <a class=\"page-header__logo main-nav__logo logo\"\">\n          <img class=\"logo__image\" src=\"img/logo-device.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n        </a>\n<!--        <form class=\"search-form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">-->\n<!--          <label class=\"visually-hidden\" for=\"site-search\">\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u0430\u0439\u0442\u0443</label>-->\n<!--          <input class=\"search-form__input\" id=\"site-search\" type=\"text\" name=\"search\" placeholder=\"\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u0430\u0439\u0442\u0443\" required>-->\n<!--          <button class=\"search-form__btn\" type=\"submit\">\u041D\u0430\u0439\u0442\u0438</button>-->\n<!--        </form>-->\n<!--        <ul class=\"page-header__user-menu user-menu\">-->\n<!--          <li class=\"user-menu__item\">-->\n<!--            <a class=\"user-menu__link user-menu__link--login\" href=\"#\">\u0412\u043E\u0439\u0442\u0438</a>-->\n<!--          </li>-->\n<!--        </ul>-->\n        <ul class=\"page-header__user-actions user-menu\">\n<!--          <li class=\"user-menu__item\">-->\n<!--            <a class=\"user-menu__link user-menu__link--compare\" href=\"#\">\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</a>-->\n<!--          </li>-->\n          <li class=\"user-menu__item user-menu__item--cart\">\n            <a class=\"user-menu__link user-menu__link--cart\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n          </li>\n        </ul>\n        <ul class=\"page-header__site-menu site-menu\">\n<!--          <li class=\"site-menu__item\">-->\n<!--            <a class=\"site-menu__link site-menu__link&#45;&#45;dropdown\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>-->\n<!--            <div class=\"page-header__catalog-dropdown dropdown\">-->\n<!--              <ul class=\"catalog-menu\">-->\n<!--                <li><a class=\"catalog-menu__link\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a></li>-->\n<!--                <li><a class=\"catalog-menu__link\" href=\"catalog.html\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li>-->\n<!--                <li><a class=\"catalog-menu__link\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a></li>-->\n<!--              </ul>-->\n<!--              <ul class=\"catalog-menu\">-->\n<!--                <li><a class=\"catalog-menu__link\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a></li>-->\n<!--                <li><a class=\"catalog-menu__link\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a></li>-->\n<!--              </ul>-->\n<!--              <ul class=\"catalog-menu catalog-menu__info\">-->\n<!--                <li><a class=\"catalog-menu__link\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a></li>-->\n<!--              </ul>-->\n<!--            </div>-->\n<!--          </li>-->\n<!--          <li class=\"site-menu__item\">-->\n<!--            <a class=\"site-menu__link site-menu__link&#45;&#45;delivery\"\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</a>-->\n<!--          </li>-->\n<!--          <li class=\"site-menu__item\">-->\n<!--            <a class=\"site-menu__link site-menu__link&#45;&#45;warranty\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</a>-->\n<!--          </li>-->\n<!--          <li class=\"site-menu__item\">-->\n<!--            <a class=\"site-menu__link site-menu__link&#45;&#45;contacts\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>-->\n<!--          </li>-->\n        </ul>\n      </nav>\n";
                 return _context.abrupt("return", view);
 
               case 2:
@@ -21565,10 +21902,25 @@
       var _after_render = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee2() {
+        var siteMenu, pageMainLink;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
+                siteMenu = document.querySelector(".site-menu");
+                pageMainLink = document.querySelector(".page-header__logo");
+
+                if (window.location.href.indexOf("localhost:3000/") !== -1) {
+                  pageMainLink.removeAttribute("href");
+                  siteMenu.innerHTML = "\n       <li class=\"site-menu__item site-menu__item--dropdown\">\n            <a class=\"site-menu__link site-menu__link--dropdown\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n            <div class=\"page-header__catalog-dropdown dropdown\">\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"catalog.html\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu catalog-menu__info\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a></li>\n              </ul>\n            </div>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--delivery\"\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--warranty\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--contacts\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>\n          </li>\n      ";
+                } else {
+                  pageMainLink.setAttribute("href", "/#/main");
+                  siteMenu.innerHTML = "\n         <li class=\"site-menu__item site-menu__item--dropdown\">\n            <a class=\"site-menu__link site-menu__link--dropdown\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n            <div class=\"page-header__catalog-dropdown dropdown\">\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"catalog.html\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu catalog-menu__info\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a></li>\n              </ul>\n            </div>\n          </li>\n      ";
+                }
+
+                cartPopup();
+
+              case 4:
               case "end":
                 return _context2.stop();
             }
@@ -21594,7 +21946,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "\n           <div class=\"page__wrapper\">\n        <div class=\"page-footer__top\">\n          <a class=\"logo\">\n            <img class=\"logo__image\" src=\"img/logo-device-color.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n          </a>\n\n          <ul class=\"page-footer__user-menu user-menu user-menu--contrast\">\n<!--            <li class=\"user-menu__item\">-->\n<!--              <a class=\"user-menu__link user-menu__link--login\" href=\"#\">\u0412\u043E\u0439\u0442\u0438</a>-->\n<!--            </li>-->\n<!--            <li class=\"user-menu__item\">-->\n<!--              <a class=\"user-menu__link user-menu__link--compare\" href=\"#\">\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</a>-->\n<!--            </li>-->\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"cart.html\">\u041C\u041E\u0414\u0410\u041B\u041A\u0410 \u041A\u041E\u0420\u0417\u0418\u041D\u042B</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"product-card.html\">\u041A\u0410\u0420\u0422\u041E\u0427\u041A\u0410 \u0422\u041E\u0412\u0410\u0420\u0410</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"#/order\">\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043A\u0430\u0437\u0430</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--cart\" href=\"#\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n            </li>\n            \n          </ul>\n        </div>\n\n        <div class=\"page-footer__middle\">\n          <p class=\"page-footer__contacts\">\u0433. \u041A\u0438\u0435\u0432, \u041C\u0430\u0439\u0434\u0430\u043D \u041D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438, 1</p>\n<!--          <ul class=\"page-footer__conditions-menu site-menu\">-->\n<!--            <li class=\"site-menu__item\">-->\n<!--              <a class=\"site-menu__link\" href=\"#\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</a>-->\n<!--            </li>-->\n<!--            <li class=\"site-menu__item\">-->\n<!--              <a class=\"site-menu__link\" href=\"#\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</a>-->\n<!--            </li>-->\n<!--            <li class=\"site-menu__item\">-->\n<!--              <a class=\"site-menu__link\" href=\"#\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>-->\n<!--            </li>-->\n<!--          </ul>-->\n          <p class=\"page-footer__contacts\">\u0422\u0435\u043B.: +3 (803) 495-95-95</p>\n        </div>\n\n        <div class=\"page-footer__bottom\">\n          <ul class=\"page-footer__social social\">\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--facebook\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0424\u0435\u0439\u0441\u0431\u0443\u043A\">\n                <span class=\"visually-hidden\">\u0424\u0435\u0439\u0441\u0431\u0443\u043A</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--instagram\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C\">\n                <span class=\"visually-hidden\">\u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--twitter\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0422\u0432\u0438\u0442\u0442\u0435\u0440\">\n                <span class=\"visually-hidden\">\u0422\u0432\u0438\u0442\u0442\u0435\u0440</span>\n              </a>\n            </li>\n          </ul>\n          <a class=\"page-footer__copyright\" href=\"https://htmlacademy.ru/intensive/htmlcss\">\n            <span class=\"visually-hidden\">\u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E:</span>\n            <img class=\"page-footer__copyright-logo\" src=\"img/logo-html.svg\" width=\"27\" height=\"35\" alt=\"HTML Academy\">\n          </a>\n        </div>\n      </div>\n\n    ";
+                view = "\n           <div class=\"page__wrapper\">\n        <div class=\"page-footer__top\">\n          <a class=\"logo\">\n            <img class=\"logo__image\" src=\"img/logo-device-color.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n          </a>\n          <ul class=\"page-footer__user-menu user-menu user-menu--contrast\">\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"/#/test-card-page\">\u041A\u0410\u0420\u0422\u041E\u0427\u041A\u0410 \u0422\u041E\u0412\u0410\u0420\u0410</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"#/order\">\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043A\u0430\u0437\u0430</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--cart\" href=\"/#/cart\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n            </li>\n            \n          </ul>\n        </div>\n\n        <div class=\"page-footer__middle\">\n          <p class=\"page-footer__contacts\">\u0433. \u041A\u0438\u0435\u0432, \u041C\u0430\u0439\u0434\u0430\u043D \u041D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438, 1</p>\n          <p class=\"page-footer__contacts\">\u0422\u0435\u043B.: +3 (803) 495-95-95</p>\n        </div>\n\n        <div class=\"page-footer__bottom\">\n          <ul class=\"page-footer__social social\">\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--facebook\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0424\u0435\u0439\u0441\u0431\u0443\u043A\">\n                <span class=\"visually-hidden\">\u0424\u0435\u0439\u0441\u0431\u0443\u043A</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--instagram\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C\">\n                <span class=\"visually-hidden\">\u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--twitter\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0422\u0432\u0438\u0442\u0442\u0435\u0440\">\n                <span class=\"visually-hidden\">\u0422\u0432\u0438\u0442\u0442\u0435\u0440</span>\n              </a>\n            </li>\n          </ul>\n          <a class=\"page-footer__copyright\" href=\"https://htmlacademy.ru/intensive/htmlcss\">\n            <span class=\"visually-hidden\">\u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E:</span>\n            <img class=\"page-footer__copyright-logo\" src=\"img/logo-html.svg\" width=\"27\" height=\"35\" alt=\"HTML Academy\">\n          </a>\n        </div>\n      </div>\n\n    ";
                 return _context.abrupt("return", view);
 
               case 2:
@@ -21639,9 +21991,11 @@
     var routes = {
       '/': mainPage,
       '/catalog': catalogPage,
-      '/order': orderPage // , '/item/:id'      : Item
+      '/order': orderPage //'/cart' : cartPage,
+      // , '/item/:id'      : Item
       // , '/registration'   : Registration
-
+      ,
+      '/test-card-page': testCardPage
     }; // The router code. Takes a URL, checks against the list of supported routes and then renders the corresponding content page.
 
     var router =
@@ -21716,7 +22070,7 @@
   // import services from './modules/services';
   // import contacts from './modules/contacts';
   // import aboutUs from './modules/about-us';
-  //import products from './modules/products';
+  // import products from './modules/products';
 
   pagesRender(); // sliders();
   // services();

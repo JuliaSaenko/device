@@ -6,25 +6,15 @@ let pageFooter = {
           <a class="logo">
             <img class="logo__image" src="img/logo-device-color.svg" width="163" height="36" alt="Интернет-магазин Device">
           </a>
-
           <ul class="page-footer__user-menu user-menu user-menu--contrast">
-<!--            <li class="user-menu__item">-->
-<!--              <a class="user-menu__link user-menu__link--login" href="#">Войти</a>-->
-<!--            </li>-->
-<!--            <li class="user-menu__item">-->
-<!--              <a class="user-menu__link user-menu__link--compare" href="#">Сравнить</a>-->
-<!--            </li>-->
             <li class="user-menu__item">
-              <a class="user-menu__link user-menu__link--product" href="cart.html">МОДАЛКА КОРЗИНЫ</a>
-            </li>
-            <li class="user-menu__item">
-              <a class="user-menu__link user-menu__link--product" href="product-card.html">КАРТОЧКА ТОВАРА</a>
+              <a class="user-menu__link user-menu__link--product" href="/#/test-card-page">КАРТОЧКА ТОВАРА</a>
             </li>
             <li class="user-menu__item">
               <a class="user-menu__link user-menu__link--product" href="#/order">Оформление заказа</a>
             </li>
             <li class="user-menu__item">
-              <a class="user-menu__link user-menu__link--cart" href="#">Корзина</a>
+              <a class="user-menu__link user-menu__link--cart" href="/#/cart">Корзина</a>
             </li>
             
           </ul>
@@ -32,17 +22,6 @@ let pageFooter = {
 
         <div class="page-footer__middle">
           <p class="page-footer__contacts">г. Киев, Майдан Независимости, 1</p>
-<!--          <ul class="page-footer__conditions-menu site-menu">-->
-<!--            <li class="site-menu__item">-->
-<!--              <a class="site-menu__link" href="#">Доставка</a>-->
-<!--            </li>-->
-<!--            <li class="site-menu__item">-->
-<!--              <a class="site-menu__link" href="#">Гарантия</a>-->
-<!--            </li>-->
-<!--            <li class="site-menu__item">-->
-<!--              <a class="site-menu__link" href="#">Контакты</a>-->
-<!--            </li>-->
-<!--          </ul>-->
           <p class="page-footer__contacts">Тел.: +3 (803) 495-95-95</p>
         </div>
 

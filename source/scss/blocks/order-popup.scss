@@ -13,6 +13,9 @@
   display: flex;
   flex-direction: column;
   .products-list-in-cart{
+    .cart__product{
+      opacity: 1;
+    }
     .cart__product-price::after {
       content: "$";
     }

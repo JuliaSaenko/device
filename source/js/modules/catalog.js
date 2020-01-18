@@ -3,13 +3,14 @@ import services from "./services";
 import contacts from "./contacts";
 import aboutUs from "./about-us";
 import commentForm from "./comment-form";
+import products from './products';
+import fillter from './fillter';
 
 let catalogPage = {
   render : async () => {
     let view = `
     <div class="page__wrapper">
         <h1 class="page__title">Моноподы для селфи</h1>
-
         <ul class="page__breadcrumbs breadcrumbs">
           <li class="breadcrumbs__item">
             <a class="breadcrumbs__link" href="index.html">Главная</a>
@@ -22,15 +23,13 @@ let catalogPage = {
           </li>
         </ul>
       </div>
-
       <div class="catalog-columns--header">
         <div class="catalog-columns__wrapper page__wrapper">
           <p class="catalog-columns__narrow catalog-columns__title">Фильтр:</p>
-
           <section class="catalog-columns__wide sort">
             <h2 class="catalog-columns__title sort__title">Сортировка:</h2>
             <ul class="sort__type-list">
-              <li class="sort__type-item">
+              <li class="sort__type-item sort__price">
                 <a class="sort__type-link sort__type-link--current">По цене</a>
               </li>
               <li class="sort__type-item">
@@ -55,7 +54,6 @@ let catalogPage = {
           </section>
         </div>
       </div>
-
       <div class="catalog-columns">
         <div class="catalog-columns__wrapper page__wrapper">
           <section class="catalog-columns__narrow filter">
@@ -81,33 +79,35 @@ let catalogPage = {
                   </label>
                 </div>
               </fieldset>
-
               <fieldset class="filter__section">
-                <legend class="filter__section-title">Цвет</legend>
-                <ul class="filter__options">
+                <legend class="filter__section-title">Категория</legend>
+                <ul class="filter__options filter__category">
                   <li>
-                    <input class="filter__option visually-hidden" id="color-black" type="checkbox" name="color_black" checked>
-                    <label class="filter__option-label filter__option-label--check" for="color-black">Черный</label>
+                    <input class="category__filter filter__option visually-hidden" id="actionCamera" type="checkbox" name="actionCamera">
+                    <label class="filter__option-label filter__option-label--check" for="actionCamera">Экшн камеры</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="color-white" type="checkbox" name="color_white">
-                    <label class="filter__option-label filter__option-label--check" for="color-white">Белый</label>
+                    <input class="category__filter filter__option visually-hidden" id="fitnessTracker" type="checkbox" name="fitnessTracker">
+                    <label class="filter__option-label filter__option-label--check" for="fitnessTracker">Фитнес трекеры</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="color-blue" type="checkbox" name="color_blue" checked>
-                    <label class="filter__option-label filter__option-label--check" for="color-blue">Синий</label>
+                    <input class="category__filter filter__option visually-hidden" id="quadrocopters" type="checkbox" name="quadrocopters">
+                    <label class="filter__option-label filter__option-label--check" for="quadrocopters">Квадрокоптеры</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="color-red" type="checkbox" name="color_red" checked>
-                    <label class="filter__option-label filter__option-label--check" for="color-red">Красный</label>
+                    <input class="category__filter filter__option visually-hidden" id="selfieSticks" type="checkbox" name="selfieSticks">
+                    <label class="filter__option-label filter__option-label--check" for="selfieSticks">Селфи палки</label>
                   </li>
                   <li>
-                    <input class="filter__option visually-hidden" id="color-pink" type="checkbox" name="color_pink">
-                    <label class="filter__option-label filter__option-label--check" for="color-pink">Розовый</label>
+                    <input class="category__filter filter__option visually-hidden" id="watches" type="checkbox" name="watches">
+                    <label class="filter__option-label filter__option-label--check" for="watches">Часы</label>
+                  </li>
+                  <li>
+                    <input class="category__filter filter__option visually-hidden" id="vr" type="checkbox" name="vr">
+                    <label class="filter__option-label filter__option-label--check" for="vr">VR/AR</label>
                   </li>
                 </ul>
               </fieldset>
-
               <fieldset class="filter__section">
                 <legend class="filter__section-title">Bluetooth</legend>
                 <ul class="filter__options">
@@ -121,68 +121,13 @@ let catalogPage = {
                   </li>
                 </ul>
               </fieldset>
-
               <button class="filter__btn btn" type="submit">Показать</button>
             </form>
           </section>
-
           <section class="catalog-columns__wide catalog">
             <h2 class="visually-hidden">Каталог</h2>
             <ul class="catalog__list">
-              <li class="catalog__item">
-                <a class="catalog__link" href="#">
-                  <h3 class="catalog__title">Любительская селфи-палка</h3>
-                </a>
-                <p class="catalog__price">5500 руб.</p>
-                <div class="catalog__wrapper">
-                  <img class="catalog__image" src="img/product-1.jpg" width="360" height="380" alt="Любительская селфи-палка">
-                  <p class="catalog__actions">
-                    <button class="catalog__btn btn" type="button">В корзину</button>
-                    <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>
-                  </p>
-                </div>
-              </li>
-              <li class="catalog__item">
-                <a class="catalog__link" href="#">
-                  <h3 class="catalog__title">Профессиональная<br> селфи-палка</h3>
-                </a>
-                <p class="catalog__price">1 500 руб.</p>
-                <div class="catalog__wrapper">
-                  <img class="catalog__image" src="img/product-2.jpg" width="360" height="380" alt="Профессиональная селфи-палка">
-                  <p class="catalog__actions">
-                    <button class="catalog__btn btn" type="button">В корзину</button>
-                    <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>
-                  </p>
-                </div>
-              </li>
-              <li class="catalog__item">
-                <a class="catalog__link" href="#">
-                  <h3 class="catalog__title">Непотопляемая селфи-палка</h3>
-                </a>
-                <p class="catalog__price">2 500 руб.</p>
-                <div class="catalog__wrapper">
-                  <img class="catalog__image" src="img/product-3.jpg" width="360" height="380" alt="Непотопляемая селфи-палка">
-                  <p class="catalog__actions">
-                    <button class="catalog__btn btn" type="button">В корзину</button>
-                    <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>
-                  </p>
-                </div>
-              </li>
-              <li class="catalog__item catalog__item--new">
-                <a class="catalog__link" href="#">
-                  <h3 class="catalog__title">Селфи-палка «Следуй за мной»</h3>
-                </a>
-                <p class="catalog__price">4 900 руб.</p>
-                <div class="catalog__wrapper">
-                  <img class="catalog__image" src="img/product-4.jpg" width="360" height="380" alt="Селфи-палка «Следуй за мной»">
-                  <p class="catalog__actions">
-                    <button class="catalog__btn btn" type="button">В корзину</button>
-                    <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>
-                  </p>
-                </div>
-              </li>
             </ul>
-
             <div class="pagination">
               <div class="pagination__wrapper">
                 <a class="pagination__link pagination__link--back">Назад</a>
@@ -211,6 +156,8 @@ let catalogPage = {
     return view
   }
   , after_render: async () => {
+    products();
+    fillter();
   }
 
 };
