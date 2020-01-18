@@ -21402,8 +21402,6 @@
         return _ref.apply(this, arguments);
       };
     }();
-    //////////
-
 
     function addListenerOnBrands() {
       var brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
@@ -21412,20 +21410,30 @@
           productList.innerHTML = '';
 
           if (brand.checked) {
-            brandFilteredArray.push.apply(brandFilteredArray, _toConsumableArray(filteredArray.filter(function (item) {
-              return item.brand === brand.id;
-            })));
-          } else if (!brand.checked) {
-            brandFilteredArray.forEach(function (item) {
-              if (brand.id === item.brand) {
-                var index = brandFilteredArray.indexOf(item);
-                console.log(index);
-                brandFilteredArray.splice(index, 1); //remove(brandFilteredArray, index);
-                //console.log(index);
-                // brandFilteredArray.splice(index, 1);
-              } // brandFilteredArray.splice(index, 1);
-
+            filteredArray.forEach(function (product) {
+              if (brand.id === product.brand) {
+                brandFilteredArray.push(product);
+              }
             });
+          } // else if(brandFiltersArray.every(item => !item.checked)){
+          //         brandFilteredArray = filteredArray.slice();
+          //         console.log(brandFilteredArray);
+          // } 
+          else {
+              brandFilteredArray = [];
+              brandFiltersArray.forEach(function (product) {
+                if (product.checked) {
+                  filteredArray.forEach(function (item) {
+                    if (item.brand === product.id) {
+                      brandFilteredArray.push(item);
+                    }
+                  });
+                }
+              });
+            }
+
+          if (priceFlag === 1) {
+            sortArrayByPrice(brandFilteredArray);
           }
 
           createProductCard(brandFilteredArray);
@@ -21504,8 +21512,8 @@
       });
     }
 
-    function sortArrayByPrice() {
-      filteredArray.sort(function (a, b) {
+    function sortArrayByPrice(arr) {
+      arr.sort(function (a, b) {
         return a.price - b.price;
       });
     }
@@ -21522,12 +21530,13 @@
             hideBrandFilter();
           } else {
             filteredArray = [];
+            brandFilteredArray = [];
             checkFiltersForChecked(JSONData);
             createBrandFilter(JSONData.data);
           }
 
           if (priceFlag === 1) {
-            sortArrayByPrice();
+            sortArrayByPrice(filteredArray);
           }
 
           createProductCard(filteredArray);
@@ -21538,24 +21547,38 @@
     function sortByPrice(JSONData) {
       priceFilter.addEventListener('click', function (e) {
         productList.innerHTML = '';
+        var brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
 
-        if (priceFlag === 0) {
-          priceFlag = 1;
-          sortArrayByPrice();
-        } else if (priceFlag === 1) {
-          priceFlag = 0;
+        if (categoryFiltersArray.every(function (item) {
+          return !item.checked;
+        })) {
+          JSONData.data.sort(function (a, b) {
+            return a.price - b.price;
+          });
+          createProductCard(JSONData.data);
+        } else {
+          // brandFilteredArray.sort((a, b) => b.price - a.price);
+          // createProductCard(brandFilteredArray);
           filteredArray = [];
+          checkFiltersForChecked(JSONData);
+          filteredArray.sort(function (a, b) {
+            return a.price - b.price;
+          });
+          createProductCard(filteredArray);
+        } // if (priceFlag === 0) {
+        //     priceFlag = 1;
+        //     sortArrayByPrice(filteredArray);
+        // } else if (priceFlag === 1) {
+        //     priceFlag = 0
+        //     filteredArray = [];
+        //     if (categoryFiltersArray.every(item => !item.checked)) {
+        //         filteredArray = JSONData.data.slice();
+        //     } else {
+        //         checkFiltersForChecked(JSONData);
+        //     }
+        // }
+        // createProductCard(filteredArray);
 
-          if (categoryFiltersArray.every(function (item) {
-            return !item.checked;
-          })) {
-            filteredArray = JSONData.data.slice();
-          } else {
-            checkFiltersForChecked(JSONData);
-          }
-        }
-
-        createProductCard(filteredArray);
       });
     }
 
@@ -21593,6 +21616,50 @@
     }();
 
     showProducts();
+    var highPrice = document.getElementById('downprice');
+    var lowPrice = document.getElementById('upprice');
+    lowPrice.addEventListener('click', sortLowToHigh);
+    highPrice.addEventListener('click', sortHighToLow);
+
+    function sortLowToHigh() {
+      productList.innerHTML = '';
+      priceFlag = 0;
+      var brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
+
+      if (brandFiltersArray.every(function (item) {
+        return !item.checked;
+      })) {
+        filteredArray.sort(function (a, b) {
+          return a.price - b.price;
+        });
+        createProductCard(filteredArray);
+      } else {
+        brandFilteredArray.sort(function (a, b) {
+          return a.price - b.price;
+        });
+        createProductCard(brandFilteredArray);
+      }
+    }
+
+    function sortHighToLow() {
+      productList.innerHTML = '';
+      priceFlag = 0;
+      var brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
+
+      if (brandFiltersArray.every(function (item) {
+        return !item.checked;
+      })) {
+        filteredArray.sort(function (a, b) {
+          return b.price - a.price;
+        });
+        createProductCard(filteredArray);
+      } else {
+        brandFilteredArray.sort(function (a, b) {
+          return b.price - a.price;
+        });
+        createProductCard(brandFilteredArray);
+      }
+    }
   });
 
   var catalogPage = {
@@ -21605,7 +21672,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "\n    <div class=\"page__wrapper\">\n        <h1 class=\"page__title\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</h1>\n\n        <ul class=\"page__breadcrumbs breadcrumbs\">\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"index.html\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"catalog.html\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a>\n          </li>\n        </ul>\n      </div>\n\n      <div class=\"catalog-columns--header\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <p class=\"catalog-columns__narrow catalog-columns__title\">\u0424\u0438\u043B\u044C\u0442\u0440:</p>\n\n          <section class=\"catalog-columns__wide sort\">\n            <h2 class=\"catalog-columns__title sort__title\">\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:</h2>\n            <ul class=\"sort__type-list\">\n              <li class=\"sort__type-item sort__price\">\n                <a class=\"sort__type-link sort__type-link--current\">\u041F\u043E \u0446\u0435\u043D\u0435</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u0442\u0438\u043F\u0443</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438</a>\n              </li>\n            </ul>\n            <ul class=\"sort__order-list\">\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--up\" href=\"#\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--down sort__order-link--current\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n            </ul>\n          </section>\n        </div>\n      </div>\n\n      <div class=\"catalog-columns\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <section class=\"catalog-columns__narrow filter\">\n            <h2 class=\"visually-hidden\">\u0424\u0438\u043B\u044C\u0442\u0440 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n            <form class=\"filter__form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C</legend>\n                <div class=\"filter__range range\">\n                  <div class=\"range__selected\"></div>\n                  <button class=\"range__slider range__slider--min\" type=\"button\" aria-label=\"\u041E\u0442\">\n                    <span class=\"range__label range__label--min\">\u043E\u0442 0</span>\n                  </button>\n                  <button class=\"range__slider range__slider--max\" type=\"button\" aria-label=\"\u0414\u043E\">\n                    <span class=\"range__label range__label--max\">\u0434\u043E 5000</span>\n                  </button>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_min\" value=\"0\">\n                  </label>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_max\" value=\"5000\">\n                  </label>\n                </div>\n              </fieldset>\n\n              <fieldset class=\"filter__section\" id =\"category\">\n                <legend class=\"filter__section-title\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F</legend>\n                <ul class=\"filter__options filter__category\">\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"actionCamera\" type=\"checkbox\" name=\"actionCamera\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"actionCamera\">\u042D\u043A\u0448\u043D \u043A\u0430\u043C\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"fitnessTracker\" type=\"checkbox\" name=\"fitnessTracker\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"fitnessTracker\">\u0424\u0438\u0442\u043D\u0435\u0441 \u0442\u0440\u0435\u043A\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"quadrocopters\" type=\"checkbox\" name=\"quadrocopters\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"quadrocopters\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"selfieSticks\" type=\"checkbox\" name=\"selfieSticks\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"selfieSticks\">\u0421\u0435\u043B\u0444\u0438 \u043F\u0430\u043B\u043A\u0438</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"watches\" type=\"checkbox\" name=\"watches\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"watches\">\u0427\u0430\u0441\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"vr\" type=\"checkbox\" name=\"vr\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"vr\">VR/AR</label>\n                  </li>\n                </ul>\n              </fieldset>\n              <div id=\"brand\"></div>\n            </form>\n          </section>\n\n          <section class=\"catalog-columns__wide catalog\">\n            <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433</h2>\n            <ul class=\"catalog__list\">\n            </ul>\n\n            <div class=\"pagination\">\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--back\">\u041D\u0430\u0437\u0430\u0434</a>\n              </div>\n              <ul class=\"pagination__list\">\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page pagination__link--current\">1</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">2</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">3</a>\n                </li>\n              </ul>\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--next\" href=\"#\">\u0412\u043F\u0435\u0440\u0435\u0434</a>\n              </div>\n            </div>\n          </section>\n        </div>\n      </div>\n    ";
+                view = "\n    <div class=\"page__wrapper\">\n        <h1 class=\"page__title\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</h1>\n\n        <ul class=\"page__breadcrumbs breadcrumbs\">\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"index.html\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"catalog.html\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a>\n          </li>\n        </ul>\n      </div>\n\n      <div class=\"catalog-columns--header\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <p class=\"catalog-columns__narrow catalog-columns__title\">\u0424\u0438\u043B\u044C\u0442\u0440:</p>\n\n          <section class=\"catalog-columns__wide sort\">\n            <h2 class=\"catalog-columns__title sort__title\">\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:</h2>\n            <ul class=\"sort__type-list\">\n              <li class=\"sort__type-item sort__price\">\n                <a class=\"sort__type-link sort__type-link--current\">\u041F\u043E \u0446\u0435\u043D\u0435</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u0442\u0438\u043F\u0443</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438</a>\n              </li>\n            </ul>\n            <ul class=\"sort__order-list\">\n              <li class=\"sort__order-item\" id=\"upprice\">\n                <a class=\"sort__order-link sort__order-link--up\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n              <li class=\"sort__order-item\" id=\"downprice\">\n                <a class=\"sort__order-link sort__order-link--down sort__order-link--current\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n            </ul>\n          </section>\n        </div>\n      </div>\n\n      <div class=\"catalog-columns\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <section class=\"catalog-columns__narrow filter\">\n            <h2 class=\"visually-hidden\">\u0424\u0438\u043B\u044C\u0442\u0440 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n            <form class=\"filter__form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">\n              <fieldset class=\"filter__section\" id =\"category\">\n                <legend class=\"filter__section-title\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F</legend>\n                <ul class=\"filter__options filter__category\">\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"actionCamera\" type=\"checkbox\" name=\"actionCamera\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"actionCamera\">\u042D\u043A\u0448\u043D \u043A\u0430\u043C\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"fitnessTracker\" type=\"checkbox\" name=\"fitnessTracker\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"fitnessTracker\">\u0424\u0438\u0442\u043D\u0435\u0441 \u0442\u0440\u0435\u043A\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"quadrocopters\" type=\"checkbox\" name=\"quadrocopters\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"quadrocopters\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"selfieSticks\" type=\"checkbox\" name=\"selfieSticks\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"selfieSticks\">\u0421\u0435\u043B\u0444\u0438 \u043F\u0430\u043B\u043A\u0438</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"watches\" type=\"checkbox\" name=\"watches\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"watches\">\u0427\u0430\u0441\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"vr\" type=\"checkbox\" name=\"vr\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"vr\">VR/AR</label>\n                  </li>\n                </ul>\n              </fieldset>\n              <div id=\"brand\"></div>\n            </form>\n          </section>\n\n          <section class=\"catalog-columns__wide catalog\">\n            <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433</h2>\n            <ul class=\"catalog__list\">\n            </ul>\n\n          </section>\n        </div>\n      </div>\n    ";
                 return _context.abrupt("return", view);
 
               case 2:

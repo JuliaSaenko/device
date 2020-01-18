@@ -6,6 +6,7 @@ import commentForm from "./comment-form";
 import products from './products';
 import fillter from './fillter';
 
+
 let catalogPage = {
   render: async () => {
     let view = `
@@ -43,12 +44,12 @@ let catalogPage = {
               </li>
             </ul>
             <ul class="sort__order-list">
-              <li class="sort__order-item">
-                <a class="sort__order-link sort__order-link--up" href="#">
+              <li class="sort__order-item" id="upprice">
+                <a class="sort__order-link sort__order-link--up">
                   <span class="visually-hidden">По возрастанию</span>
                 </a>
               </li>
-              <li class="sort__order-item">
+              <li class="sort__order-item" id="downprice">
                 <a class="sort__order-link sort__order-link--down sort__order-link--current">
                   <span class="visually-hidden">По убыванию</span>
                 </a>
@@ -63,27 +64,6 @@ let catalogPage = {
           <section class="catalog-columns__narrow filter">
             <h2 class="visually-hidden">Фильтр товаров</h2>
             <form class="filter__form" action="https://echo.htmlacademy.ru" method="get">
-              <fieldset class="filter__section">
-                <legend class="filter__section-title">Стоимость</legend>
-                <div class="filter__range range">
-                  <div class="range__selected"></div>
-                  <button class="range__slider range__slider--min" type="button" aria-label="От">
-                    <span class="range__label range__label--min">от 0</span>
-                  </button>
-                  <button class="range__slider range__slider--max" type="button" aria-label="До">
-                    <span class="range__label range__label--max">до 5000</span>
-                  </button>
-                  <label class="visually-hidden">
-                    Минимальная стоимость
-                    <input type="number" name="price_min" value="0">
-                  </label>
-                  <label class="visually-hidden">
-                    Максимальная стоимость
-                    <input type="number" name="price_max" value="5000">
-                  </label>
-                </div>
-              </fieldset>
-
               <fieldset class="filter__section" id ="category">
                 <legend class="filter__section-title">Категория</legend>
                 <ul class="filter__options filter__category">
@@ -122,25 +102,6 @@ let catalogPage = {
             <ul class="catalog__list">
             </ul>
 
-            <div class="pagination">
-              <div class="pagination__wrapper">
-                <a class="pagination__link pagination__link--back">Назад</a>
-              </div>
-              <ul class="pagination__list">
-                <li class="pagination__item">
-                  <a class="pagination__link pagination__link--page pagination__link--current">1</a>
-                </li>
-                <li class="pagination__item">
-                  <a class="pagination__link pagination__link--page" href="#">2</a>
-                </li>
-                <li class="pagination__item">
-                  <a class="pagination__link pagination__link--page" href="#">3</a>
-                </li>
-              </ul>
-              <div class="pagination__wrapper">
-                <a class="pagination__link pagination__link--next" href="#">Вперед</a>
-              </div>
-            </div>
           </section>
         </div>
       </div>

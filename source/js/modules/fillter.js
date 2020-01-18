@@ -18,49 +18,38 @@ export default () => {
         const data = await products.json();
         return { data }
     }
-    function filterByBrand() {
-        filteredArray.filter(function (item) {
-            return item.brand === brand.id
-        })
-    }
-    //////////
-
-      //////////
-
-
-
-
-
     function addListenerOnBrands() {
         const brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
         brandFiltersArray.forEach(brand => {
             brand.addEventListener('click', e => {
                 productList.innerHTML = '';
-
-
+                
                 if (brand.checked) {
-                    brandFilteredArray.push(...filteredArray.filter(item => item.brand === brand.id));
-                } else if (!brand.checked) {
-                   brandFilteredArray.forEach(item => {
-                      
-                       if(brand.id === item.brand) {
-                            let index = brandFilteredArray.indexOf(item);
-                            console.log(index);
-                            brandFilteredArray.splice(index, 1);
-                            
-                            
-                            
-                           
-                            //remove(brandFilteredArray, index);
-                            //console.log(index);
-                            // brandFilteredArray.splice(index, 1);
-                            
-                         
-                       }
-                      // brandFilteredArray.splice(index, 1);
-                      
-                       
-                   })
+                    filteredArray.forEach(product => {
+                        if (brand.id === product.brand) {
+                            brandFilteredArray.push(product);
+                        }
+                    })
+                
+                }
+                // else if(brandFiltersArray.every(item => !item.checked)){
+                //         brandFilteredArray = filteredArray.slice();
+                //         console.log(brandFilteredArray);
+                // } 
+                else {
+                    brandFilteredArray = [];
+                    brandFiltersArray.forEach(product => {
+                        if (product.checked) {
+                            filteredArray.forEach(item => {
+                                if (item.brand === product.id) {
+                                    brandFilteredArray.push(item);
+                                }
+                            })
+                        }
+                    })
+                }
+                if (priceFlag === 1) {
+                    sortArrayByPrice(brandFilteredArray);
                 }
                 createProductCard(brandFilteredArray);
             })
@@ -134,8 +123,8 @@ export default () => {
             }
         })
     }
-    function sortArrayByPrice() {
-        filteredArray.sort((a, b) => a.price - b.price);
+    function sortArrayByPrice(arr) {
+        arr.sort((a, b) => a.price - b.price);
     }
     function filterBycategory(JSONData) {
         categoryFiltersArray.forEach(item => {
@@ -147,12 +136,13 @@ export default () => {
                     hideBrandFilter();
                 } else {
                     filteredArray = [];
+                    brandFilteredArray = [];
                     checkFiltersForChecked(JSONData);
                     createBrandFilter(JSONData.data);
                 }
 
                 if (priceFlag === 1) {
-                    sortArrayByPrice();
+                    sortArrayByPrice(filteredArray);
                 }
                 createProductCard(filteredArray);
             })
@@ -161,22 +151,35 @@ export default () => {
     function sortByPrice(JSONData) {
         priceFilter.addEventListener('click', e => {
             productList.innerHTML = '';
-
-            if (priceFlag === 0) {
-                priceFlag = 1;
-                sortArrayByPrice();
-
-            } else if (priceFlag === 1) {
-                priceFlag = 0
+            const brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
+            if(categoryFiltersArray.every(item => !item.checked)){
+                JSONData.data.sort((a, b) => a.price - b.price);
+                createProductCard(JSONData.data);
+            } else {
+                // brandFilteredArray.sort((a, b) => b.price - a.price);
+                // createProductCard(brandFilteredArray);
                 filteredArray = [];
-
-                if (categoryFiltersArray.every(item => !item.checked)) {
-                    filteredArray = JSONData.data.slice();
-                } else {
-                    checkFiltersForChecked(JSONData);
-                }
+                checkFiltersForChecked(JSONData);
+                filteredArray.sort((a, b) => a.price - b.price);
+                createProductCard(filteredArray);
             }
-            createProductCard(filteredArray);
+
+
+
+            // if (priceFlag === 0) {
+            //     priceFlag = 1;
+            //     sortArrayByPrice(filteredArray);
+            // } else if (priceFlag === 1) {
+            //     priceFlag = 0
+            //     filteredArray = [];
+
+            //     if (categoryFiltersArray.every(item => !item.checked)) {
+            //         filteredArray = JSONData.data.slice();
+            //     } else {
+            //         checkFiltersForChecked(JSONData);
+            //     }
+            // }
+            // createProductCard(filteredArray);
         });
     }
     const showProducts = async () => {
@@ -186,4 +189,34 @@ export default () => {
         sortByPrice(JSONData);
     }
     showProducts();
+
+    const highPrice = document.getElementById('downprice');
+    const lowPrice = document.getElementById('upprice');
+    lowPrice.addEventListener('click', sortLowToHigh);
+    highPrice.addEventListener('click', sortHighToLow);
+    function sortLowToHigh() {
+        productList.innerHTML = '';
+        priceFlag = 0;
+        const brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
+        if(brandFiltersArray.every(item => !item.checked)){
+            filteredArray.sort((a, b) => a.price - b.price);
+            createProductCard(filteredArray);
+        } else {
+            brandFilteredArray.sort((a, b) => a.price - b.price);
+            createProductCard(brandFilteredArray);
+        }
+    }
+    function sortHighToLow() {
+        productList.innerHTML = '';
+        priceFlag = 0;
+        const brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
+        if(brandFiltersArray.every(item => !item.checked)){
+            filteredArray.sort((a, b) => b.price - a.price);
+            createProductCard(filteredArray);
+        } else {
+            brandFilteredArray.sort((a, b) => b.price - a.price);
+            createProductCard(brandFilteredArray);
+        }
+        
+    }
 }
