@@ -6,19 +6,16 @@ let pageHeader = {
         <a class="page-header__logo main-nav__logo logo"">
           <img class="logo__image" src="img/logo-device.svg" width="163" height="36" alt="Интернет-магазин Device">
         </a>
-
 <!--        <form class="search-form" action="https://echo.htmlacademy.ru" method="get">-->
 <!--          <label class="visually-hidden" for="site-search">Поиск по сайту</label>-->
 <!--          <input class="search-form__input" id="site-search" type="text" name="search" placeholder="Поиск по сайту" required>-->
 <!--          <button class="search-form__btn" type="submit">Найти</button>-->
 <!--        </form>-->
-
 <!--        <ul class="page-header__user-menu user-menu">-->
 <!--          <li class="user-menu__item">-->
 <!--            <a class="user-menu__link user-menu__link--login" href="#">Войти</a>-->
 <!--          </li>-->
 <!--        </ul>-->
-
         <ul class="page-header__user-actions user-menu">
 <!--          <li class="user-menu__item">-->
 <!--            <a class="user-menu__link user-menu__link--compare" href="#">Сравнить</a>-->
@@ -27,7 +24,6 @@ let pageHeader = {
             <a class="user-menu__link user-menu__link--cart">Корзина</a>
           </li>
         </ul>
-
         <ul class="page-header__site-menu site-menu">
 <!--          <li class="site-menu__item">-->
 <!--            <a class="site-menu__link site-menu__link&#45;&#45;dropdown" href="/#/catalog">Каталог товаров</a>-->

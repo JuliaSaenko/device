@@ -6,14 +6,17 @@ let pageFooter = {
           <a class="logo">
             <img class="logo__image" src="img/logo-device-color.svg" width="163" height="36" alt="Интернет-магазин Device">
           </a>
-
           <ul class="page-footer__user-menu user-menu user-menu--contrast">
             <li class="user-menu__item">
               <a class="user-menu__link user-menu__link--product" href="/#/test-card-page">КАРТОЧКА ТОВАРА</a>
             </li>
             <li class="user-menu__item">
+              <a class="user-menu__link user-menu__link--product" href="#/order">Оформление заказа</a>
+            </li>
+            <li class="user-menu__item">
               <a class="user-menu__link user-menu__link--cart" href="/#/cart">Корзина</a>
             </li>
+            
           </ul>
         </div>
 

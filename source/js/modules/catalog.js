@@ -11,7 +11,6 @@ let catalogPage = {
     let view = `
     <div class="page__wrapper">
         <h1 class="page__title">Моноподы для селфи</h1>
-
         <ul class="page__breadcrumbs breadcrumbs">
           <li class="breadcrumbs__item">
             <a class="breadcrumbs__link" href="index.html">Главная</a>
@@ -24,11 +23,9 @@ let catalogPage = {
           </li>
         </ul>
       </div>
-
       <div class="catalog-columns--header">
         <div class="catalog-columns__wrapper page__wrapper">
           <p class="catalog-columns__narrow catalog-columns__title">Фильтр:</p>
-
           <section class="catalog-columns__wide sort">
             <h2 class="catalog-columns__title sort__title">Сортировка:</h2>
             <ul class="sort__type-list">
@@ -57,7 +54,6 @@ let catalogPage = {
           </section>
         </div>
       </div>
-
       <div class="catalog-columns">
         <div class="catalog-columns__wrapper page__wrapper">
           <section class="catalog-columns__narrow filter">
@@ -83,7 +79,6 @@ let catalogPage = {
                   </label>
                 </div>
               </fieldset>
-
               <fieldset class="filter__section">
                 <legend class="filter__section-title">Категория</legend>
                 <ul class="filter__options filter__category">
@@ -113,7 +108,6 @@ let catalogPage = {
                   </li>
                 </ul>
               </fieldset>
-
               <fieldset class="filter__section">
                 <legend class="filter__section-title">Bluetooth</legend>
                 <ul class="filter__options">
@@ -127,16 +121,13 @@ let catalogPage = {
                   </li>
                 </ul>
               </fieldset>
-
               <button class="filter__btn btn" type="submit">Показать</button>
             </form>
           </section>
-
           <section class="catalog-columns__wide catalog">
             <h2 class="visually-hidden">Каталог</h2>
             <ul class="catalog__list">
             </ul>
-
             <div class="pagination">
               <div class="pagination__wrapper">
                 <a class="pagination__link pagination__link--back">Назад</a>

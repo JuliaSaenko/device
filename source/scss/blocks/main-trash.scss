@@ -1,14 +1,26 @@
+//.popup-back{
+//  width:100%;
+//  min-height:100%;
+//  background-color: rgba(0,0,0,0.5);
+//  //overflow:hidden;
+//  //position:fixed;
+//  z-index: 9;
+//  top: 0px;
+//  left: 0px;
+//}
+
+
 .modal_container{
-  position: fixed;
+  top: 200px;
+  position: relative;
   align-self: center;
   display: -webkit-box;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  padding: 50px;
+  padding: 20px;
   margin: 0px auto;
-  width: 1200px;
-  z-index: 100;
+  width: 1120px;
   display: flex;
   color: #000000;
   background-color: #ffffff;
@@ -17,15 +29,12 @@
   -webkit-box-direction: normal;
   animation-duration: 0.6s;
   .finalPrice-container{
-    width: 1200px;
+    width: 1160px;
     justify-content: space-between;
   }
-  .delete_item{
-    margin-top: 20px;
-  }
-  .delete_item:hover{
-    color: red;
+
+  #make-order{
+    margin-right: 20px;
   }
 }
-
 
