@@ -3648,6 +3648,10 @@ body {
 .hide {
   display: none; }
 
+.inputs-transition {
+  -webkit-transform: translate(-50%);
+          transform: translate(-50%); }
+
 .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets {
   position: absolute;
   left: auto;

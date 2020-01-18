@@ -48,9 +48,10 @@ export default () => {
     let paymantOption = popupform.payment_option;
 
 
+
     // let cardPattern = new RegExp("^[0-9]{16}$");
 
-    //тут прикольные пробелым в инпуте номера карты
+    //тут прикольные пробелы в инпуте номера карты
     let cardNumber = popupform.creditcard;
     cardNumber.addEventListener('input', function () {
       let digitst = this.value.replace(/[^\d]/g, '').substring(0,16);
@@ -71,7 +72,6 @@ export default () => {
         name.classList.remove('alert');
       } else {
         name.classList.add('alert');
-        name.classList.add('error');
         res = false;
       }
 

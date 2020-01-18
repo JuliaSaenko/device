@@ -11,8 +11,8 @@ let orderPage = {
 <div class="order-popup-container">
   <h3>Ваш заказ</h3>
 
-  <form name="popupform" action="#" class="popup-form order-form">
-    <div class="input-text-wraper">
+  <div class="popup-form order-form">
+    <form name="popupform"  action="#" class="input-text-wraper">
       <label for="user_name" class="popup-label">
         Ваше имя:
         <input type="text" name="user_name" placeholder="Имя Фамилая">
@@ -64,7 +64,7 @@ let orderPage = {
         Номер карты:
         <input type="text"  name="creditcard" placeholder="XXXX XXXX XXXX XXXX">
       </label>
-    </div>
+    </form>
     <ul class="products-list-in-cart">   <!-- тут список товаров в корзине -->
  
       <li>
@@ -92,10 +92,10 @@ let orderPage = {
         <span>Всего:</span>
         <span class="finalPrice">2000</span>
       </div>
-      <button type="button" class="btn confirm-order-btn">Заказ принимаю</button>
+      <button type="button" class="btn confirm-order-btn">Заказ подтверждаю</button>
     </div>
 
-  </form>
+  </div>
 <!--  <button disabled type="button " class="cart__close modal__close"></button>-->
 </div>
 
