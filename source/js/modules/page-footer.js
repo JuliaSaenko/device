@@ -8,6 +8,9 @@ let pageFooter = {
           </a>
 
           <ul class="page-footer__user-menu user-menu user-menu--contrast">
+           <li class="user-menu__item">
+              <a class="user-menu__link user-menu__link--product" href="/#/order">Корзина</a>
+            </li>
             <li class="user-menu__item">
               <a class="user-menu__link user-menu__link--product" href="/#/test-card-page">КАРТОЧКА ТОВАРА</a>
             </li>

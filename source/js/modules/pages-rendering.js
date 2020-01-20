@@ -1,10 +1,9 @@
 "use strict";
 
-
-
 import mainPage from './main-page';
 import catalogPage from "./catalog";
-import testCardPage from './testCardPage';
+import orderPage from "./order-render";
+import cardPage from './card-page';
 // import About        from './views/pages/About.js'
 // import Error404     from './views/pages/Error404.js'
 // import PostShow     from './views/pages/PostShow.js'
@@ -22,10 +21,10 @@ const pagesRender = () => {
   const routes = {
     '/' : mainPage,
     '/catalog': catalogPage,
+    '/order' : orderPage,
     //'/cart' : cartPage,
-    // , '/item/:id'      : Item
+    '/i/:id' : cardPage
     // , '/registration'   : Registration
-    '/test-card-page': testCardPage
   };
 
 
