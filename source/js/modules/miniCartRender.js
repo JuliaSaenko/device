@@ -3,9 +3,11 @@
 export default () => {
 
   let cartArray = JSON.parse(localStorage.getItem('cartData'));
-  if(cartArray !== null){
+  if (cartArray === null){
+    document.querySelector('.cart-popup>ul').innerHTML = `<div>Корзина пуста :(</div>`
+  } else{
     if (document.querySelector('.cart-popup>ul')){
-      // document.querySelector('.cart-popup>ul').innerHTML = "";
+      document.querySelector('.cart-popup>ul').innerHTML = ``;
       cartArray.forEach(function (item) {
         document.querySelector('.cart-popup>ul').innerHTML += `
           <li class="cart__product">
@@ -25,9 +27,9 @@ export default () => {
         `;
       });
     }
-  } else{
-    console.log('локал сторедж пустой');
-    document.querySelector('.cart-popup>ul').innerHTML = `<div>Корзина пуста :(</div>>`
   }
+
+
+
 
 }

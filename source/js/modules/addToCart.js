@@ -6,7 +6,7 @@ export default () => {
   (function(){
 
 
-    //булировать инфу в новый объект для корзины
+    //дублировать инфу в новый объект для корзины
     function getProductProperties(name, price, img, col) {
       this.name = name;
       this.price = price;
@@ -15,37 +15,13 @@ export default () => {
     }
 
 
-    // //взять из LocalStorage
-    // function getCartData(cartArray){
-    //   return JSON.parse(localStorage.getItem('cart'));
-    // }
-    //
-    // //запись LocalStorage
-    // function setCartData(data){
-    //   return  localStorage.setItem('cart', JSON.stringify(data));
-    // }
-
-
-    // function forLocalStorage(data, value){
-    //   if (localStorage.getItem(data) === null){
-    //     localStorage.setItem(data, JSON.stringify(value))
-    //   }
-    //   return JSON.parse(localStorage.getItem(data));
-    // }
-
-
-
+    //если локал сторедж не пустой то взять из него
     let cartArray = JSON.parse(localStorage.getItem('cartData'));
     if (!cartArray){
       cartArray = [];
     }
 
-    // document.querySelector('.products-list-in-cart').innerHTML = "";
-
-
-
-
-    //слушатель на кнопку
+    // функция -повесить слушатель если есть элемент
     function addEvent(elem, eventType, handler){
       if(elem.addEventListener){
         elem.addEventListener(eventType, handler, false);
@@ -53,10 +29,7 @@ export default () => {
     }
 
 
-
-
-
-
+    // циклом вешаеются слушатели на кнопки
     let allProduts = document.querySelectorAll('.addToCartBtn');
     if(allProduts) {
       allProduts.forEach((elem)=>{
@@ -68,7 +41,7 @@ export default () => {
 
 
 
-
+    // добавление в локал стореж и отрисовка
     function addToCart(e){
       // console.log(e.target);
       // e.target.class.add();
@@ -80,8 +53,15 @@ export default () => {
 
       let cartData = new getProductProperties(prodCartName, prodCardPrice, prodCardImg, 1);
       console.log(cartData);
-      if(cartArray.includes(cartData.hasOwnProperty(name === prodCartName))){
+      if (cartArray === null){
+        document.querySelector('.cart-popup>ul').innerHTML = `<div>Корзина пуста :(</div>`
+      } else{
+        document.querySelector('.cart-popup>ul>div').innerHTML = "";
+      }
+
+      if(cartArray.includes(cartData.hasOwnProperty(name) === prodCartName)){
         cartArray.includes(cartData.col +1);
+        localStorage.setItem('cartData', JSON.stringify(cartArray));
       } else {
         cartArray.push(cartData);
         localStorage.setItem('cartData', JSON.stringify(cartArray));
@@ -104,9 +84,6 @@ export default () => {
       }
 
     }
-
-    // console.log(document.querySelector('.products-list-in-cart'));
-
 
   })();
 

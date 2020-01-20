@@ -4,6 +4,8 @@ import {errorClass} from "./utils";
 export default () => {
   (function() {
 
+console.log(document.querySelector('.user-menu__link--cart'));
+    document.querySelector('.user-menu__link--cart').classList.add('hide');
 
     let cartArray = JSON.parse(localStorage.getItem('cartData'));
 

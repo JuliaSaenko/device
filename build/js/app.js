@@ -21206,42 +21206,28 @@
 
   var addToCart = (function () {
     (function () {
-      //булировать инфу в новый объект для корзины
+      //дублировать инфу в новый объект для корзины
       function getProductProperties(name, price, img, col) {
         this.name = name;
         this.price = price;
         this.src = img;
         this.col = col;
-      } // //взять из LocalStorage
-      // function getCartData(cartArray){
-      //   return JSON.parse(localStorage.getItem('cart'));
-      // }
-      //
-      // //запись LocalStorage
-      // function setCartData(data){
-      //   return  localStorage.setItem('cart', JSON.stringify(data));
-      // }
-      // function forLocalStorage(data, value){
-      //   if (localStorage.getItem(data) === null){
-      //     localStorage.setItem(data, JSON.stringify(value))
-      //   }
-      //   return JSON.parse(localStorage.getItem(data));
-      // }
+      } //если локал сторедж не пустой то взять из него
 
 
       var cartArray = JSON.parse(localStorage.getItem('cartData'));
 
       if (!cartArray) {
         cartArray = [];
-      } // document.querySelector('.products-list-in-cart').innerHTML = "";
-      //слушатель на кнопку
+      } // функция -повесить слушатель если есть элемент
 
 
       function addEvent(elem, eventType, handler) {
         if (elem.addEventListener) {
           elem.addEventListener(eventType, handler, false);
         }
-      }
+      } // циклом вешаеются слушатели на кнопки
+
 
       var allProduts = document.querySelectorAll('.addToCartBtn');
 
@@ -21251,7 +21237,8 @@
             addToCart(e);
           });
         });
-      }
+      } // добавление в локал стореж и отрисовка
+
 
       function addToCart(e) {
         // console.log(e.target);
@@ -21263,15 +21250,21 @@
         var cartData = new getProductProperties(prodCartName, prodCardPrice, prodCardImg, 1);
         console.log(cartData);
 
-        if (cartArray.includes(cartData.hasOwnProperty(name === prodCartName))) {
+        if (cartArray === null) {
+          document.querySelector('.cart-popup>ul').innerHTML = "<div>\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043F\u0443\u0441\u0442\u0430 :(</div>";
+        } else {
+          document.querySelector('.cart-popup>ul>div').innerHTML = "";
+        }
+
+        if (cartArray.includes(cartData.hasOwnProperty(name) === prodCartName)) {
           cartArray.includes(cartData.col + 1);
+          localStorage.setItem('cartData', JSON.stringify(cartArray));
         } else {
           cartArray.push(cartData);
           localStorage.setItem('cartData', JSON.stringify(cartArray));
           document.querySelector('.cart-popup>ul').innerHTML += " \n          <li class=\"cart__product\">\n              <div class=\"cart__product-img\">\n                <img src=\"".concat(prodCardImg, "\" width=\"100\" height=\"100\">\n              </div>\n              <div class=\"cart__product-info\">\n                <div class=\"cart__product-name product-name\">").concat(prodCartName, "</div>\n                <div class=\"amount-of-produts\">\n                  <span class=\"amount\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E:</span>\n                  <span class=\"number-of-amount\">").concat(cartData.col, "</span>\n                  <p class=\"cart__product-price\">\u0426\u0435\u043D\u0430: <span class=\"product-price\">").concat(prodCardPrice, "</span></p>\n                  <div class=\"delete_item\">\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u043A\u043E\u0440\u0437\u0438\u043D\u044B</div>\n                </div>\n              </div>\n            </li>\n        ");
         }
-      } // console.log(document.querySelector('.products-list-in-cart'));
-
+      }
     })();
   });
 
@@ -21336,16 +21329,15 @@
   var miniCartRender = (function () {
     var cartArray = JSON.parse(localStorage.getItem('cartData'));
 
-    if (cartArray !== null) {
+    if (cartArray === null) {
+      document.querySelector('.cart-popup>ul').innerHTML = "<div>\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043F\u0443\u0441\u0442\u0430 :(</div>";
+    } else {
       if (document.querySelector('.cart-popup>ul')) {
-        // document.querySelector('.cart-popup>ul').innerHTML = "";
+        document.querySelector('.cart-popup>ul').innerHTML = "";
         cartArray.forEach(function (item) {
           document.querySelector('.cart-popup>ul').innerHTML += "\n          <li class=\"cart__product\">\n              <div class=\"cart__product-img\">\n                <img src=\"".concat(item.src, "\" width=\"100\" height=\"100\">\n              </div>\n              <div class=\"cart__product-info\">\n                <div class=\"cart__product-name product-name\">").concat(item.name, "</div>\n                <div class=\"amount-of-produts\">\n                  <span class=\"amount\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E:</span>\n                  <span class=\"number-of-amount\">").concat(item.col, "</span>\n                  <p class=\"cart__product-price\">\u0426\u0435\u043D\u0430: <span class=\"product-price\">").concat(item.price, "</span></p>\n                  <div class=\"delete_item\">\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u043A\u043E\u0440\u0437\u0438\u043D\u044B</div>\n                </div>\n              </div>\n            </li>\n        ");
         });
       }
-    } else {
-      console.log('локал сторедж пустой');
-      document.querySelector('.cart-popup>ul').innerHTML = "<div>\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043F\u0443\u0441\u0442\u0430 :(</div>>";
     }
   });
 
@@ -21660,6 +21652,8 @@
 
   var order = (function () {
     (function () {
+      console.log(document.querySelector('.user-menu__link--cart'));
+      document.querySelector('.user-menu__link--cart').classList.add('hide');
       var cartArray = JSON.parse(localStorage.getItem('cartData'));
       document.querySelector('.cart-popup>ul').innerHTML = "";
       cartArray.forEach(function (item) {
