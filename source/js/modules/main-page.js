@@ -3,6 +3,7 @@ import sliders from './sliders';
 import services from './services';
 import contacts from './contacts';
 import aboutUs from './about-us';
+import addToCart from './addToCart';
 
 let mainPage = {
   render : async () => {
@@ -211,6 +212,7 @@ let mainPage = {
     contacts();
     aboutUs();
     commentForm();
+    addToCart();
   }
 
 };

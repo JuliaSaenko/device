@@ -4,6 +4,7 @@
 // import contacts from './contacts';
 // import aboutUs from './about-us';
 import order from './order';
+import addToCart from './addToCart';
 
 let orderPage = {
   render : async () => {
@@ -67,24 +68,6 @@ let orderPage = {
     </form>
     <ul class="products-list-in-cart">   <!-- тут список товаров в корзине -->
  
-      <li>
-        <div class="cart__product">
-            <div class="cart__product-img">
-              <img src="#" width="130" height="130">
-            </div>
-            <div class="cart__product-info">
-              <div class="cart__product-name product-name"> товар 1 </div>
-              <div class="amount-of-produts">
-                <span class="amount">Количество: </span>
-                <button class="btnMinus">-</button>
-                <span class="number-of-amount">1</span>
-                <button class="btnPlus">+</button>
-                <p class="cart__product-price">Цена: <span class="product-price">2000</span></p>
-              </div>
-              <div class="delete_item">Убрать из корзины</div>
-            </div>
-          </div>
-      </li>
  
     </ul>
     <div class="finalPrice-container">
@@ -108,6 +91,7 @@ let orderPage = {
   }
   , after_render: async () => {
     order();
+    addToCart();
   }
 
 };

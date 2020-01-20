@@ -6,6 +6,7 @@ import commentForm from "./comment-form";
 import products from './products';
 import fillter from './fillter';
 
+
 let catalogPage = {
   render : async () => {
     let view = `
@@ -158,6 +159,13 @@ let catalogPage = {
   , after_render: async () => {
     products();
     fillter();
+
+    window.onload = function() {
+      console.log('Страница загружена');
+
+      // к этому моменту страница загружена
+    };
+
   }
 
 };
