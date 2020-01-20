@@ -8,11 +8,19 @@ import order from './order';
 let orderPage = {
   render : async () => {
     let view = `
+<<<<<<< HEAD
+<div class="order-popup-container modal modal--order">
+  <h3>Ваш заказ</h3>
+
+  <form name="popupform" action="#" class="popup-form order-form">
+    <div class="input-text-wraper">
+=======
 <div class="order-popup-container">
   <h3>Ваш заказ</h3>
 
   <div class="popup-form order-form">
     <form name="popupform"  action="#" class="input-text-wraper">
+>>>>>>> main-page
       <label for="user_name" class="popup-label">
         Ваше имя:
         <input type="text" name="user_name" placeholder="Имя Фамилая">
@@ -64,9 +72,15 @@ let orderPage = {
         Номер карты:
         <input type="text"  name="creditcard" placeholder="XXXX XXXX XXXX XXXX">
       </label>
+<<<<<<< HEAD
+    </div>
+    <ul class="products-list-in-cart">   <!-- тут список товаров в корзине -->
+
+=======
     </form>
     <ul class="products-list-in-cart">   <!-- тут список товаров в корзине -->
  
+>>>>>>> main-page
       <li>
         <div class="cart__product">
             <div class="cart__product-img">
@@ -85,17 +99,28 @@ let orderPage = {
             </div>
           </div>
       </li>
+<<<<<<< HEAD
+
+=======
  
+>>>>>>> main-page
     </ul>
     <div class="finalPrice-container">
       <div>
         <span>Всего:</span>
         <span class="finalPrice">2000</span>
       </div>
+<<<<<<< HEAD
+      <button type="button" class="btn confirm-order-btn">Заказ принимаю</button>
+    </div>
+
+  </form>
+=======
       <button type="button" class="btn confirm-order-btn">Заказ подтверждаю</button>
     </div>
 
   </div>
+>>>>>>> main-page
 <!--  <button disabled type="button " class="cart__close modal__close"></button>-->
 </div>
 

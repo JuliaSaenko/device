@@ -5,6 +5,7 @@ import aboutUs from "./about-us";
 import commentForm from "./comment-form";
 import products from './products';
 import fillter from './fillter';
+//import cardPage from "./card-page";
 
 let catalogPage = {
   render : async () => {
@@ -158,6 +159,7 @@ let catalogPage = {
   , after_render: async () => {
     products();
     fillter();
+
   }
 
 };

@@ -1,3 +1,5 @@
+import cardPage from "./card-page";
+
 export default () => {
   const productList = document.querySelector('.catalog__list');
 
@@ -8,7 +10,7 @@ export default () => {
       throw new Error(`Can not fetch ${products.url}`)
     }
 
-    const data = await products.json();    
+    const data = await products.json();
     return { data }
   }
 
@@ -28,8 +30,8 @@ export default () => {
 
     response.data.forEach(item => {
       productList.innerHTML += `
-        <li class="catalog__item">
-            <a class="catalog__link" href="#">
+        <li class="catalog__item" data-id="${item.id}">
+            <a class="catalog__link" data-id="${item.id}" href="#/i/${item.id}">
                 <h3 class="catalog__title">${item.name}</h3>
             </a>
             <p class="catalog__price">${item.price} грн</p>
@@ -42,6 +44,14 @@ export default () => {
             </div>
         </li>
         `;
+
+      const catalogLink = document.querySelector(`.catalog__link`);
+      catalogLink.addEventListener(`click`, () => {
+        if(catalogLink.getAttribute(`data-id`) === item.id) {
+          console.log(1);
+          cardPage();
+        }
+      });
     })
   }
   showData();

@@ -37,7 +37,7 @@
     display: flex;
     justify-content: space-between;
   }
-    .input-text-wraper{
+  .input-text-wraper{
     display: flex;
     flex-direction: column;
     .popup-label{
@@ -47,9 +47,9 @@
       font-size: 14px;
       font-weight: 900;
     }
-      .alert{
-        border: 1px solid red;
-      }
+    .alert{
+      border: 1px solid red;
+    }
     input, select{
       margin-bottom: 10px;
       width: 290px;
