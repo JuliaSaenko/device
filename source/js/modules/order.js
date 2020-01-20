@@ -5,9 +5,9 @@ import {errorClass} from "./utils";
 export default () => {
   (function() {
 
-   // if($('.city').val()!=0){
-   //    $('#delivery-option').removeClass('hide');
-   // }
+    // if($('.city').val()!=0){
+    //    $('#delivery-option').removeClass('hide');
+    // }
 
     document.querySelector('#city').addEventListener('click', function () {
       if (document.querySelector('#city').value!=0){
@@ -19,11 +19,11 @@ export default () => {
 
     document.querySelector('#delivery-option').addEventListener('click', function () {
       if (document.querySelector('#delivery-option select').options.selectedIndex === 1){
-          document.querySelector('#NP-number').classList.remove('hide');
-          document.querySelector('#user-adress').classList.add('hide');
+        document.querySelector('#NP-number').classList.remove('hide');
+        document.querySelector('#user-adress').classList.add('hide');
       }else if(document.querySelector('#delivery-option select').options.selectedIndex === 2){
-          document.querySelector('#user-adress').classList.remove('hide');
-          document.querySelector('#NP-number').classList.add('hide');
+        document.querySelector('#user-adress').classList.remove('hide');
+        document.querySelector('#NP-number').classList.add('hide');
       }
       document.querySelector('#payment-option').classList.remove('hide');
     });
@@ -72,8 +72,6 @@ export default () => {
         name.classList.remove('alert');
       } else {
         name.classList.add('alert');
-        name.classList.add('inputs-transition');
-        name.classList.add('error');
         res = false;
       }
 
@@ -135,11 +133,11 @@ export default () => {
 
     let confirmOrderBtn = document.querySelector('.confirm-order-btn');
     confirmOrderBtn.addEventListener('click', function(){
-       if(orderValidation()){
+      if(orderValidation()){
 
         document.querySelector('.order-popup-container').innerHTML=`
         <div class="success-order-message">
-            <div class="success-used-data">  
+            <div class="success-used-data">
                 <img src="img/High-contrast-face-smile.svg" width="560" height="560">
                 <h3>Спасибо!</h3>
                 <p>Ваш заказ успешно офрмлен! Наш менеджер скоро с Вами свяжется =)</p>
@@ -147,7 +145,7 @@ export default () => {
             </div>
         </div>
         `;
-       }
+      }
     });
 
 

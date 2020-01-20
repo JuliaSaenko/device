@@ -3,7 +3,9 @@
 import mainPage from './main-page';
 import catalogPage from "./catalog";
 import orderPage from "./order-render";
+
 import cardPage from './card-page';
+
 // import About        from './views/pages/About.js'
 // import Error404     from './views/pages/Error404.js'
 // import PostShow     from './views/pages/PostShow.js'
@@ -19,11 +21,11 @@ const pagesRender = () => {
   // List of supported routes. Any url other than these routes will throw a 404 error
 
   const routes = {
-    '/' : mainPage,
-    '/catalog': catalogPage,
+    '/': mainPage,
+    '/catalog' : catalogPage,
     '/order' : orderPage,
     //'/cart' : cartPage,
-    '/i/:id' : cardPage
+    '/i/:id' : cardPage,
     // , '/registration'   : Registration
   };
 
