@@ -102,7 +102,7 @@ let mainPage = {
         <h2 class="visually-hidden">Категории товаров</h2>
         <ul class="categories__list">
           <li class="categories__item">
-            <a class="categories__link categories__link--virtual" href="#">Виртуальная реальность</a>
+            <a class="categories__link categories__link--virtual" href="catalog">Виртуальная реальность</a>
           </li>
           <li class="categories__item">
             <a class="categories__link categories__link--monopod" href="catalog.html">Моноподы для&nbsp;селфи</a>

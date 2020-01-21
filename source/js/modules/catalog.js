@@ -5,6 +5,7 @@ import aboutUs from "./about-us";
 import commentForm from "./comment-form";
 import products from './products';
 import fillter from './fillter';
+import redirect2 from "./redirect2";
 
 
 let catalogPage = {
@@ -111,6 +112,7 @@ let catalogPage = {
     return view
   }
   , after_render: async () => {
+    redirect2();
     products();
     fillter();
   }

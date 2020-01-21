@@ -2,6 +2,7 @@
 
 import { async, values } from "./polyfill";
 import products from "./products";
+import redirect2 from "./redirect2";
 
 export default () => {
     const productList = document.querySelector('.catalog__list');
