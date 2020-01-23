@@ -1,13 +1,16 @@
 .reviews {
-  max-width: 1000px;
+  width: 100%;
+  max-width: 1070px;
   margin: 40px auto 0;
-  padding: 0 0 50px 30px;
+  padding: 0 0 30px;
+  //background-color: #efefef;
 }
 
 .reviews__list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 70px 0 100px 70px;
+  max-width: 1000px;
 }
 
 .reviews__heading {
