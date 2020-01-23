@@ -21386,6 +21386,7 @@
 
             if (priceFlag === 1) {
               sortArrayByPrice(brandFilteredArray);
+              createProductCard(brandFilteredArray);
             } else if (priceFlag === 2) {
               sortHighToLow();
             } else {
@@ -21398,7 +21399,8 @@
             brandFilteredArray = [];
 
             if (priceFlag === 1) {
-              sortArrayByPrice(brandFilteredArray);
+              sortArrayByPrice(filteredArray);
+              createProductCard(filteredArray);
             } else if (priceFlag === 2) {
               sortHighToLow();
             } else {
@@ -21419,6 +21421,7 @@
 
             if (priceFlag === 1) {
               sortArrayByPrice(brandFilteredArray);
+              createProductCard(brandFilteredArray);
             } else if (priceFlag === 2) {
               sortHighToLow();
             } else {
@@ -21516,15 +21519,16 @@
             return !item.checked;
           })) {
             filteredArray = JSONData.data.slice();
-            hideBrandFilter();
-            createBreadCrumb();
+            hideBrandFilter(); //createBreadCrumb(item);
           } else {
             filteredArray = [];
             brandFilteredArray = [];
-            checkFiltersForChecked(JSONData);
-            createBreadCrumb();
+            checkFiltersForChecked(JSONData); //createBreadCrumb(item);
+
             createBrandFilter(JSONData.data);
           }
+
+          createBreadCrumb();
 
           if (priceFlag === 1) {
             sortArrayByPrice(filteredArray);
@@ -21533,9 +21537,9 @@
             sortHighToLow();
           } else {
             createProductCard(filteredArray);
-          }
+          } //console.log(filteredArray);
+          //createProductCard(filteredArray);
 
-          console.log(filteredArray); //createProductCard(filteredArray);
         });
       });
     }
@@ -21555,26 +21559,26 @@
         } else {
           // brandFilteredArray.sort((a, b) => b.price - a.price);
           // createProductCard(brandFilteredArray);
-          filteredArray = [];
-          checkFiltersForChecked(JSONData);
-          filteredArray.sort(function (a, b) {
-            return a.price - b.price;
-          });
-          createProductCard(filteredArray);
-        } // if (priceFlag === 0) {
-        //     priceFlag = 1;
-        //     sortArrayByPrice(filteredArray);
-        // } else if (priceFlag === 1) {
-        //     priceFlag = 0
-        //     filteredArray = [];
-        //     if (categoryFiltersArray.every(item => !item.checked)) {
-        //         filteredArray = JSONData.data.slice();
-        //     } else {
-        //         checkFiltersForChecked(JSONData);
-        //     }
-        // }
-        // createProductCard(filteredArray);
+          // filteredArray = [];
+          if (brandFilteredArray.length !== 0) {
+            brandFilteredArray.sort(function (a, b) {
+              return a.price - b.price;
+            });
+            createProductCard(brandFilteredArray);
+          } else {
+            filteredArray = [];
+            checkFiltersForChecked(JSONData);
+            filteredArray.sort(function (a, b) {
+              return a.price - b.price;
+            });
+            createProductCard(filteredArray);
+          } // checkFiltersForChecked(JSONData);
+          // filteredArray.sort((a, b) => a.price - b.price);
+          // createProductCard(filteredArray);
 
+        }
+
+        console.log(filteredArray);
       });
     }
 

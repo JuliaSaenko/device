@@ -21306,108 +21306,6 @@
     }()
   };
 
-  var products = (function () {
-    var productList = document.querySelector('.catalog__list');
-    var filter = null;
-    var userFilter;
-    var filteredArray = [];
-
-    function checkState() {
-      var checkboxes = Array.from(document.querySelectorAll('.category__filter'));
-      checkboxes.forEach(function (item) {
-        if (item.checked) {
-          filter = item.id;
-          return;
-        }
-      });
-    }
-
-    var requestData =
-    /*#__PURE__*/
-    function () {
-      var _ref = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee() {
-        var products, data;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.next = 2;
-                return fetch("./data/products.json");
-
-              case 2:
-                products = _context.sent;
-
-                if (products.ok) {
-                  _context.next = 5;
-                  break;
-                }
-
-                throw new Error("Can not fetch ".concat(products.url));
-
-              case 5:
-                _context.next = 7;
-                return products.json();
-
-              case 7:
-                data = _context.sent;
-                return _context.abrupt("return", {
-                  data: data
-                });
-
-              case 9:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }));
-
-      return function requestData() {
-        return _ref.apply(this, arguments);
-      };
-    }();
-
-    var showData = function showData() {
-      requestData().then(function (response) {
-        if (filter !== null) {
-          response.data.forEach(function (item) {
-            if (item.category === filter) {
-              filteredArray.push(item);
-              userFilter = item.userCategory;
-              console.log(userFilter);
-            }
-          });
-          createCards(filteredArray);
-          localStorage.removeItem('categoryName');
-        } else {
-          createCards(response.data);
-        }
-      })["catch"](function (error) {
-        productList.innerHTML = "\n        <p class = \"item__error\">\n            Too many requests, try again in 1 minute...\n        </p>\n        ";
-      });
-    };
-
-    function createCards(response) {
-      response.forEach(function (item) {
-        productList.innerHTML += "\n        <li class=\"catalog__item\">\n            <a class=\"catalog__link\" href=\"#\">\n                <h3 class=\"catalog__title\">".concat(item.name, "</h3>\n            </a>\n            <p class=\"catalog__price\">").concat(item.price, " \u0433\u0440\u043D</p>\n            <div class=\"catalog__wrapper\">\n                <img class=\"catalog__image\" src=\"").concat(item.img, "\">\n                <p class=\"catalog__actions\">\n                <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                </p>\n            </div>\n        </li>\n        ");
-      });
-    }
-
-    function checkBreadCrumbs() {
-      var crumb = document.getElementById('breadcrumb');
-
-      if (filter) {
-        crumb.innerHTML = "".concat(userFilter);
-      }
-    }
-
-    checkState();
-    checkBreadCrumbs();
-    showData();
-  });
-
   var redirect2 = (function () {
     var category = localStorage.getItem('categoryName');
     var categoryFilter = Array.from(document.querySelectorAll('.category__filter'));
@@ -21485,28 +21383,49 @@
                 brandFilteredArray.push(product);
               }
             });
-          } // else if(brandFiltersArray.every(item => !item.checked)){
-          //         brandFilteredArray = filteredArray.slice();
-          //         console.log(brandFilteredArray);
-          // } 
-          else {
-              brandFilteredArray = [];
-              brandFiltersArray.forEach(function (product) {
-                if (product.checked) {
-                  filteredArray.forEach(function (item) {
-                    if (item.brand === product.id) {
-                      brandFilteredArray.push(item);
-                    }
-                  });
-                }
-              });
-            }
 
-          if (priceFlag === 1) {
-            sortArrayByPrice(brandFilteredArray);
+            if (priceFlag === 1) {
+              sortArrayByPrice(brandFilteredArray);
+            } else if (priceFlag === 2) {
+              sortHighToLow();
+            } else {
+              createProductCard(brandFilteredArray);
+            } //createProductCard(brandFilteredArray);
+
+          } else if (brandFiltersArray.every(function (item) {
+            return !item.checked;
+          })) {
+            brandFilteredArray = [];
+
+            if (priceFlag === 1) {
+              sortArrayByPrice(brandFilteredArray);
+            } else if (priceFlag === 2) {
+              sortHighToLow();
+            } else {
+              createProductCard(filteredArray);
+            } //createProductCard(filteredArray);
+
+          } else {
+            brandFilteredArray = [];
+            brandFiltersArray.forEach(function (product) {
+              if (product.checked) {
+                filteredArray.forEach(function (item) {
+                  if (item.brand === product.id) {
+                    brandFilteredArray.push(item);
+                  }
+                });
+              }
+            });
+
+            if (priceFlag === 1) {
+              sortArrayByPrice(brandFilteredArray);
+            } else if (priceFlag === 2) {
+              sortHighToLow();
+            } else {
+              createProductCard(brandFilteredArray);
+            } // createProductCard(brandFilteredArray);
+
           }
-
-          createProductCard(brandFilteredArray);
         });
       });
     }
@@ -21598,18 +21517,25 @@
           })) {
             filteredArray = JSONData.data.slice();
             hideBrandFilter();
+            createBreadCrumb();
           } else {
             filteredArray = [];
             brandFilteredArray = [];
             checkFiltersForChecked(JSONData);
+            createBreadCrumb();
             createBrandFilter(JSONData.data);
           }
 
           if (priceFlag === 1) {
             sortArrayByPrice(filteredArray);
+            createProductCard(filteredArray);
+          } else if (priceFlag === 2) {
+            sortHighToLow();
+          } else {
+            createProductCard(filteredArray);
           }
 
-          createProductCard(filteredArray);
+          console.log(filteredArray); //createProductCard(filteredArray);
         });
       });
     }
@@ -21617,7 +21543,7 @@
     function sortByPrice(JSONData) {
       priceFilter.addEventListener('click', function (e) {
         productList.innerHTML = '';
-        var brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
+        priceFlag = 1; //const brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
 
         if (categoryFiltersArray.every(function (item) {
           return !item.checked;
@@ -21693,7 +21619,7 @@
 
     function sortLowToHigh() {
       productList.innerHTML = '';
-      priceFlag = 0;
+      priceFlag = 1;
       var brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
 
       if (brandFiltersArray.every(function (item) {
@@ -21713,7 +21639,7 @@
 
     function sortHighToLow() {
       productList.innerHTML = '';
-      priceFlag = 0;
+      priceFlag = 2;
       var brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
 
       if (brandFiltersArray.every(function (item) {
@@ -21730,6 +21656,148 @@
         createProductCard(brandFilteredArray);
       }
     }
+
+    function createBreadCrumb() {
+      var crumbBlock = document.getElementById('breadcrumb');
+      var userCategories = [];
+      crumbBlock.innerHTML = '';
+      filteredArray.forEach(function (item) {
+        userCategories.push(item.userCategory);
+      });
+      userCategories = new Set(userCategories);
+      userCategories.forEach(function (item) {
+        if (userCategories.size > 5) {
+          crumbBlock.innerHTML = '';
+          crumbBlock.innerHTML += "\n                    <a class=\"breadcrumbs__link\"> \u0412\u0441\u0435 \u0442\u043E\u0432\u0430\u0440\u044B </a>\n                ";
+        } else {
+          crumbBlock.innerHTML += "\n                    <a class=\"breadcrumbs__link\">".concat(item, " / </a>\n                ");
+        }
+      });
+    }
+  });
+
+  var products = (function () {
+    var productList = document.querySelector('.catalog__list');
+    var catalogCrumb = document.getElementById('catalog-crumb');
+    catalogCrumb.addEventListener('click', handleClickOnCatalogCrumb);
+    var filter = null;
+    var userFilter;
+    var filteredArray = [];
+
+    function checkState() {
+      var checkboxes = Array.from(document.querySelectorAll('.category__filter'));
+      checkboxes.forEach(function (item) {
+        if (item.checked) {
+          filter = item.id;
+          return;
+        }
+      });
+    }
+
+    var requestData =
+    /*#__PURE__*/
+    function () {
+      var _ref = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        var products, data;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return fetch("./data/products.json");
+
+              case 2:
+                products = _context.sent;
+
+                if (products.ok) {
+                  _context.next = 5;
+                  break;
+                }
+
+                throw new Error("Can not fetch ".concat(products.url));
+
+              case 5:
+                _context.next = 7;
+                return products.json();
+
+              case 7:
+                data = _context.sent;
+                return _context.abrupt("return", {
+                  data: data
+                });
+
+              case 9:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function requestData() {
+        return _ref.apply(this, arguments);
+      };
+    }();
+
+    var showData = function showData() {
+      requestData().then(function (response) {
+        if (filter !== null) {
+          response.data.forEach(function (item) {
+            if (item.category === filter) {
+              filteredArray.push(item);
+              userFilter = item.userCategory;
+            }
+          });
+          checkBreadCrumbs();
+          createCards(filteredArray);
+          localStorage.removeItem('categoryName');
+        } else {
+          createCards(response.data);
+        }
+      })["catch"](function (error) {
+        productList.innerHTML = "\n        <p class = \"item__error\">\n            Too many requests, try again in 1 minute...\n        </p>\n        ";
+      });
+    };
+
+    function createCards(response) {
+      response.forEach(function (item) {
+        productList.innerHTML += "\n        <li class=\"catalog__item\">\n            <a class=\"catalog__link\" href=\"#\">\n                <h3 class=\"catalog__title\">".concat(item.name, "</h3>\n            </a>\n            <p class=\"catalog__price\">").concat(item.price, " \u0433\u0440\u043D</p>\n            <div class=\"catalog__wrapper\">\n                <img class=\"catalog__image\" src=\"").concat(item.img, "\">\n                <p class=\"catalog__actions\">\n                <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                </p>\n            </div>\n        </li>\n        ");
+      });
+    }
+
+    function checkBreadCrumbs() {
+      var crumb = document.getElementById('breadcrumb');
+      crumb.innerHTML = "".concat(userFilter);
+    }
+
+    function handleClickOnCatalogCrumb() {
+      //удаляем локал сторедж
+      localStorage.removeItem('categoryName'); //получаем крошку категории
+
+      var crumb = document.getElementById('breadcrumb'); //фильтра по категориям
+
+      var categoryFiltersArray = Array.from(document.querySelectorAll('.category__filter')); //меняем крошку на все товары
+
+      crumb.innerHTML = "\u0412\u0441\u0435 \u0442\u043E\u0432\u0430\u0440\u044B"; //очищаем полотно товаров и выводим все товары
+
+      productList.innerHTML = '';
+      filter = null;
+      showData(); //снимаем чеки со всех чекбоксов
+
+      categoryFiltersArray.forEach(function (item) {
+        if (item.checked) {
+          item.checked = false;
+        }
+      }); //закрываем бренд лист
+
+      var brandFilter = document.getElementById('brand');
+      brandFilter.innerHTML = '';
+    }
+
+    checkState();
+    showData();
   });
 
   var catalogPage = {
@@ -21742,7 +21810,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "\n    <div class=\"page__wrapper\">\n        <h1 class=\"page__title\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</h1>\n\n        <ul class=\"page__breadcrumbs breadcrumbs\">\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"index.html\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" id=\"breadcrumb\">\u0412\u0441\u0435 \u0442\u043E\u0432\u0430\u0440\u044B</a>\n          </li>\n        </ul>\n      </div>\n\n      <div class=\"catalog-columns--header\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <p class=\"catalog-columns__narrow catalog-columns__title\">\u0424\u0438\u043B\u044C\u0442\u0440:</p>\n\n          <section class=\"catalog-columns__wide sort\">\n            <h2 class=\"catalog-columns__title sort__title\">\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:</h2>\n            <ul class=\"sort__type-list\">\n              <li class=\"sort__type-item sort__price\">\n                <a class=\"sort__type-link sort__type-link--current\">\u041F\u043E \u0446\u0435\u043D\u0435</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u0442\u0438\u043F\u0443</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438</a>\n              </li>\n            </ul>\n            <ul class=\"sort__order-list\">\n              <li class=\"sort__order-item\" id=\"upprice\">\n                <a class=\"sort__order-link sort__order-link--up\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n              <li class=\"sort__order-item\" id=\"downprice\">\n                <a class=\"sort__order-link sort__order-link--down sort__order-link--current\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n            </ul>\n          </section>\n        </div>\n      </div>\n\n      <div class=\"catalog-columns\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <section class=\"catalog-columns__narrow filter\">\n            <h2 class=\"visually-hidden\">\u0424\u0438\u043B\u044C\u0442\u0440 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n            <form class=\"filter__form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">\n              <fieldset class=\"filter__section\" id =\"category\">\n                <legend class=\"filter__section-title\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F</legend>\n                <ul class=\"filter__options filter__category\">\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"actionCamera\" type=\"checkbox\" name=\"actionCamera\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"actionCamera\">\u042D\u043A\u0448\u043D \u043A\u0430\u043C\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"fitnessTracker\" type=\"checkbox\" name=\"fitnessTracker\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"fitnessTracker\">\u0424\u0438\u0442\u043D\u0435\u0441 \u0442\u0440\u0435\u043A\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"quadrocopters\" type=\"checkbox\" name=\"quadrocopters\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"quadrocopters\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"selfieSticks\" type=\"checkbox\" name=\"selfieSticks\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"selfieSticks\">\u0421\u0435\u043B\u0444\u0438 \u043F\u0430\u043B\u043A\u0438</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"watches\" type=\"checkbox\" name=\"watches\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"watches\">\u0427\u0430\u0441\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"vr\" type=\"checkbox\" name=\"vr\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"vr\">VR/AR</label>\n                  </li>\n                </ul>\n              </fieldset>\n              <div id=\"brand\"></div>\n            </form>\n          </section>\n\n          <section class=\"catalog-columns__wide catalog\">\n            <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433</h2>\n            <ul class=\"catalog__list\">\n            </ul>\n\n          </section>\n        </div>\n      </div>\n    ";
+                view = "\n    <div class=\"page__wrapper\">\n        <h1 class=\"page__title\">\u041D\u0430\u043B\u0435\u0442\u0430\u0439, \u043F\u043E\u043A\u0443\u043F\u0430\u0439!</h1>\n\n        <ul class=\"page__breadcrumbs breadcrumbs\">\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"index.html\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" id=\"catalog-crumb\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" id=\"breadcrumb\">\u0412\u0441\u0435 \u0442\u043E\u0432\u0430\u0440\u044B</a>\n          </li>\n        </ul>\n      </div>\n\n      <div class=\"catalog-columns--header\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <p class=\"catalog-columns__narrow catalog-columns__title\">\u0424\u0438\u043B\u044C\u0442\u0440:</p>\n\n          <section class=\"catalog-columns__wide sort\">\n            <h2 class=\"catalog-columns__title sort__title\">\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:</h2>\n            <ul class=\"sort__type-list\">\n              <li class=\"sort__type-item sort__price\">\n                <a class=\"sort__type-link sort__type-link--current\">\u041F\u043E \u0446\u0435\u043D\u0435</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u0442\u0438\u043F\u0443</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438</a>\n              </li>\n            </ul>\n            <ul class=\"sort__order-list\">\n              <li class=\"sort__order-item\" id=\"upprice\">\n                <a class=\"sort__order-link sort__order-link--up\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n              <li class=\"sort__order-item\" id=\"downprice\">\n                <a class=\"sort__order-link sort__order-link--down sort__order-link--current\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n            </ul>\n          </section>\n        </div>\n      </div>\n\n      <div class=\"catalog-columns\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <section class=\"catalog-columns__narrow filter\">\n            <h2 class=\"visually-hidden\">\u0424\u0438\u043B\u044C\u0442\u0440 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n            <form class=\"filter__form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">\n              <fieldset class=\"filter__section\" id =\"category\">\n                <legend class=\"filter__section-title\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F</legend>\n                <ul class=\"filter__options filter__category\">\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"actionCamera\" type=\"checkbox\" name=\"actionCamera\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"actionCamera\">\u042D\u043A\u0448\u043D \u043A\u0430\u043C\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"fitnessTracker\" type=\"checkbox\" name=\"fitnessTracker\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"fitnessTracker\">\u0424\u0438\u0442\u043D\u0435\u0441 \u0442\u0440\u0435\u043A\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"quadrocopters\" type=\"checkbox\" name=\"quadrocopters\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"quadrocopters\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"selfieSticks\" type=\"checkbox\" name=\"selfieSticks\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"selfieSticks\">\u0421\u0435\u043B\u0444\u0438 \u043F\u0430\u043B\u043A\u0438</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"watches\" type=\"checkbox\" name=\"watches\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"watches\">\u0427\u0430\u0441\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"vr\" type=\"checkbox\" name=\"vr\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"vr\">VR/AR</label>\n                  </li>\n                </ul>\n              </fieldset>\n              <div id=\"brand\"></div>\n            </form>\n          </section>\n\n          <section class=\"catalog-columns__wide catalog\">\n            <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433</h2>\n            <ul class=\"catalog__list\">\n            </ul>\n\n          </section>\n        </div>\n      </div>\n    ";
                 return _context.abrupt("return", view);
 
               case 2:
