@@ -3,6 +3,8 @@ import sliders from './sliders';
 import services from './services';
 import contacts from './contacts';
 import aboutUs from './about-us';
+import redirect from './redirect';
+import redirectMain from './redirectMain';
 
 let mainPage = {
   render : async () => {
@@ -102,22 +104,22 @@ let mainPage = {
         <h2 class="visually-hidden">Категории товаров</h2>
         <ul class="categories__list">
           <li class="categories__item">
-            <a class="categories__link categories__link--virtual" href="catalog">Виртуальная реальность</a>
+            <a class="categories__link categories__link--virtual" data-id="vr" href="/#/catalog">Виртуальная реальность</a>
           </li>
           <li class="categories__item">
-            <a class="categories__link categories__link--monopod" href="catalog.html">Моноподы для&nbsp;селфи</a>
+            <a class="categories__link categories__link--monopod" data-id="selfieSticks" href="/#/catalog">Моноподы для&nbsp;селфи</a>
           </li>
           <li class="categories__item">
-            <a class="categories__link categories__link--camera" href="#">Экшн-камеры</a>
+            <a class="categories__link categories__link--camera" data-id="actionCamera" href="/#/catalog">Экшн-камеры</a>
           </li>
           <li class="categories__item">
-            <a class="categories__link categories__link--fitness" href="#">Фитнес-браслеты</a>
+            <a class="categories__link categories__link--fitness" data-id="fitnessTracker" href="/#/catalog">Фитнес-браслеты</a>
           </li>
           <li class="categories__item">
-            <a class="categories__link categories__link--watches" href="#">Умные часы</a>
+            <a class="categories__link categories__link--watches" data-id="watches" href="/#/catalog">Умные часы</a>
           </li>
           <li class="categories__item">
-            <a class="categories__link categories__link--copter" href="#">Квадрокоптеры</a>
+            <a class="categories__link categories__link--copter" data-id="quadrocopters" href="/#/catalog">Квадрокоптеры</a>
           </li>
         </ul>
       </section>
@@ -210,6 +212,7 @@ let mainPage = {
     contacts();
     aboutUs();
     commentForm();
+    redirectMain();
   }
 
 };

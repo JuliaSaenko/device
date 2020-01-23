@@ -12,17 +12,17 @@ let catalogPage = {
   render: async () => {
     let view = `
     <div class="page__wrapper">
-        <h1 class="page__title">Моноподы для селфи</h1>
+        <h1 class="page__title">Налетай, покупай!</h1>
 
         <ul class="page__breadcrumbs breadcrumbs">
           <li class="breadcrumbs__item">
             <a class="breadcrumbs__link" href="index.html">Главная</a>
           </li>
           <li class="breadcrumbs__item">
-            <a class="breadcrumbs__link" href="catalog.html">Каталог товаров</a>
+            <a class="breadcrumbs__link" id="catalog-crumb" href="/#/catalog">Каталог товаров</a>
           </li>
           <li class="breadcrumbs__item">
-            <a class="breadcrumbs__link">Моноподы для селфи</a>
+            <a class="breadcrumbs__link" id="breadcrumb">Все товары</a>
           </li>
         </ul>
       </div>

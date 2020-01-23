@@ -8,9 +8,11 @@ export default () => {
     const productList = document.querySelector('.catalog__list');
     const priceFilter = document.querySelector('.sort__price');
     const categoryFiltersArray = Array.from(document.querySelectorAll('.category__filter'));
+
     let filteredArray = [];
     let brandFilteredArray = [];
     let priceFlag = 0;
+
     const requestData = async (path) => {
         const products = await fetch(path);
         if (!products.ok) {
@@ -24,20 +26,32 @@ export default () => {
         brandFiltersArray.forEach(brand => {
             brand.addEventListener('click', e => {
                 productList.innerHTML = '';
-                
+
                 if (brand.checked) {
                     filteredArray.forEach(product => {
                         if (brand.id === product.brand) {
                             brandFilteredArray.push(product);
                         }
                     })
-                
-                }
-                // else if(brandFiltersArray.every(item => !item.checked)){
-                //         brandFilteredArray = filteredArray.slice();
-                //         console.log(brandFilteredArray);
-                // } 
-                else {
+                    if (priceFlag === 1) {
+                        sortArrayByPrice(brandFilteredArray);
+                    } else if (priceFlag ===2) {
+                        sortHighToLow()
+                    } else {
+                        createProductCard(brandFilteredArray);
+                    }
+                    //createProductCard(brandFilteredArray);
+                } else if(brandFiltersArray.every(item => !item.checked)){
+                     brandFilteredArray = [];
+                    if (priceFlag === 1) {
+                        sortArrayByPrice(brandFilteredArray);
+                    } else if (priceFlag ===2) {
+                        sortHighToLow()
+                    } else {
+                        createProductCard(filteredArray);
+                    }
+                    //createProductCard(filteredArray);
+                } else {
                     brandFilteredArray = [];
                     brandFiltersArray.forEach(product => {
                         if (product.checked) {
@@ -48,11 +62,15 @@ export default () => {
                             })
                         }
                     })
+                    if (priceFlag === 1) {
+                        sortArrayByPrice(brandFilteredArray);
+                    } else if (priceFlag ===2) {
+                        sortHighToLow()
+                    } else {
+                        createProductCard(brandFilteredArray);
+                    }
+                    // createProductCard(brandFilteredArray);
                 }
-                if (priceFlag === 1) {
-                    sortArrayByPrice(brandFilteredArray);
-                }
-                createProductCard(brandFilteredArray);
             })
         })
     }
@@ -135,25 +153,35 @@ export default () => {
                 if (categoryFiltersArray.every(item => !item.checked)) {
                     filteredArray = JSONData.data.slice();
                     hideBrandFilter();
+                    createBreadCrumb(item);
                 } else {
                     filteredArray = [];
                     brandFilteredArray = [];
                     checkFiltersForChecked(JSONData);
+                    createBreadCrumb(item);
                     createBrandFilter(JSONData.data);
                 }
 
                 if (priceFlag === 1) {
                     sortArrayByPrice(filteredArray);
+                    createProductCard(filteredArray);
+                } else if (priceFlag === 2){
+                    sortHighToLow()
+                } else {
+                    createProductCard(filteredArray);
                 }
-                createProductCard(filteredArray);
+                console.log(filteredArray);
+                
+                //createProductCard(filteredArray);
             })
         })
     }
     function sortByPrice(JSONData) {
         priceFilter.addEventListener('click', e => {
             productList.innerHTML = '';
-            const brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
-            if(categoryFiltersArray.every(item => !item.checked)){
+            priceFlag = 1;
+            //const brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
+            if (categoryFiltersArray.every(item => !item.checked)) {
                 JSONData.data.sort((a, b) => a.price - b.price);
                 createProductCard(JSONData.data);
             } else {
@@ -197,9 +225,9 @@ export default () => {
     highPrice.addEventListener('click', sortHighToLow);
     function sortLowToHigh() {
         productList.innerHTML = '';
-        priceFlag = 0;
+        priceFlag = 1;
         const brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
-        if(brandFiltersArray.every(item => !item.checked)){
+        if (brandFiltersArray.every(item => !item.checked)) {
             filteredArray.sort((a, b) => a.price - b.price);
             createProductCard(filteredArray);
         } else {
@@ -209,15 +237,39 @@ export default () => {
     }
     function sortHighToLow() {
         productList.innerHTML = '';
-        priceFlag = 0;
+        priceFlag = 2;
         const brandFiltersArray = Array.from(document.querySelectorAll('.brand__filter'));
-        if(brandFiltersArray.every(item => !item.checked)){
+        if (brandFiltersArray.every(item => !item.checked)) {
             filteredArray.sort((a, b) => b.price - a.price);
             createProductCard(filteredArray);
         } else {
             brandFilteredArray.sort((a, b) => b.price - a.price);
             createProductCard(brandFilteredArray);
         }
-        
+
+    }
+    function createBreadCrumb() {
+        const crumbBlock = document.getElementById('breadcrumb');
+        let userCategories = [];
+        crumbBlock.innerHTML = '';
+
+        filteredArray.forEach((item) => {
+            userCategories.push(item.userCategory);
+        });
+
+        userCategories = new Set(userCategories);
+
+        userCategories.forEach(item => {
+            if (userCategories.size > 5) {
+                crumbBlock.innerHTML = '';
+                crumbBlock.innerHTML += `
+                    <a class="breadcrumbs__link"> Все товары </a>
+                `;
+            } else {
+                crumbBlock.innerHTML += `
+                    <a class="breadcrumbs__link">${item} / </a>
+                `;
+            }
+        })
     }
 }
