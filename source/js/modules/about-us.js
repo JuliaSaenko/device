@@ -1,3 +1,4 @@
+import { disableBodyScroll, enableBodyScroll} from 'body-scroll-lock/lib/bodyScrollLock.es6';
 import {showSuccessMassage, showClass, errorClass} from './utils';
 
 export default () => {
@@ -10,19 +11,21 @@ export default () => {
     const showContactFormPopup = () => {
       const contactFormName = contactForm.elements.writeUsName;
       const contactsFormCloseBtn = contactFormPopup.querySelector(`.modal__close`);
-
+      disableBodyScroll(contactFormPopup);
       contactFormPopup.classList.add(showClass);
       contactForm.reset();
       contactFormName.focus();
 
       contactsFormCloseBtn.addEventListener(`click`, (evt) => {
         evt.preventDefault();
+        enableBodyScroll(contactFormPopup);
         contactFormPopup.classList.remove(showClass);
         contactFormPopup.classList.remove(errorClass);
       });
 
       contactFormSubmitBtn.addEventListener(`click`, () => {
         if (formValidate(contactForm)) {
+          enableBodyScroll(contactFormPopup);
           contactFormPopup.classList.remove(showClass);
           showSuccessMassage('Ваше сообщение успешно отправлено!', 'Мы обязательно свяжимся с Вами в ближайшее время.');
 

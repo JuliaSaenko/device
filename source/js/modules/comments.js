@@ -1,15 +1,12 @@
-//import renderElement from './utils';
+
 import moment from "moment";
 import 'moment/locale/ru'
-//export default () => {
+
  const renderComments = (data, container) => {
    container.innerHTML = '';
    data.forEach(comment => {
-     moment.locale('ru')
+     moment.locale('ru');
      const commentTimePublication = moment.unix(comment.time).format('LL');
-     //console.log(test);
-     console.log(comment.time);
-     console.log(commentTimePublication);
 
      const commentContent = `
           <div class="reviews__heading">
@@ -26,10 +23,7 @@ import 'moment/locale/ru'
       container.appendChild(newComment);
    });
 
-    //const newCommnet = renderElement('li', 'reviews__item', commentContent);
-
-    //return renderElement('li', 'reviews__item', commentContent);
   };
-//};
+
 
 export default renderComments;

@@ -1,3 +1,5 @@
+import { disableBodyScroll, enableBodyScroll} from 'body-scroll-lock/lib/bodyScrollLock.es6';
+
 export const showClass = `show`;
 export const errorClass = `error`;
 
@@ -8,10 +10,12 @@ export const showSuccessMassage = (messageHeading, messageText) => {
     const successMessageText = successMessage.querySelector('.success-message-text');
 
     successMessage.classList.add(showClass);
+    disableBodyScroll(successMessage);
     successMessageHeading.textContent = messageHeading;
     successMessageText.textContent = messageText;
 
     successMessageCloseBtn.addEventListener('click', function () {
+      enableBodyScroll(successMessage);
       successMessage.classList.remove(showClass);
     });
   };

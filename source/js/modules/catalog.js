@@ -11,16 +11,13 @@ let catalogPage = {
   render : async () => {
     let view = `
     <div class="page__wrapper">
-        <h1 class="page__title">Моноподы для селфи</h1>
+        <h1 class="page__title">Каталог товаров</h1>
         <ul class="page__breadcrumbs breadcrumbs">
           <li class="breadcrumbs__item">
             <a class="breadcrumbs__link" href="index.html">Главная</a>
           </li>
           <li class="breadcrumbs__item">
             <a class="breadcrumbs__link" href="catalog.html">Каталог товаров</a>
-          </li>
-          <li class="breadcrumbs__item">
-            <a class="breadcrumbs__link">Моноподы для селфи</a>
           </li>
         </ul>
       </div>
@@ -59,27 +56,7 @@ let catalogPage = {
         <div class="catalog-columns__wrapper page__wrapper">
           <section class="catalog-columns__narrow filter">
             <h2 class="visually-hidden">Фильтр товаров</h2>
-            <form class="filter__form" action="https://echo.htmlacademy.ru" method="get">
-              <fieldset class="filter__section">
-                <legend class="filter__section-title">Стоимость</legend>
-                <div class="filter__range range">
-                  <div class="range__selected"></div>
-                  <button class="range__slider range__slider--min" type="button" aria-label="От">
-                    <span class="range__label range__label--min">от 0</span>
-                  </button>
-                  <button class="range__slider range__slider--max" type="button" aria-label="До">
-                    <span class="range__label range__label--max">до 5000</span>
-                  </button>
-                  <label class="visually-hidden">
-                    Минимальная стоимость
-                    <input type="number" name="price_min" value="0">
-                  </label>
-                  <label class="visually-hidden">
-                    Максимальная стоимость
-                    <input type="number" name="price_max" value="5000">
-                  </label>
-                </div>
-              </fieldset>
+            <form class="filter__form">
               <fieldset class="filter__section">
                 <legend class="filter__section-title">Категория</legend>
                 <ul class="filter__options filter__category">
@@ -109,45 +86,12 @@ let catalogPage = {
                   </li>
                 </ul>
               </fieldset>
-              <fieldset class="filter__section">
-                <legend class="filter__section-title">Bluetooth</legend>
-                <ul class="filter__options">
-                  <li>
-                    <input class="filter__option visually-hidden" id="bluetooth-yes" type="radio" name="bluetooth" value="yes" checked>
-                    <label class="filter__option-label filter__option-label--radio" for="bluetooth-yes">Есть</label>
-                  </li>
-                  <li>
-                    <input class="filter__option visually-hidden" id="bluetooth-no" type="radio" name="bluetooth" value="no">
-                    <label class="filter__option-label filter__option-label--radio" for="bluetooth-no">Нет</label>
-                  </li>
-                </ul>
-              </fieldset>
-              <button class="filter__btn btn" type="submit">Показать</button>
             </form>
           </section>
           <section class="catalog-columns__wide catalog">
             <h2 class="visually-hidden">Каталог</h2>
             <ul class="catalog__list">
             </ul>
-            <div class="pagination">
-              <div class="pagination__wrapper">
-                <a class="pagination__link pagination__link--back">Назад</a>
-              </div>
-              <ul class="pagination__list">
-                <li class="pagination__item">
-                  <a class="pagination__link pagination__link--page pagination__link--current">1</a>
-                </li>
-                <li class="pagination__item">
-                  <a class="pagination__link pagination__link--page" href="#">2</a>
-                </li>
-                <li class="pagination__item">
-                  <a class="pagination__link pagination__link--page" href="#">3</a>
-                </li>
-              </ul>
-              <div class="pagination__wrapper">
-                <a class="pagination__link pagination__link--next" href="#">Вперед</a>
-              </div>
-            </div>
           </section>
         </div>
       </div>
