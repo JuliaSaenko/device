@@ -84,7 +84,7 @@
 
 <section class="write-us modal modal--write-us">
   <h2 class="visually-hidden">Напишите нам</h2>
-  <form class="write-us__form" action="https://echo.htmlacademy.ru" method="post">
+  <form class="write-us__form">
     <p class="write-us__field">
       <label class="write-us__label" for="writeUsName">Ваше имя:</label>
       <input class="write-us__input" id="writeUsName" type="text" name="writeUsName" placeholder="Имя Фамилия">
@@ -98,6 +98,24 @@
       <textarea class="write-us__textarea" id="contactMessage" cols="78" rows="4" name="contactMessage" placeholder="В свободной форме"></textarea>
     </p>
     <button class="write-us__btn btn" type="button">Отправить</button>
+  </form>
+  <button class="modal__close" type="button">
+    <span class="visually-hidden">Закрыть</span>
+  </button>
+</section>
+
+<section class="review-modal modal modal--review">
+  <h2 class="visually-hidden"> Оставить отзыв</h2>
+  <form class="review-modal__form">
+    <p class="review-modal__field">
+      <label class="review-modal__label" for="reviewName">Ваше имя:</label>
+      <input class="review-modal__input" id="reviewName" type="text" name="reviewName" placeholder="Ваше имя">
+    </p>
+    <p class="review-modal__field review-modal__field--message">
+      <label class="review-modal__label" for="reviewMessage">Ваш отзыв:</label>
+      <textarea class="review-modal__textarea" id="reviewMessage" cols="78" rows="4" name="reviewMessage" placeholder="Поделитесь впечатлениями о товаре"></textarea>
+    </p>
+    <button class="review-modal__btn btn" type="button">Отправить</button>
   </form>
   <button class="modal__close" type="button">
     <span class="visually-hidden">Закрыть</span>
@@ -158,7 +176,37 @@
       <img src="#" width="100" height="100">
     </div>
     <div class="cart__product-info">
-      <div class="cart__product-name product-name"> товар 3 </div>
+      <div class="cart__product-name product-name"> товар 2 </div>
+      <div class="amount-of-produts">
+        <span class="amount">Количество: </span>
+        <button class="btnMinus">-</button>
+        <span class="number-of-amount">1</span>
+        <button class="btnPlus">+</button>
+        <p class="cart__product-price">Цена: <span class="product-price">$2000</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="cart__product">
+    <div class="cart__product-img">
+      <img src="#" width="100" height="100">
+    </div>
+    <div class="cart__product-info">
+      <div class="cart__product-name product-name"> товар 2 </div>
+      <div class="amount-of-produts">
+        <span class="amount">Количество: </span>
+        <button class="btnMinus">-</button>
+        <span class="number-of-amount">1</span>
+        <button class="btnPlus">+</button>
+        <p class="cart__product-price">Цена: <span class="product-price">$2000</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="cart__product">
+    <div class="cart__product-img">
+      <img src="#" width="100" height="100">
+    </div>
+    <div class="cart__product-info">
+      <div class="cart__product-name product-name"> товар 2 </div>
       <div class="amount-of-produts">
         <span class="amount">Количество: </span>
         <button class="btnMinus">-</button>
@@ -169,12 +217,112 @@
     </div>
   </div>
 
+  <div class="cart__product">
+    <div class="cart__product-img">
+      <img src="#" width="100" height="100">
+    </div>
+    <div class="cart__product-info">
+      <div class="cart__product-name product-name"> товар 3 </div>
+      <div class="amount-of-produts">
+        <span class="amount">Количество: </span>
+        <button class="btnMinus">-</button>
+        <span class="number-of-amount">1</span>
+        <button class="btnPlus">+</button>
+        <p class="cart__product-price">Цена: <span class="product-price">$2000</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="cart__product">
+    <div class="cart__product-img">
+      <img src="#" width="100" height="100">
+    </div>
+    <div class="cart__product-info">
+      <div class="cart__product-name product-name"> товар 3 </div>
+      <div class="amount-of-produts">
+        <span class="amount">Количество: </span>
+        <button class="btnMinus">-</button>
+        <span class="number-of-amount">1</span>
+        <button class="btnPlus">+</button>
+        <p class="cart__product-price">Цена: <span class="product-price">$2000</span></p>
+      </div>
+    </div>
+  </div><div class="cart__product">
+  <div class="cart__product-img">
+    <img src="#" width="100" height="100">
+  </div>
+  <div class="cart__product-info">
+    <div class="cart__product-name product-name"> товар 3 </div>
+    <div class="amount-of-produts">
+      <span class="amount">Количество: </span>
+      <button class="btnMinus">-</button>
+      <span class="number-of-amount">1</span>
+      <button class="btnPlus">+</button>
+      <p class="cart__product-price">Цена: <span class="product-price">$2000</span></p>
+    </div>
+  </div>
+</div><div class="cart__product">
+  <div class="cart__product-img">
+    <img src="#" width="100" height="100">
+  </div>
+  <div class="cart__product-info">
+    <div class="cart__product-name product-name"> товар 3 </div>
+    <div class="amount-of-produts">
+      <span class="amount">Количество: </span>
+      <button class="btnMinus">-</button>
+      <span class="number-of-amount">1</span>
+      <button class="btnPlus">+</button>
+      <p class="cart__product-price">Цена: <span class="product-price">$2000</span></p>
+    </div>
+  </div>
+</div><div class="cart__product">
+  <div class="cart__product-img">
+    <img src="#" width="100" height="100">
+  </div>
+  <div class="cart__product-info">
+    <div class="cart__product-name product-name"> товар 3 </div>
+    <div class="amount-of-produts">
+      <span class="amount">Количество: </span>
+      <button class="btnMinus">-</button>
+      <span class="number-of-amount">1</span>
+      <button class="btnPlus">+</button>
+      <p class="cart__product-price">Цена: <span class="product-price">$2000</span></p>
+    </div>
+  </div>
+</div><div class="cart__product">
+  <div class="cart__product-img">
+    <img src="#" width="100" height="100">
+  </div>
+  <div class="cart__product-info">
+    <div class="cart__product-name product-name"> товар 3 </div>
+    <div class="amount-of-produts">
+      <span class="amount">Количество: </span>
+      <button class="btnMinus">-</button>
+      <span class="number-of-amount">1</span>
+      <button class="btnPlus">+</button>
+      <p class="cart__product-price">Цена: <span class="product-price">$2000</span></p>
+    </div>
+  </div>
+</div><div class="cart__product">
+  <div class="cart__product-img">
+    <img src="#" width="100" height="100">
+  </div>
+  <div class="cart__product-info">
+    <div class="cart__product-name product-name"> товар 3 </div>
+    <div class="amount-of-produts">
+      <span class="amount">Количество: </span>
+      <button class="btnMinus">-</button>
+      <span class="number-of-amount">1</span>
+      <button class="btnPlus">+</button>
+      <p class="cart__product-price">Цена: <span class="product-price">$2000</span></p>
+    </div>
+  </div>
+</div>
   <div class="finalPrice-container">
     <div>
       <span>Всего:</span>
-      <span class="finalPrice">2000</span>
+      <span class="finalPrice">2000 </span>
     </div>
-    <a class="btn cart__btn" href="/#/cart">Перейти в корзину</a>
+    <a class="btn cart__btn" href="/#/cart">Оформить заказ</a>
   </div>
   <button class="cart__close modal__close" type="button">
     <span class="visually-hidden">Закрыть</span>

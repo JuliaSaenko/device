@@ -1,0 +1,112 @@
+.review-modal__form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.review-modal__field {
+  width: 360px;
+  margin-top: 0;
+  margin-bottom: 33px;
+}
+
+.review-modal__field--message {
+  width: 100%;
+}
+
+.review-modal__label {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 7px;
+
+  font-family: "Gilroy", "Arial", sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.review-modal__input,
+.review-modal__textarea {
+  display: block;
+  width: 100%;
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  font: inherit;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #464646;
+
+  background-color: #f2f2f2;
+  border: 3px solid #f2f2f2;
+}
+
+.review-modal__input {
+  height: 50px;
+  padding-top: 7px;
+  padding-right: 16px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+}
+
+.review-modal__textarea {
+  height: 156px;
+  padding-top: 12px;
+  padding-right: 17px;
+  padding-bottom: 12px;
+  padding-left: 17px;
+
+  resize: none;
+}
+
+.review-modal__input:hover,
+.review-modal__textarea:hover {
+  background-color: #eaeaea;
+  border-color: #eaeaea;
+}
+
+.review-modal__input:focus,
+.review-modal__textarea:focus {
+  background-color: #ffffff;
+  border: 3px solid rgba(240, 197, 46, 0.5);
+  outline: none;
+}
+
+.review-modal__input:invalid,
+.review-modal__textarea:invalid {
+  background-color: #f6dada;
+  border-color: #f6dada;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.review-modal__input::-webkit-input-placeholder,
+.review-modal__textarea::-webkit-input-placeholder {
+  color: #464646;
+
+  opacity: 0.4;
+}
+
+.review-modal__input:-ms-input-placeholder,
+.review-modal__textarea:-ms-input-placeholder {
+  color: #464646;
+
+  opacity: 0.4;
+}
+
+.review-modal__input::-ms-input-placeholder,
+.review-modal__textarea::-ms-input-placeholder {
+  color: #464646;
+
+  opacity: 0.4;
+}
+
+.review-modal__input::placeholder,
+.review-modal__textarea::placeholder {
+  color: #464646;
+
+  opacity: 0.4;
+}

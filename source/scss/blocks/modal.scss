@@ -3,23 +3,24 @@
   top: 50%;
   left: 50%;
   z-index: 100;
-
   display: none;
-
   color: #000000;
-
   background-color: #ffffff;
   -webkit-box-shadow: 0 10px 20px rgba(4, 6, 6, 0.2);
   box-shadow: 0 10px 20px rgba(4, 6, 6, 0.2);
-  //
-  //-webkit-transform: translate(-50%, -50%);
-  //-ms-transform: translate(-50%, -50%);
-  //transform: translate(-50%, -50%);
-
   -webkit-animation-name: popup;
   animation-name: popup;
   -webkit-animation-duration: 0.6s;
   animation-duration: 0.6s;
+
+  &--order {
+    transform: translate(-50%, -50%);
+  }
+
+  &--review {
+    padding: 50px;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .modal.show {
@@ -81,3 +82,4 @@
   opacity: 0.3;
   outline: none;
 }
+

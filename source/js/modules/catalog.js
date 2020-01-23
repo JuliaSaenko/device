@@ -6,6 +6,7 @@ import commentForm from "./comment-form";
 import products from './products';
 import fillter from './fillter';
 import redirect2 from "./redirect2";
+//import cardPage from "./card-page";
 
 
 let catalogPage = {
@@ -13,7 +14,6 @@ let catalogPage = {
     let view = `
     <div class="page__wrapper">
         <h1 class="page__title">Налетай, покупай!</h1>
-
         <ul class="page__breadcrumbs breadcrumbs">
           <li class="breadcrumbs__item">
             <a class="breadcrumbs__link" href="index.html">Главная</a>
@@ -21,16 +21,16 @@ let catalogPage = {
           <li class="breadcrumbs__item">
             <a class="breadcrumbs__link" id="catalog-crumb" href="/#/catalog">Каталог товаров</a>
           </li>
+
           <li class="breadcrumbs__item">
             <a class="breadcrumbs__link" id="breadcrumb">Все товары</a>
           </li>
+
         </ul>
       </div>
-
       <div class="catalog-columns--header">
         <div class="catalog-columns__wrapper page__wrapper">
           <p class="catalog-columns__narrow catalog-columns__title">Фильтр:</p>
-
           <section class="catalog-columns__wide sort">
             <h2 class="catalog-columns__title sort__title">Сортировка:</h2>
             <ul class="sort__type-list">
@@ -59,12 +59,12 @@ let catalogPage = {
           </section>
         </div>
       </div>
-
       <div class="catalog-columns">
         <div class="catalog-columns__wrapper page__wrapper">
           <section class="catalog-columns__narrow filter">
             <h2 class="visually-hidden">Фильтр товаров</h2>
-            <form class="filter__form" action="https://echo.htmlacademy.ru" method="get">
+
+            <form class="filter__form">
               <fieldset class="filter__section" id ="category">
                 <legend class="filter__section-title">Категория</legend>
                 <ul class="filter__options filter__category">
@@ -94,15 +94,15 @@ let catalogPage = {
                   </li>
                 </ul>
               </fieldset>
+
               <div id="brand"></div>
+
             </form>
           </section>
-
           <section class="catalog-columns__wide catalog">
             <h2 class="visually-hidden">Каталог</h2>
             <ul class="catalog__list">
             </ul>
-
           </section>
         </div>
       </div>
@@ -115,6 +115,7 @@ let catalogPage = {
     redirect2();
     products();
     fillter();
+
   }
 
 };

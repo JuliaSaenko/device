@@ -38,6 +38,10 @@
   margin-right: 0;
 }
 
+.catalog__item.animate {
+  animation: slideInUp;
+}
+
 .catalog__item--new::before {
   content: "New";
 

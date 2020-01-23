@@ -1,3 +1,5 @@
+import { disableBodyScroll, enableBodyScroll} from 'body-scroll-lock/lib/bodyScrollLock.es6';
+
 export const showClass = `show`;
 export const errorClass = `error`;
 
@@ -8,13 +10,23 @@ export const showSuccessMassage = (messageHeading, messageText) => {
     const successMessageText = successMessage.querySelector('.success-message-text');
 
     successMessage.classList.add(showClass);
+    disableBodyScroll(successMessage);
     successMessageHeading.textContent = messageHeading;
     successMessageText.textContent = messageText;
 
     successMessageCloseBtn.addEventListener('click', function () {
+      enableBodyScroll(successMessage);
       successMessage.classList.remove(showClass);
     });
   };
+
+const renderElement = (tag, className, text) => {
+  let element = document.createElement(tag);
+  element.setAttribute('class', className);
+  element.textContent = text;
+
+  return element
+};
 
 export const hideSection = (section) => {
   section.classList.remove(showClass);
@@ -28,7 +40,7 @@ export const toggleShowClass = (section) => {
   section.classList.toggle(showClass);
 };
 
- const urlUtils = {
+const urlUtils = {
   // --------------------------------
   //  Parse a url and break it into resource, id and verb
   // --------------------------------
@@ -56,4 +68,8 @@ export const toggleShowClass = (section) => {
   }
 };
 
+let a = 5;
+
 export default urlUtils;
+
+export {renderElement};

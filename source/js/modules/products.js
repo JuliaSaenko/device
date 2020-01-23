@@ -1,4 +1,6 @@
 import fillter from "./fillter";
+import cardPage from "./card-page";
+
 
 export default () => {
   const productList = document.querySelector('.catalog__list');
@@ -25,9 +27,10 @@ export default () => {
       throw new Error(`Can not fetch ${products.url}`)
     }
 
-    const data = await products.json();    
+    const data = await products.json();
     return { data }
-  }
+  };
+
   const showData = () => {
     requestData().then((response) => {      
       if(filter !== null){
@@ -51,13 +54,14 @@ export default () => {
         </p>
         `
       })
-  }
+  };
+
   function createCards(response) {
 
     response.forEach(item => {
       productList.innerHTML += `
-        <li class="catalog__item">
-            <a class="catalog__link" href="#">
+        <li class="catalog__item"  data-id="${item.id}">
+            <a class="catalog__link" data-id="${item.id}" href="#/i/${item.id}">
                 <h3 class="catalog__title">${item.name}</h3>
             </a>
             <p class="catalog__price">${item.price} грн</p>
@@ -65,11 +69,18 @@ export default () => {
                 <img class="catalog__image" src="${item.img}">
                 <p class="catalog__actions">
                 <button class="catalog__btn btn" type="button">В корзину</button>
-                <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>
                 </p>
             </div>
         </li>
         `;
+
+      const catalogLink = document.querySelector(`.catalog__link`);
+      catalogLink.addEventListener(`click`, () => {
+        if(catalogLink.getAttribute(`data-id`) === item.id) {
+          console.log(1);
+          cardPage();
+        }
+      });
     })
   }
   function checkBreadCrumbs(){
