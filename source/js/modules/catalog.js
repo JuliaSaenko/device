@@ -5,20 +5,27 @@ import aboutUs from "./about-us";
 import commentForm from "./comment-form";
 import products from './products';
 import fillter from './fillter';
+import redirect2 from "./redirect2";
 //import cardPage from "./card-page";
 
+
 let catalogPage = {
-  render : async () => {
+  render: async () => {
     let view = `
     <div class="page__wrapper">
-        <h1 class="page__title">Каталог товаров</h1>
+        <h1 class="page__title">Налетай, покупай!</h1>
         <ul class="page__breadcrumbs breadcrumbs">
           <li class="breadcrumbs__item">
             <a class="breadcrumbs__link" href="index.html">Главная</a>
           </li>
           <li class="breadcrumbs__item">
-            <a class="breadcrumbs__link" href="catalog.html">Каталог товаров</a>
+            <a class="breadcrumbs__link" id="catalog-crumb" href="/#/catalog">Каталог товаров</a>
           </li>
+
+          <li class="breadcrumbs__item">
+            <a class="breadcrumbs__link" id="breadcrumb">Все товары</a>
+          </li>
+
         </ul>
       </div>
       <div class="catalog-columns--header">
@@ -38,12 +45,12 @@ let catalogPage = {
               </li>
             </ul>
             <ul class="sort__order-list">
-              <li class="sort__order-item">
-                <a class="sort__order-link sort__order-link--up" href="#">
+              <li class="sort__order-item" id="upprice">
+                <a class="sort__order-link sort__order-link--up">
                   <span class="visually-hidden">По возрастанию</span>
                 </a>
               </li>
-              <li class="sort__order-item">
+              <li class="sort__order-item" id="downprice">
                 <a class="sort__order-link sort__order-link--down sort__order-link--current">
                   <span class="visually-hidden">По убыванию</span>
                 </a>
@@ -56,8 +63,9 @@ let catalogPage = {
         <div class="catalog-columns__wrapper page__wrapper">
           <section class="catalog-columns__narrow filter">
             <h2 class="visually-hidden">Фильтр товаров</h2>
+
             <form class="filter__form">
-              <fieldset class="filter__section">
+              <fieldset class="filter__section" id ="category">
                 <legend class="filter__section-title">Категория</legend>
                 <ul class="filter__options filter__category">
                   <li>
@@ -86,6 +94,9 @@ let catalogPage = {
                   </li>
                 </ul>
               </fieldset>
+
+              <div id="brand"></div>
+
             </form>
           </section>
           <section class="catalog-columns__wide catalog">
@@ -101,6 +112,7 @@ let catalogPage = {
     return view
   }
   , after_render: async () => {
+    redirect2();
     products();
     fillter();
 

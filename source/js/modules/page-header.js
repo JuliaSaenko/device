@@ -1,4 +1,5 @@
 import cartPopup from './cart-popup';
+import redirect from './redirect';
 
 let pageHeader = {
   render: async () => {
@@ -31,16 +32,16 @@ let pageHeader = {
             <a class="site-menu__link site-menu__link--dropdown" href="/#/catalog">Каталог товаров</a>
             <div class="page-header__catalog-dropdown dropdown">
               <ul class="catalog-menu">
-                <li><a class="catalog-menu__link" href="#">Виртуальная реальность</a></li>
-                <li><a class="catalog-menu__link" href="catalog.html">Моноподы для селфи</a></li>
-                <li><a class="catalog-menu__link" href="#">Экшн-камеры</a></li>
+                <li><a class="catalog-menu__link" data-id="vr" href="/#/catalog">Виртуальная реальность</a></li>
+                <li><a class="catalog-menu__link" data-id="selfieSticks" href="/#/catalog">Моноподы для селфи</a></li>
+                <li><a class="catalog-menu__link" data-id="actionCamera" href="/#/catalog">Экшн-камеры</a></li>
               </ul>
               <ul class="catalog-menu">
-                <li><a class="catalog-menu__link" href="#">Фитнес-браслеты</a></li>
-                <li><a class="catalog-menu__link" href="#">Умные часы</a></li>
+                <li><a class="catalog-menu__link" data-id="fitnessTracker" href="/#/catalog">Фитнес-браслеты</a></li>
+                <li><a class="catalog-menu__link" data-id="watches" href="/#/catalog">Умные часы</a></li>
               </ul>
               <ul class="catalog-menu catalog-menu__info">
-                <li><a class="catalog-menu__link" href="#">Квадрокоптеры</a></li>
+                <li><a class="catalog-menu__link" data-id="quadrocopters" href="/#/catalog">Квадрокоптеры</a></li>
               </ul>
             </div>
           </li>
@@ -51,16 +52,16 @@ let pageHeader = {
             <a class="site-menu__link site-menu__link--dropdown" href="/#/catalog">Каталог товаров</a>
             <div class="page-header__catalog-dropdown dropdown">
               <ul class="catalog-menu">
-                <li><a class="catalog-menu__link" href="#">Виртуальная реальность</a></li>
-                <li><a class="catalog-menu__link" href="#">Моноподы для селфи</a></li>
-                <li><a class="catalog-menu__link" href="#">Экшн-камеры</a></li>
+                <li><a class="catalog-menu__link" data-id="vr" href="/#/catalog">Виртуальная реальность</a></li>
+                <li><a class="catalog-menu__link" data-id="selfieSticks" href="/#/catalog">Моноподы для селфи</a></li>
+                <li><a class="catalog-menu__link" data-id="actionCamera" href="/#/catalog">Экшн-камеры</a></li>
               </ul>
               <ul class="catalog-menu">
-                <li><a class="catalog-menu__link" href="#">Фитнес-браслеты</a></li>
-                <li><a class="catalog-menu__link" href="#">Умные часы</a></li>
+                <li><a class="catalog-menu__link" data-id="fitnessTracker"  href="/#/catalog">Фитнес-браслеты</a></li>
+                <li><a class="catalog-menu__link" data-id="watches" href="/#/catalog">Умные часы</a></li>
               </ul>
               <ul class="catalog-menu catalog-menu__info">
-                <li><a class="catalog-menu__link" href="#">Квадрокоптеры</a></li>
+                <li><a class="catalog-menu__link" data-id="quadrocopters" href="/#/catalog">Квадрокоптеры</a></li>
               </ul>
             </div>
           </li>
@@ -77,6 +78,7 @@ let pageHeader = {
     }
 
     cartPopup();
+    redirect();
   }
 };
 
