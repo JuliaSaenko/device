@@ -4,10 +4,12 @@
   left: auto;
   right: 100px;
   //display: flex;
-  flex-wrap: wrap;
+  //flex-wrap: wrap;
   flex-direction: column;
-  padding: 50px;
+  padding: 50px 50px 100px;
   width: 400px;
+  max-height: 780px;
+  overflow-y: auto;
   transform-style: preserve-3d;
   transform-origin: top center;
   transform: perspective(100px) rotateX(-90deg) translate3d(0, 0, 0);
@@ -28,7 +30,7 @@
     animation: show-cart-item 0.3s 3s ease-in forwards;
   }
 
-  @for $i from 1 through 10 {
+  @for $i from 1 through 100 {
     .cart__product:nth-child(#{$i}n) {
       animation-delay: #{$i * 0.5}s;
     }

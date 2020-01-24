@@ -7,6 +7,8 @@ export default () => {
 
     let cartArray = getLocalData('cartData');
 
+
+
     if (cartArray.length === 0 ){ //пустая ли корзина
       document.querySelector('.cart-popup>ul').innerHTML = `<div>Корзина пуста :(</div>`;
       document.querySelector('.finalPrice').innerHTML = totalPrice(cartArray);

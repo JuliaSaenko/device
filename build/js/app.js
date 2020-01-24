@@ -21093,6 +21093,195 @@
     }
   });
 
+  // Older browsers don't support event options, feature detect it.
+  // Adopted and modified solution from Bohdan Didukh (2017)
+  // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
+  let hasPassiveEvents = false;
+
+  if (typeof window !== 'undefined') {
+    const passiveTestOptions = {
+      get passive() {
+        hasPassiveEvents = true;
+        return undefined;
+      }
+
+    };
+    window.addEventListener('testPassive', null, passiveTestOptions);
+    window.removeEventListener('testPassive', null, passiveTestOptions);
+  }
+
+  const isIosDevice = typeof window !== 'undefined' && window.navigator && window.navigator.platform && /iP(ad|hone|od)/.test(window.navigator.platform);
+  let locks = [];
+  let documentListenerAdded = false;
+  let initialClientY = -1;
+  let previousBodyOverflowSetting;
+  let previousBodyPaddingRight; // returns true if `el` should be allowed to receive touchmove events.
+
+  const allowTouchMove = el => locks.some(lock => {
+    if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
+      return true;
+    }
+
+    return false;
+  });
+
+  const preventDefault = rawEvent => {
+    const e = rawEvent || window.event; // For the case whereby consumers adds a touchmove event listener to document.
+    // Recall that we do document.addEventListener('touchmove', preventDefault, { passive: false })
+    // in disableBodyScroll - so if we provide this opportunity to allowTouchMove, then
+    // the touchmove event on document will break.
+
+    if (allowTouchMove(e.target)) {
+      return true;
+    } // Do not prevent if the event has more than one touch (usually meaning this is a multi touch gesture like pinch to zoom).
+
+
+    if (e.touches.length > 1) return true;
+    if (e.preventDefault) e.preventDefault();
+    return false;
+  };
+
+  const setOverflowHidden = options => {
+    // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
+    // the responsiveness for some reason. Setting within a setTimeout fixes this.
+    setTimeout(() => {
+      // If previousBodyPaddingRight is already set, don't set it again.
+      if (previousBodyPaddingRight === undefined) {
+        const reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
+        const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
+
+        if (reserveScrollBarGap && scrollBarGap > 0) {
+          previousBodyPaddingRight = document.body.style.paddingRight;
+          document.body.style.paddingRight = `${scrollBarGap}px`;
+        }
+      } // If previousBodyOverflowSetting is already set, don't set it again.
+
+
+      if (previousBodyOverflowSetting === undefined) {
+        previousBodyOverflowSetting = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  };
+
+  const restoreOverflowSetting = () => {
+    // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
+    // the responsiveness for some reason. Setting within a setTimeout fixes this.
+    setTimeout(() => {
+      if (previousBodyPaddingRight !== undefined) {
+        document.body.style.paddingRight = previousBodyPaddingRight; // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
+        // can be set again.
+
+        previousBodyPaddingRight = undefined;
+      }
+
+      if (previousBodyOverflowSetting !== undefined) {
+        document.body.style.overflow = previousBodyOverflowSetting; // Restore previousBodyOverflowSetting to undefined
+        // so setOverflowHidden knows it can be set again.
+
+        previousBodyOverflowSetting = undefined;
+      }
+    });
+  }; // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
+
+
+  const isTargetElementTotallyScrolled = targetElement => targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
+
+  const handleScroll = (event, targetElement) => {
+    const clientY = event.targetTouches[0].clientY - initialClientY;
+
+    if (allowTouchMove(event.target)) {
+      return false;
+    }
+
+    if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
+      // element is at the top of its scroll.
+      return preventDefault(event);
+    }
+
+    if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
+      // element is at the top of its scroll.
+      return preventDefault(event);
+    }
+
+    event.stopPropagation();
+    return true;
+  };
+
+  const disableBodyScroll = (targetElement, options) => {
+    if (isIosDevice) {
+      // targetElement must be provided, and disableBodyScroll must not have been
+      // called on this targetElement before.
+      if (!targetElement) {
+        // eslint-disable-next-line no-console
+        console.error('disableBodyScroll unsuccessful - targetElement must be provided when calling disableBodyScroll on IOS devices.');
+        return;
+      }
+
+      if (targetElement && !locks.some(lock => lock.targetElement === targetElement)) {
+        const lock = {
+          targetElement,
+          options: options || {}
+        };
+        locks = [...locks, lock];
+
+        targetElement.ontouchstart = event => {
+          if (event.targetTouches.length === 1) {
+            // detect single touch.
+            initialClientY = event.targetTouches[0].clientY;
+          }
+        };
+
+        targetElement.ontouchmove = event => {
+          if (event.targetTouches.length === 1) {
+            // detect single touch.
+            handleScroll(event, targetElement);
+          }
+        };
+
+        if (!documentListenerAdded) {
+          document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? {
+            passive: false
+          } : undefined);
+          documentListenerAdded = true;
+        }
+      }
+    } else {
+      setOverflowHidden(options);
+      const lock = {
+        targetElement,
+        options: options || {}
+      };
+      locks = [...locks, lock];
+    }
+  };
+  const enableBodyScroll = targetElement => {
+    if (isIosDevice) {
+      if (!targetElement) {
+        // eslint-disable-next-line no-console
+        console.error('enableBodyScroll unsuccessful - targetElement must be provided when calling enableBodyScroll on IOS devices.');
+        return;
+      }
+
+      targetElement.ontouchstart = null;
+      targetElement.ontouchmove = null;
+      locks = locks.filter(lock => lock.targetElement !== targetElement);
+
+      if (documentListenerAdded && locks.length === 0) {
+        document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? {
+          passive: false
+        } : undefined);
+        documentListenerAdded = false;
+      }
+    } else {
+      locks = locks.filter(lock => lock.targetElement !== targetElement);
+
+      if (!locks.length) {
+        restoreOverflowSetting();
+      }
+    }
+  };
+
   var showClass = "show";
   var errorClass = "error";
   var showSuccessMassage = function showSuccessMassage(messageHeading, messageText) {
@@ -21101,9 +21290,11 @@
     var successMessageHeading = successMessage.querySelector('.success-message-lead');
     var successMessageText = successMessage.querySelector('.success-message-text');
     successMessage.classList.add(showClass);
+    disableBodyScroll(successMessage);
     successMessageHeading.textContent = messageHeading;
     successMessageText.textContent = messageText;
     successMessageCloseBtn.addEventListener('click', function () {
+      enableBodyScroll(successMessage);
       successMessage.classList.remove(showClass);
     });
   };
@@ -21155,16 +21346,19 @@
       var showContactFormPopup = function showContactFormPopup() {
         var contactFormName = contactForm.elements.writeUsName;
         var contactsFormCloseBtn = contactFormPopup.querySelector(".modal__close");
+        disableBodyScroll(contactFormPopup);
         contactFormPopup.classList.add(showClass);
         contactForm.reset();
         contactFormName.focus();
         contactsFormCloseBtn.addEventListener("click", function (evt) {
           evt.preventDefault();
+          enableBodyScroll(contactFormPopup);
           contactFormPopup.classList.remove(showClass);
           contactFormPopup.classList.remove(errorClass);
         });
         contactFormSubmitBtn.addEventListener("click", function () {
           if (formValidate(contactForm)) {
+            enableBodyScroll(contactFormPopup);
             contactFormPopup.classList.remove(showClass);
             showSuccessMassage('Ваше сообщение успешно отправлено!', 'Мы обязательно свяжимся с Вами в ближайшее время.');
             contactFormPopup.classList.remove(errorClass);
@@ -21335,6 +21529,7 @@
         cartArray.push(cartItemInfo);
         localStorage.setItem('cartData', JSON.stringify(cartArray));
         document.querySelector('.finalPrice').innerHTML = totalPrice(cartArray);
+        deleteFromCart();
       } else if (cartArray.length > 0) {
         var flag = true;
         cartArray.forEach(function (item, index) {
@@ -21355,7 +21550,6 @@
       }
 
       miniCartRender();
-      deleteFromCart();
     }
   }); // function fillCart(cartItemInfo) {
   //   document.querySelector('.cart-popup>ul').innerHTML = "";
@@ -26204,24 +26398,18 @@
     });
   });
 
-  //import renderElement from './utils';
-
   var renderComments = function renderComments(data, container) {
     container.innerHTML = '';
     data.forEach(function (comment) {
       moment.locale('ru');
-      var commentTimePublication = moment.unix(comment.time).format('LL'); //console.log(test);
-
-      console.log(comment.time);
-      console.log(commentTimePublication);
+      var commentTimePublication = moment.unix(comment.time).format('LL');
       var commentContent = "\n          <div class=\"reviews__heading\">\n            <b class=\"reviews__author\">".concat(comment.author, "</b>\n            <p class=\"reviews__publication\">\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E <span class=\"reviews__time\">").concat(commentTimePublication, "</span></p>\n          </div>\n          <div class=\"review__content\">\n              <blockquote>").concat(comment.text, "</blockquote>\n          </div>");
       var newComment = document.createElement("li");
       newComment.setAttribute('class', "reviews__item");
       newComment.innerHTML = commentContent;
       container.appendChild(newComment);
-    }); //const newCommnet = renderElement('li', 'reviews__item', commentContent);
-    //return renderElement('li', 'reviews__item', commentContent);
-  }; //};
+    });
+  };
 
   var productSlider = (function () {
     var productLargeSlider = document.querySelector('.product__gallery');
@@ -26246,6 +26434,517 @@
         }
       });
     }
+  });
+
+  var renderImages = function renderImages(data, container, imgSize) {
+    container.innerHTML = '';
+    data.forEach(function (slideImage) {
+      var slideImgContent = "<img src=\"".concat(slideImage, "\" width=\"").concat(imgSize, "\" height=\"").concat(imgSize, "\">");
+      var newImgElement = document.createElement("li");
+      newImgElement.setAttribute('class', "product__slide swiper-slide");
+      newImgElement.innerHTML = slideImgContent;
+      container.appendChild(newImgElement);
+    });
+  }; //};
+
+  var raterJs = createCommonjsModule(function (module, exports) {
+    (function (f) {
+      {
+        module.exports = f();
+      }
+    })(function () {
+      return function () {
+        function r(e, n, t) {
+          function o(i, f) {
+            if (!n[i]) {
+              if (!e[i]) {
+                var c = "function" == typeof commonjsRequire && commonjsRequire;
+                if (!f && c) return c(i, !0);
+                if (u) return u(i, !0);
+                var a = new Error("Cannot find module '" + i + "'");
+                throw a.code = "MODULE_NOT_FOUND", a;
+              }
+
+              var p = n[i] = {
+                exports: {}
+              };
+              e[i][0].call(p.exports, function (r) {
+                var n = e[i][1][r];
+                return o(n || r);
+              }, p, p.exports, r, e, n, t);
+            }
+
+            return n[i].exports;
+          }
+
+          for (var u = "function" == typeof commonjsRequire && commonjsRequire, i = 0; i < t.length; i++) o(t[i]);
+
+          return o;
+        }
+
+        return r;
+      }()({
+        1: [function (require, module, exports) {
+          /*! rater-js. [c] 2018 Fredrik Olsson. MIT License */
+
+          var css = require('./style.css');
+
+          module.exports = function (options) {
+            //private fields
+            var showToolTip = true;
+
+            if (typeof options.element === "undefined" || options.element === null) {
+              throw new Error("element required");
+            }
+
+            if (typeof options.showToolTip !== "undefined") {
+              showToolTip = !!options.showToolTip;
+            }
+
+            if (typeof options.step !== "undefined") {
+              if (options.step <= 0 || options.step > 1) {
+                throw new Error("step must be a number between 0 and 1");
+              }
+            }
+
+            var elem = options.element;
+            var reverse = options.reverse;
+            var stars = options.max || 5;
+            var starSize = options.starSize || 16;
+            var step = options.step || 1;
+            var onHover = options.onHover;
+            var onLeave = options.onLeave;
+            var rating = null;
+            var myRating;
+            elem.classList.add("star-rating");
+            var div = document.createElement("div");
+            div.classList.add("star-value");
+
+            if (reverse) {
+              div.classList.add("rtl");
+            }
+
+            div.style.backgroundSize = starSize + "px";
+            elem.appendChild(div);
+            elem.style.width = starSize * stars + "px";
+            elem.style.height = starSize + "px";
+            elem.style.backgroundSize = starSize + "px";
+            var callback = options.rateCallback;
+            var disabled = !!options.readOnly;
+            var disableText;
+            var isRating = false;
+            var isBusyText = options.isBusyText;
+            var currentRating;
+            var ratingText;
+
+            if (typeof options.disableText !== "undefined") {
+              disableText = options.disableText;
+            } else {
+              disableText = "{rating}/{maxRating}";
+            }
+
+            if (typeof options.ratingText !== "undefined") {
+              ratingText = options.ratingText;
+            } else {
+              ratingText = "{rating}/{maxRating}";
+            }
+
+            if (options.rating) {
+              setRating(options.rating);
+            } else {
+              var dataRating = elem.dataset.rating;
+
+              if (dataRating) {
+                setRating(+dataRating);
+              }
+            }
+
+            if (!rating) {
+              elem.querySelector(".star-value").style.width = "0px";
+            }
+
+            if (disabled) {
+              disable();
+            } //private methods
+
+
+            function onMouseMove(e) {
+              onMove(e, false);
+            }
+            /**
+             * Called by eventhandlers when mouse or touch events are triggered
+             * @param {MouseEvent} e
+             */
+
+
+            function onMove(e, isTouch) {
+              if (disabled === true || isRating === true) {
+                return;
+              }
+
+              var xCoor = null;
+              var percent;
+              var width = elem.offsetWidth;
+              var parentOffset = elem.getBoundingClientRect();
+
+              if (reverse) {
+                if (isTouch) {
+                  xCoor = e.changedTouches[0].pageX - parentOffset.left;
+                } else {
+                  xCoor = e.pageX - window.scrollX - parentOffset.left;
+                }
+
+                var relXRtl = width - xCoor;
+                var valueForDivision = width / 100;
+                percent = relXRtl / valueForDivision;
+              } else {
+                if (isTouch) {
+                  xCoor = e.changedTouches[0].pageX - parentOffset.left;
+                } else {
+                  xCoor = e.offsetX;
+                }
+
+                percent = xCoor / width * 100;
+              }
+
+              if (percent < 101) {
+                if (step === 1) {
+                  currentRating = Math.ceil(percent / 100 * stars);
+                } else {
+                  var rat = percent / 100 * stars;
+
+                  for (var i = 0;; i += step) {
+                    if (i >= rat) {
+                      currentRating = i;
+                      break;
+                    }
+                  }
+                } //todo: check why this happens and fix
+
+
+                if (currentRating > stars) {
+                  currentRating = stars;
+                }
+
+                elem.querySelector(".star-value").style.width = currentRating / stars * 100 + "%";
+
+                if (showToolTip) {
+                  var toolTip = ratingText.replace("{rating}", currentRating);
+                  toolTip = toolTip.replace("{maxRating}", stars);
+                  elem.setAttribute("title", toolTip);
+                }
+
+                if (typeof onHover === "function") {
+                  onHover(currentRating, rating);
+                }
+              }
+            }
+            /**
+             * Called when mouse is released. This function will update the view with the rating.
+             * @param {MouseEvent} e
+             */
+
+
+            function onStarOut(e) {
+              if (!rating) {
+                elem.querySelector(".star-value").style.width = "0%";
+                elem.removeAttribute("data-rating");
+              } else {
+                elem.querySelector(".star-value").style.width = rating / stars * 100 + "%";
+                elem.setAttribute("data-rating", rating);
+              }
+
+              if (typeof onLeave === "function") {
+                onLeave(currentRating, rating);
+              }
+            }
+            /**
+             * Called when star is clicked.
+             * @param {MouseEvent} e
+             */
+
+
+            function onStarClick(e) {
+              if (disabled === true) {
+                return;
+              }
+
+              if (isRating === true) {
+                return;
+              }
+
+              if (typeof callback !== "undefined") {
+                isRating = true;
+                myRating = currentRating;
+
+                if (typeof isBusyText === "undefined") {
+                  elem.removeAttribute("title");
+                } else {
+                  elem.setAttribute("title", isBusyText);
+                }
+
+                elem.classList.add("is-busy");
+                callback.call(this, myRating, function () {
+                  if (disabled === false) {
+                    elem.removeAttribute("title");
+                  }
+
+                  isRating = false;
+                  elem.classList.remove("is-busy");
+                });
+              }
+            }
+            /**
+             * Disables the rater so that it's not possible to click the stars.
+             */
+
+
+            function disable() {
+              disabled = true;
+              elem.classList.add("disabled");
+
+              if (showToolTip && !!disableText) {
+                var toolTip = disableText.replace("{rating}", !!rating ? rating : 0);
+                toolTip = toolTip.replace("{maxRating}", stars);
+                elem.setAttribute("title", toolTip);
+              } else {
+                elem.removeAttribute("title");
+              }
+            }
+            /**
+             * Enabled the rater so that it's possible to click the stars.
+             */
+
+
+            function enable() {
+              disabled = false;
+              elem.removeAttribute("title");
+              elem.classList.remove("disabled");
+            }
+            /**
+             * Sets the rating
+             */
+
+
+            function setRating(value) {
+              if (typeof value === "undefined") {
+                throw new Error("Value not set.");
+              }
+
+              if (value === null) {
+                throw new Error("Value cannot be null.");
+              }
+
+              if (typeof value !== "number") {
+                throw new Error("Value must be a number.");
+              }
+
+              if (value < 0 || value > stars) {
+                throw new Error("Value too high. Please set a rating of " + stars + " or below.");
+              }
+
+              rating = value;
+              elem.querySelector(".star-value").style.width = value / stars * 100 + "%";
+              elem.setAttribute("data-rating", value);
+            }
+            /**
+             * Gets the rating
+             */
+
+
+            function getRating() {
+              return rating;
+            }
+            /**
+             * Set the rating to a value to inducate it's not rated.
+             */
+
+
+            function clear() {
+              rating = null;
+              elem.querySelector(".star-value").style.width = "0px";
+              elem.removeAttribute("title");
+            }
+            /**
+             * Remove event handlers.
+             */
+
+
+            function dispose() {
+              elem.removeEventListener("mousemove", onMouseMove);
+              elem.removeEventListener("mouseleave", onStarOut);
+              elem.removeEventListener("click", onStarClick);
+              elem.removeEventListener("touchmove", handleMove, false);
+              elem.removeEventListener("touchstart", handleStart, false);
+              elem.removeEventListener("touchend", handleEnd, false);
+              elem.removeEventListener("touchcancel", handleCancel, false);
+            }
+
+            elem.addEventListener("mousemove", onMouseMove);
+            elem.addEventListener("mouseleave", onStarOut);
+            var module = {
+              setRating: setRating,
+              getRating: getRating,
+              disable: disable,
+              enable: enable,
+              clear: clear,
+              dispose: dispose,
+
+              get element() {
+                return elem;
+              }
+
+            };
+            /**
+            * Handles touchmove event.
+            * @param {TouchEvent} e
+            */
+
+            function handleMove(e) {
+              e.preventDefault();
+              onMove(e, true);
+            }
+            /**
+             * Handles touchstart event.
+             * @param {TouchEvent} e 
+             */
+
+
+            function handleStart(e) {
+              e.preventDefault();
+              onMove(e, true);
+            }
+            /**
+             * Handles touchend event.
+             * @param {TouchEvent} e 
+             */
+
+
+            function handleEnd(evt) {
+              evt.preventDefault();
+              onMove(evt, true);
+              onStarClick.call(module);
+            }
+            /**
+             * Handles touchend event.
+             * @param {TouchEvent} e 
+             */
+
+
+            function handleCancel(e) {
+              e.preventDefault();
+              onStarOut();
+            }
+
+            elem.addEventListener("click", onStarClick.bind(module));
+            elem.addEventListener("touchmove", handleMove, false);
+            elem.addEventListener("touchstart", handleStart, false);
+            elem.addEventListener("touchend", handleEnd, false);
+            elem.addEventListener("touchcancel", handleCancel, false);
+            return module;
+          };
+        }, {
+          "./style.css": 2
+        }],
+        2: [function (require, module, exports) {
+          var css = ".star-rating {\n  width: 0;\n  position: relative;\n  display: inline-block;\n  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDguOSIgaGVpZ2h0PSIxMDMuNiIgdmlld0JveD0iMCAwIDEwOC45IDEwMy42Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2UzZTZlNjt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPnN0YXJfMDwvdGl0bGU+PGcgaWQ9IkxheWVyXzIiIGRhdGEtbmFtZT0iTGF5ZXIgMiI+PGcgaWQ9IkxheWVyXzEtMiIgZGF0YS1uYW1lPSJMYXllciAxIj48cG9seWdvbiBjbGFzcz0iY2xzLTEiIHBvaW50cz0iMTA4LjkgMzkuNiA3MS4zIDM0LjEgNTQuNCAwIDM3LjYgMzQuMSAwIDM5LjYgMjcuMiA2Ni4xIDIwLjggMTAzLjYgNTQuNCA4NS45IDg4LjEgMTAzLjYgODEuNyA2Ni4xIDEwOC45IDM5LjYiLz48L2c+PC9nPjwvc3ZnPg0K);\n  background-position: 0 0;\n  background-repeat: repeat-x;\n  cursor: pointer;\n}\n.star-rating .star-value {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  background: url('data:image/svg+xml;base64,PHN2Zw0KCXhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwOC45IiBoZWlnaHQ9IjEwMy42IiB2aWV3Qm94PSIwIDAgMTA4LjkgMTAzLjYiPg0KCTxkZWZzPg0KCQk8c3R5bGU+LmNscy0xe2ZpbGw6I2YxYzk0Nzt9PC9zdHlsZT4NCgk8L2RlZnM+DQoJPHRpdGxlPnN0YXIxPC90aXRsZT4NCgk8ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIj4NCgkJPGcgaWQ9IkxheWVyXzEtMiIgZGF0YS1uYW1lPSJMYXllciAxIj4NCgkJCTxwb2x5Z29uIGNsYXNzPSJjbHMtMSIgcG9pbnRzPSI1NC40IDAgNzEuMyAzNC4xIDEwOC45IDM5LjYgODEuNyA2Ni4xIDg4LjEgMTAzLjYgNTQuNCA4NS45IDIwLjggMTAzLjYgMjcuMiA2Ni4xIDAgMzkuNiAzNy42IDM0LjEgNTQuNCAwIi8+DQoJCTwvZz4NCgk8L2c+DQo8L3N2Zz4NCg==');\n  background-repeat: repeat-x;\n}\n.star-rating.disabled {\n  cursor: default;\n}\n.star-rating.is-busy {\n  cursor: wait;\n}\n.star-rating .star-value.rtl {\n  -moz-transform: scaleX(-1);\n  -o-transform: scaleX(-1);\n  -webkit-transform: scaleX(-1);\n  transform: scaleX(-1);\n  filter: FlipH;\n  -ms-filter: \"FlipH\";\n  right: 0;\n  left: auto;\n}\n";
+
+          require("browserify-css").createStyle(css, {
+            "href": "lib\\style.css"
+          }, {
+            "insertAt": "bottom"
+          });
+
+          module.exports = css;
+        }, {
+          "browserify-css": 3
+        }],
+        3: [function (require, module, exports) {
+
+          var styleElementsInsertedAtTop = [];
+
+          var insertStyleElement = function (styleElement, options) {
+            var head = document.head || document.getElementsByTagName('head')[0];
+            var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+            options = options || {};
+            options.insertAt = options.insertAt || 'bottom';
+
+            if (options.insertAt === 'top') {
+              if (!lastStyleElementInsertedAtTop) {
+                head.insertBefore(styleElement, head.firstChild);
+              } else if (lastStyleElementInsertedAtTop.nextSibling) {
+                head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+              } else {
+                head.appendChild(styleElement);
+              }
+
+              styleElementsInsertedAtTop.push(styleElement);
+            } else if (options.insertAt === 'bottom') {
+              head.appendChild(styleElement);
+            } else {
+              throw new Error('Invalid value for parameter \'insertAt\'. Must be \'top\' or \'bottom\'.');
+            }
+          };
+
+          module.exports = {
+            // Create a <link> tag with optional data attributes
+            createLink: function (href, attributes) {
+              var head = document.head || document.getElementsByTagName('head')[0];
+              var link = document.createElement('link');
+              link.href = href;
+              link.rel = 'stylesheet';
+
+              for (var key in attributes) {
+                if (!attributes.hasOwnProperty(key)) {
+                  continue;
+                }
+
+                var value = attributes[key];
+                link.setAttribute('data-' + key, value);
+              }
+
+              head.appendChild(link);
+            },
+            // Create a <style> tag with optional data attributes
+            createStyle: function (cssText, attributes, extraOptions) {
+              extraOptions = extraOptions || {};
+              var style = document.createElement('style');
+              style.type = 'text/css';
+
+              for (var key in attributes) {
+                if (!attributes.hasOwnProperty(key)) {
+                  continue;
+                }
+
+                var value = attributes[key];
+                style.setAttribute('data-' + key, value);
+              }
+
+              if (style.sheet) {
+                // for jsdom and IE9+
+                style.innerHTML = cssText;
+                style.sheet.cssText = cssText;
+                insertStyleElement(style, {
+                  insertAt: extraOptions.insertAt
+                });
+              } else if (style.styleSheet) {
+                // for IE8 and below
+                insertStyleElement(style, {
+                  insertAt: extraOptions.insertAt
+                });
+                style.styleSheet.cssText = cssText;
+              } else {
+                // for Chrome, Firefox, and Safari
+                style.appendChild(document.createTextNode(cssText));
+                insertStyleElement(style, {
+                  insertAt: extraOptions.insertAt
+                });
+              }
+            }
+          };
+        }, {}]
+      }, {}, [1])(1);
+    });
   });
 
   var card;
@@ -26278,7 +26977,6 @@
 
             case 7:
               json = _context.sent;
-              //console.log(json);
               element = json.find(function (el) {
                 return el.id === id;
               });
@@ -26313,17 +27011,14 @@
             switch (_context2.prev = _context2.next) {
               case 0:
                 request = urlUtils.parseRequestURL();
-                console.log(request);
-                _context2.next = 4;
+                _context2.next = 3;
                 return getPost(request.id);
 
-              case 4:
+              case 3:
                 card = _context2.sent;
-                return _context2.abrupt("return",
-                /*html*/
-                "\n      <div class=\"product-card-wrapper\">\n       <ul class=\"page__breadcrumbs breadcrumbs product-card__breadcrumbs\">\n          <li class=\"breadcrumbs__item\"><a class=\"breadcrumbs__link\"  href=\"/#/\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a></li>\n          <li class=\"breadcrumbs__item\"><a class=\"breadcrumbs__link\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a></li>\n          <li class=\"breadcrumbs__item\"><a class=\"breadcrumbs__link\" href=\"#\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li> <!-- \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A \u0444\u0438\u043B\u044C\u0442\u0440\u0430\u0446\u0438\u0438 -->\n          <li class=\"breadcrumbs__item\">".concat(card.name, "</li>\n       </ul>\n\n       <div class=\"product-wrapper\">\n          <button type=\"button\" class=\"product__close btn--close\"><span class=\"visually-hidden\">\u0437\u0430\u043A\u0440\u044B\u0442\u044C</span></button>\n          <div class=\"product__gallery-container\">\n              <div class=\"product__gallery gallery-top swiper-container\">\n                 <ul class=\"product__slider swiper-wrapper\">\n                   <li class=\"product__slide swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-l.jpg\" width=\"600\" height=\"600\"></li>\n                   <li class=\"product__slide swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-2-l.jpg\" width=\"600\" height=\"600\"></li>\n                   <li class=\"product__slide swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-3-l.jpg\" width=\"600\" height=\"600\"></li>\n                 </ul>\n              </div>\n              <div class=\"product__gallery-small swiper-container gallery-thumbs\">\n                 <ul class=\"product__slider-small swiper-wrapper\">\n                    <li class=\"product__slide-small swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-s.jpg\" width=\"100\" height=\"100\"></li>\n                    <li class=\"product__slide-small swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-2-s.jpg\" width=\"100\" height=\"100\"></li>\n                    <li class=\"product__slide-small swiper-slide\"><img src=\"img/content/selfie-sticks/photo1-3-s.jpg\" width=\"100\" height=\"100\"></li>\n                  </ul>\n              </div>\n          </div>\n          <div class=\"product__info\">\n            <div class=\"product__heading\">\n              <h1 class=\"product__title\">").concat(card.name, "</h1>\n              <p class=\"product__art\">\u0410\u0440\u0442\u0438\u043A\u0443\u043B: <span id=\"product-article\">").concat(card.art, "</span></p>\n              <div id=\"reviewStars-input\">\n                 <input class=\"stars-rait\" type=\"checkbox\" id=\"st1\" value=\"1\">\n                 <label for=\"st1\"></label>\n                 <input class=\"stars-rait\" type=\"checkbox\" id=\"st2\" value=\"2\">\n                 <label for=\"st2\"></label>\n                 <input class=\"stars-rait\" type=\"checkbox\" id=\"st3\" value=\"3\">\n                 <label for=\"st3\"></label>\n                 <input class=\"stars-rait\" type=\"checkbox\" id=\"st4\" value=\"4\">\n                 <label for=\"st4\"></label>\n                 <input class=\"stars-rait\" type=\"checkbox\" id=\"st5\" value=\"5\">\n                 <label for=\"st5\"></label>\n              </div>\n            </div>\n\n            <div class=\"product__about\">\n              <div class=\"product__price-wrapper inner-order-content\">\n                 <p class=\"product__price price-title\">\u0426\u0435\u043D\u0430: <span id=\"productPrice\">").concat(card.price, "</span></p>\n              </div>\n              <button class=\"product__btn-buy main-buy-btn btn\">\uD83D\uDED2\u041A\u0443\u043F\u0438\u0442\u044C</button>\n              <div class=\"product__delivery-info\">\n                 <p>\u041E\u0441\u0442\u0430\u043B\u043E\u0441\u044C \u0432 \u043D\u0430\u043B\u0438\u0447\u0438\u0438: 2</p>\n               </div>\n            </div>\n            <div class=\"product__brns\">\n               <button class=\"product__brn product__brn--description btn\">\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435</button>\n               <button class=\"product__brn product__brn--review btn\">\u041E\u0442\u0437\u044B\u0432\u044B</button>\n            </div>\n            <div class=\"product__review-wrapper\">\n              <a class=\"product__review\" id=\"feedback\">\u041E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043E\u0442\u0437\u044B\u0432</a>\n            </div>\n          </div>\n          <div class=\"product__description\">\n             <h2 class=\"product__description-title\">\u0420\u0430\u0441\u0448\u0438\u0440\u044F\u044E\u0449\u0438\u0439\u0441\u044F \u0433\u0438\u0434\u0440\u043E\u0434\u0438\u043D\u0430\u043C\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0443\u0434\u0430\u0440</h2>\n             <p class=\"product__description-text\">\n                \u041F\u0440\u0438\u0437\u043C\u0430 \u044D\u043A\u0441\u043F\u0435\u0440\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u043E \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u0443\u0435\u043C\u0430. \u0412 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0438 \u0441 \u043F\u0440\u0438\u043D\u0446\u0438\u043F\u043E\u043C \u043D\u0435\u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438, \u043F\u043B\u0430\u0437\u043C\u0435\u043D\u043D\u043E\u0435\n                 \u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u043A\u043E\u0433\u0435\u0440\u0435\u043D\u0442\u043D\u043E.\n                 \u0412\u0435\u0449\u0435\u0441\u0442\u0432\u043E, \u0432\u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u0435 \u043A\u0432\u0430\u043D\u0442\u043E\u0432\u043E\u0433\u043E \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0430 \u044F\u0432\u043B\u0435\u043D\u0438\u044F, \u0437\u0435\u0440\u043A\u0430\u043B\u044C\u043D\u043E. \u041C\u043D\u043E\u0433\u043E\u0447\u0438\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0440\u0430\u0441\u0447\u0435\u0442\u044B \u043F\u0440\u0435\u0434\u0441\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442, \u0430\n                 \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442, \u0447\u0442\u043E \u0433\u043E\u043C\u043E\u0433\u0435\u043D\u043D\u0430\u044F \u0441\u0440\u0435\u0434\u0430 \u0437\u0435\u0440\u043A\u0430\u043B\u044C\u043D\u043E \u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043A\u0432\u0430\u043D\u0442\u043E\u0432\u044B\u0439 \u0444\u043E\u0442\u043E\u043D.\n             </p>\n             <p class=\"product__description-text\">\n                \u0413\u0430\u043B\u0430\u043A\u0442\u0438\u043A\u0430 \u0441\u0436\u0438\u043C\u0430\u0435\u0442 \u0444\u043E\u0442\u043E\u043D.\n                \u041A\u0430\u043A \u043B\u0435\u0433\u043A\u043E \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0438\u0437 \u0441\u0430\u043C\u044B\u0445 \u043E\u0431\u0449\u0438\u0445 \u0441\u043E\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439, \u043F\u043E\u0432\u0435\u0440\u0445\u043D\u043E\u0441\u0442\u044C \u0438\u0437\u043E\u0442\u0435\u0440\u043C\u0438\u0447\u043D\u043E \u0438\u0441\u043A\u0430\u0436\u0430\u0435\u0442 \u0432\u0437\u0440\u044B\n                \u0412\u043E\u0437\u043C\u0443\u0449\u0435\u043D\u0438\u0435 \u043F\u043B\u043E\u0442\u043D\u043E\u0441\u0442\u0438, \u043A\u0430\u043A \u0442\u043E\u0433\u043E \u0442\u0440\u0435\u0431\u0443\u044E\u0442 \u0437\u0430\u043A\u043E\u043D\u044B \u0442\u0435\u0440\u043C\u043E\u0434\u0438\u043D\u0430\u043C\u0438\u043A\u0438, \u0440\u0430\u0441\u0442\u044F\u0433\u0438\u0432\u0430\u0435\u0442 \u0444\u043E\u0442\u043E\u043D. \u041C\u0438\u0448\u0435\u043D\u044C, \u0432 \u0440\u0430\u043C\u043A\u0430\u0445\n                \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439 \u043A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043C\u0435\u0445\u0430\u043D\u0438\u043A\u0438, \u0442\u0440\u0430\u043D\u0441\u0444\u043E\u0440\u043C\u0438\u0440\u0443\u0435\u0442 \u043F\u043E\u0442\u043E\u043A \u043F\u0440\u0438\n                \u043B\u044E\u0431\u043E\u043C \u0430\u0433\u0440\u0435\u0433\u0430\u0442\u043D\u043E\u043C \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0438 \u0441\u0440\u0435\u0434\u044B \u0432\u0437\u0430\u0438\u043C\u043E\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F.\n             </p>\n          </div>\n          <div class=\"products__reviews reviews\">\n             <ul class=\"reviews__list\">\n\n            </ul>\n          </div>\n      </div>\n    </div>\n        "));
+                return _context2.abrupt("return", "\n      <div class=\"product-card-wrapper\">\n       <ul class=\"page__breadcrumbs breadcrumbs product-card__breadcrumbs\">\n          <li class=\"breadcrumbs__item\"><a class=\"breadcrumbs__link\"  href=\"/#/\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a></li>\n          <li class=\"breadcrumbs__item\"><a class=\"breadcrumbs__link\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a></li>\n          <li class=\"breadcrumbs__item\">".concat(card.name, "</li>\n       </ul>\n\n       <div class=\"product-wrapper\">\n          <div class=\"product__gallery-container\">\n              <div class=\"product__gallery gallery-top swiper-container\">\n                 <ul class=\"product__slider swiper-wrapper\">\n                 </ul>\n              </div>\n              <div class=\"product__gallery-small swiper-container gallery-thumbs\">\n                 <ul class=\"product__slider-small swiper-wrapper\">\n                  </ul>\n              </div>\n          </div>\n          <div class=\"product__info\">\n            <div class=\"product__heading\">\n              <h1 class=\"product__title\">").concat(card.name, "</h1>\n              <p class=\"product__art\">\u0410\u0440\u0442\u0438\u043A\u0443\u043B: <span id=\"product-article\">").concat(card.art, "</span></p>\n              <div class=\"product__rating\" id=\"rater\">\n              </div>\n            </div>\n\n            <div class=\"product__about\">\n              <div class=\"product__price-wrapper inner-order-content\">\n                 <p class=\"product__price price-title\">\u0426\u0435\u043D\u0430: <span id=\"productPrice\">").concat(card.price, "</span><span class=\"product__currency\"> \u0433\u0440\u043D</span> </p>\n              </div>\n              <button class=\"product__btn-buy main-buy-btn btn addToCartBtn\">\uD83D\uDED2\u041A\u0443\u043F\u0438\u0442\u044C</button>\n            </div>\n            <div class=\"product__brns\">\n               <button class=\"product__brn product__brn--description btn\">\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435</button>\n               <button class=\"product__brn product__brn--review btn\">\u041E\u0442\u0437\u044B\u0432\u044B</button>\n            </div>\n            <div class=\"product__review-wrapper\">\n              <a class=\"product__review\" id=\"feedback\">\u041E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043E\u0442\u0437\u044B\u0432</a>\n            </div>\n          </div>\n          <div class=\"product__description\">\n             <h2 class=\"product__description-title\">\u0420\u0430\u0441\u0448\u0438\u0440\u044F\u044E\u0449\u0438\u0439\u0441\u044F \u0433\u0438\u0434\u0440\u043E\u0434\u0438\u043D\u0430\u043C\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0443\u0434\u0430\u0440</h2>\n             <p class=\"product__description-text\">\n                \u041F\u0440\u0438\u0437\u043C\u0430 \u044D\u043A\u0441\u043F\u0435\u0440\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u043E \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u0443\u0435\u043C\u0430. \u0412 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0438 \u0441 \u043F\u0440\u0438\u043D\u0446\u0438\u043F\u043E\u043C \u043D\u0435\u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438, \u043F\u043B\u0430\u0437\u043C\u0435\u043D\u043D\u043E\u0435\n                 \u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u043A\u043E\u0433\u0435\u0440\u0435\u043D\u0442\u043D\u043E.\n                 \u0412\u0435\u0449\u0435\u0441\u0442\u0432\u043E, \u0432\u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u0435 \u043A\u0432\u0430\u043D\u0442\u043E\u0432\u043E\u0433\u043E \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0430 \u044F\u0432\u043B\u0435\u043D\u0438\u044F, \u0437\u0435\u0440\u043A\u0430\u043B\u044C\u043D\u043E. \u041C\u043D\u043E\u0433\u043E\u0447\u0438\u0441\u043B\u0435\u043D\u043D\u044B\u0435 \u0440\u0430\u0441\u0447\u0435\u0442\u044B \u043F\u0440\u0435\u0434\u0441\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442, \u0430\n                 \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442, \u0447\u0442\u043E \u0433\u043E\u043C\u043E\u0433\u0435\u043D\u043D\u0430\u044F \u0441\u0440\u0435\u0434\u0430 \u0437\u0435\u0440\u043A\u0430\u043B\u044C\u043D\u043E \u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043A\u0432\u0430\u043D\u0442\u043E\u0432\u044B\u0439 \u0444\u043E\u0442\u043E\u043D.\n             </p>\n             <p class=\"product__description-text\">\n                \u0413\u0430\u043B\u0430\u043A\u0442\u0438\u043A\u0430 \u0441\u0436\u0438\u043C\u0430\u0435\u0442 \u0444\u043E\u0442\u043E\u043D.\n                \u041A\u0430\u043A \u043B\u0435\u0433\u043A\u043E \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0438\u0437 \u0441\u0430\u043C\u044B\u0445 \u043E\u0431\u0449\u0438\u0445 \u0441\u043E\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439, \u043F\u043E\u0432\u0435\u0440\u0445\u043D\u043E\u0441\u0442\u044C \u0438\u0437\u043E\u0442\u0435\u0440\u043C\u0438\u0447\u043D\u043E \u0438\u0441\u043A\u0430\u0436\u0430\u0435\u0442 \u0432\u0437\u0440\u044B\n                \u0412\u043E\u0437\u043C\u0443\u0449\u0435\u043D\u0438\u0435 \u043F\u043B\u043E\u0442\u043D\u043E\u0441\u0442\u0438, \u043A\u0430\u043A \u0442\u043E\u0433\u043E \u0442\u0440\u0435\u0431\u0443\u044E\u0442 \u0437\u0430\u043A\u043E\u043D\u044B \u0442\u0435\u0440\u043C\u043E\u0434\u0438\u043D\u0430\u043C\u0438\u043A\u0438, \u0440\u0430\u0441\u0442\u044F\u0433\u0438\u0432\u0430\u0435\u0442 \u0444\u043E\u0442\u043E\u043D. \u041C\u0438\u0448\u0435\u043D\u044C, \u0432 \u0440\u0430\u043C\u043A\u0430\u0445\n                \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439 \u043A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043C\u0435\u0445\u0430\u043D\u0438\u043A\u0438, \u0442\u0440\u0430\u043D\u0441\u0444\u043E\u0440\u043C\u0438\u0440\u0443\u0435\u0442 \u043F\u043E\u0442\u043E\u043A \u043F\u0440\u0438\n                \u043B\u044E\u0431\u043E\u043C \u0430\u0433\u0440\u0435\u0433\u0430\u0442\u043D\u043E\u043C \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0438 \u0441\u0440\u0435\u0434\u044B \u0432\u0437\u0430\u0438\u043C\u043E\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F.\n             </p>\n          </div>\n          <div class=\"products__reviews reviews\">\n             <ul class=\"reviews__list\">\n\n            </ul>\n          </div>\n      </div>\n    </div>\n        "));
 
-              case 6:
+              case 5:
               case "end":
                 return _context2.stop();
             }
@@ -26341,7 +27036,7 @@
       var _after_render = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee3() {
-        var cardsInJSON, response, json, cardElement, product, productDescriptionBtn, productDescription, commentsList, reviewFormPopup, reviewForm, reviewPopupOpenBtn, reviewFormSubmitBtn, showReviewFormPopup, formValidate;
+        var cardsInJSON, response, json, cardElement, productRatingCount, productRating, product, productDescriptionBtn, productDescription, commentsList, mainImages, smallImages, reviewBtn, reviewFormPopup, reviewForm, reviewPopupOpenBtn, reviewFormSubmitBtn, reviewFormName, reviewFormText, reviewFormCloseBtn, showReviewFormPopup, addNewComment, formValidate;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
@@ -26356,7 +27051,6 @@
 
               case 5:
                 json = _context3.sent;
-                console.log(json);
 
                 if (localStorage.getItem('cards')) {
                   cardsInJSON = localStorage.getItem('cards');
@@ -26364,90 +27058,113 @@
                 } else {
                   cardsInJSON = JSON.stringify(json);
                   localStorage.setItem('cards', cardsInJSON);
-                  console.log(json);
                 }
 
                 json = JSON.parse(cardsInJSON);
                 cardElement = json.find(function (el) {
                   return el.id === card.id;
                 });
-                console.log(json);
-                console.log(card);
+                productRatingCount = parseInt(cardElement.rating);
+                productRating = raterJs({
+                  element: document.querySelector("#rater"),
+                  showToolTip: true,
+                  max: 5,
+                  starSize: 25,
+                  disableText: 'Thank you for your vote!',
+                  ratingText: '{rating}/{maxRating}',
+                  isBusyText: null,
+                  step: 0.1,
+                  reverse: false,
+                  readOnly: true,
+                  rating: productRatingCount,
+                  rateCallback: function rateCallback(rating, done) {
+                    productRating.setRating(rating);
+                    productRating.disable();
+                    done();
+                  }
+                });
                 product = document.querySelector(".product-card-wrapper");
                 productDescriptionBtn = product.querySelector(".product__brn--description");
                 productDescription = product.querySelector(".product__description");
                 commentsList = document.querySelector(".reviews__list");
+                mainImages = document.querySelector(".product__slider");
+                smallImages = document.querySelector(".product__slider-small");
+                reviewBtn = document.querySelector(".product__brn--review");
+                renderImages(cardElement.imgLarge, mainImages, 600);
+                renderImages(cardElement.imgSmall, smallImages, 100); //productRating.enable();
+                // console.log(cardElement.rating);
+                //productRating.setRating(cardElement.rating);
+
                 productDescriptionBtn.addEventListener("click", function () {
                   toggleShowClass(productDescription);
                 });
                 productSlider();
-                renderComments(cardElement.comments, commentsList); // json.findIndex(x => x.id == card.id);
-                // json[foundIndex] = card;
-                // json.forEach((element, index) => {
-                //   if(element.id === card.id) {
-                //     json[index] = card;
-                //   }
-                // });
-
-                console.log(cardElement.comments);
+                renderComments(cardElement.comments, commentsList);
                 reviewFormPopup = document.querySelector(".review-modal");
 
                 if (reviewFormPopup) {
                   reviewForm = reviewFormPopup.querySelector(".review-modal__form");
                   reviewPopupOpenBtn = document.querySelector(".product__review");
                   reviewFormSubmitBtn = reviewForm.querySelector(".review-modal__btn");
+                  reviewFormName = reviewForm.elements.reviewName;
+                  reviewFormText = reviewForm.elements.reviewMessage;
+                  reviewFormCloseBtn = reviewFormPopup.querySelector(".modal__close");
 
                   showReviewFormPopup = function showReviewFormPopup() {
-                    var reviewFormName = reviewForm.elements.reviewName;
-                    var reviewFormText = reviewForm.elements.reviewMessage;
-                    var reviewFormCloseBtn = reviewFormPopup.querySelector(".modal__close");
                     reviewFormPopup.classList.add(showClass);
+                    disableBodyScroll(reviewFormPopup);
                     reviewForm.reset();
                     reviewFormName.focus();
                     reviewFormCloseBtn.addEventListener("click", function (evt) {
                       evt.preventDefault();
+                      enableBodyScroll(reviewFormPopup);
                       reviewFormPopup.classList.remove(showClass);
                       reviewFormPopup.classList.remove(errorClass);
                     });
-                    reviewFormSubmitBtn.addEventListener("click", function () {
-                      if (formValidate(reviewForm)) {
-                        reviewFormPopup.classList.remove(showClass);
-                        var newComment = {};
-                        newComment.author = reviewFormName.value;
-                        newComment.time = moment();
-                        newComment.text = reviewFormText.value;
-                        cardElement.comments.push(newComment);
-                        console.log(cardElement);
-                        json.forEach(function (element, index) {
-                          if (element.id === cardElement.id) {
-                            json[index] = cardElement;
-                          }
-                        });
-                        console.log(json);
-
-                        var _cardsInJSON = JSON.stringify(json);
-
-                        localStorage.setItem('cards', _cardsInJSON);
-                        renderComments(cardElement.comments, commentsList);
-                        showSuccessMassage('Ваш отзыв успешно отправлен!', 'Спасибо!');
-                        reviewFormPopup.classList.remove(errorClass);
-                      } else {
-                        if (reviewFormPopup.classList.contains(errorClass)) {
-                          reviewFormPopup.classList.remove(errorClass);
-                          void reviewFormPopup.offsetWidth;
-                          reviewFormPopup.classList.add(errorClass);
-                        }
-                      }
-                    });
                   };
+
+                  addNewComment = function addNewComment() {
+                    var newComment = {};
+                    newComment.author = reviewFormName.value;
+                    newComment.time = moment().unix();
+                    newComment.text = reviewFormText.value;
+                    cardElement.comments.push(newComment);
+                  };
+
+                  reviewFormSubmitBtn.addEventListener("click", function () {
+                    if (formValidate(reviewForm)) {
+                      enableBodyScroll(reviewFormPopup);
+                      reviewFormPopup.classList.remove(showClass);
+                      addNewComment();
+                      json.forEach(function (element, index) {
+                        if (element.id === cardElement.id) {
+                          json[index] = cardElement;
+                        }
+                      });
+
+                      var _cardsInJSON = JSON.stringify(json);
+
+                      localStorage.setItem('cards', _cardsInJSON);
+                      renderComments(cardElement.comments, commentsList);
+                      showSuccessMassage('Спасибо!', 'Ваш отзыв успешно отправлен!');
+                      reviewFormPopup.classList.remove(errorClass);
+                    } else {
+                      if (reviewFormPopup.classList.contains(errorClass)) {
+                        reviewFormPopup.classList.remove(errorClass);
+                        void reviewFormPopup.offsetWidth;
+                        reviewFormPopup.classList.add(errorClass);
+                      }
+                    }
+                  });
 
                   formValidate = function formValidate(form) {
                     var valid = true;
                     var formName = form.elements.reviewName;
                     var formMessage = form.elements.reviewMessage;
                     reviewFormPopup.classList.remove(errorClass);
+                    var nameValidate = /^[a-zA-Z-Яа-я0-9_]{3,}[a-zA-Z-Яа-я]+[0-9]*$/;
 
-                    if (!formName.value) {
+                    if (!formName.value.match(nameValidate)) {
                       reviewFormPopup.classList.add(errorClass);
                       valid = false;
                     }
@@ -26464,16 +27181,19 @@
                     evt.preventDefault();
                     showReviewFormPopup();
                   });
-                } //
-                // fs.writeFile('data/products.json', cardsInJSON, 'utf8', (err) => {
-                //   if (err) throw err;
-                //   console.log('The file has been saved!');
-                // });
+                }
 
+                reviewBtn.addEventListener("click", function () {
+                  scrollToElement(commentsList, {
+                    offset: 0,
+                    ease: 'out-expo',
+                    duration: 1500
+                  });
+                });
+                console.log(card);
+                addToCart();
 
-                console.log(card); //json = JSON.stringify();
-
-              case 23:
+              case 28:
               case "end":
                 return _context3.stop();
             }
@@ -26488,109 +27208,6 @@
       return after_render;
     }()
   };
-  //   render : async () => {
-  //     let view = `
-  //            <div class="product-card-wrapper">
-  //    <ul class="page__breadcrumbs breadcrumbs product-card__breadcrumbs">
-  //      <li class="breadcrumbs__item"><a class="breadcrumbs__link"  href="/#/main">Главная</a></li>
-  //      <li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/#/catalog">Каталог товаров</a></li>
-  //      <li class="breadcrumbs__item"><a class="breadcrumbs__link" href="#">Моноподы для селфи</a></li> <!-- Добавить обработчик фильтрации -->
-  //      <li class="breadcrumbs__item">Beike QZSD Q999H</li>
-  //     </ul>
-  //
-  //   <div class="product-wrapper">
-  //     <button type="button" class="product__close btn--close"><span class="visually-hidden">закрыть</span></button>
-  //     <div class="product__gallery-container">
-  //        <div class="product__gallery gallery-top swiper-container">
-  //           <ul class="product__slider swiper-wrapper">
-  //             <li class="product__slide swiper-slide"><img src="img/content/selfie-sticks/photo1-l.jpg" width="600" height="600"></li>
-  //             <li class="product__slide swiper-slide"><img src="img/content/selfie-sticks/photo1-2-l.jpg" width="600" height="600"></li>
-  //             <li class="product__slide swiper-slide"><img src="img/content/selfie-sticks/photo1-3-l.jpg" width="600" height="600"></li>
-  //           </ul>
-  //        </div>
-  //        <div class="product__gallery-small swiper-container gallery-thumbs">
-  //           <ul class="product__slider-small swiper-wrapper">
-  //             <li class="product__slide-small swiper-slide"><img src="img/content/selfie-sticks/photo1-s.jpg" width="100" height="100"></li>
-  //             <li class="product__slide-small swiper-slide"><img src="img/content/selfie-sticks/photo1-2-s.jpg" width="100" height="100"></li>
-  //             <li class="product__slide-small swiper-slide"><img src="img/content/selfie-sticks/photo1-3-s.jpg" width="100" height="100"></li>
-  //           </ul>
-  //         </div>
-  //       </div>
-  //       <div class="product__info">
-  //         <div class="product__heading">
-  //           <h1 class="product__title">Монопод Beike QZSD Q999H</h1>
-  //           <p class="product__art">Артикул: <span id="product-article">#12345</span></p>
-  //           <div id="reviewStars-input">
-  //             <input class="stars-rait" type="checkbox" id="st1" value="1">
-  //             <label for="st1"></label>
-  //             <input class="stars-rait" type="checkbox" id="st2" value="2">
-  //             <label for="st2"></label>
-  //             <input class="stars-rait" type="checkbox" id="st3" value="3">
-  //             <label for="st3"></label>
-  //             <input class="stars-rait" type="checkbox" id="st4" value="4">
-  //             <label for="st4"></label>
-  //             <input class="stars-rait" type="checkbox" id="st5" value="5">
-  //             <label for="st5"></label>
-  //           </div>
-  //         </div>
-  //
-  //         <div class="product__about">
-  //           <div class="product__price-wrapper inner-order-content">
-  //             <p class="product__price price-title">Цена: <span id="productPrice">$ 1000</span></p>
-  //           </div>
-  //           <button class="product__btn-buy main-buy-btn btn">🛒Купить</button>
-  //           <div class="product__delivery-info">
-  //             <p>Осталось в наличии: 2</p>
-  //           </div>
-  //         </div>
-  //         <div class="product__brns">
-  //           <button class="product__brn product__brn--description btn">Описание</button>
-  //           <button class="product__brn product__brn--review btn">Отзывы</button>
-  //         </div>
-  //         <div class="product__review-wrapper">
-  //           <a class="product__review" id="feedback">Оставить отзыв</a>
-  //         </div>
-  //       </div>
-  //      <div class="product__description">
-  //         <h2 class="product__description-title">Расширяющийся гидродинамический удар</h2>
-  //         <p class="product__description-text">
-  //           Призма эксперментально верифицируема. В соответствии с принципом неопределенности, плазменное
-  //           образование когерентно.
-  //           Вещество, вследствие квантового характера явления, зеркально. Многочисленные расчеты предсказывают, а
-  //           эксперименты подтверждают, что гомогенная среда зеркально вращает квантовый фотон.
-  //         </p>
-  //         <p class="product__description-text">
-  //           Галактика сжимает фотон.
-  //           Как легко получить из самых общих соображений, поверхность изотермично искажает взры
-  //           Возмущение плотности, как того требуют законы термодинамики, растягивает фотон. Мишень, в рамках
-  //           ограничений классической механики, трансформирует поток при
-  //           любом агрегатном состоянии среды взаимодействия.
-  //         </p>
-  //       </div>
-  //       <div class="products__reviews reviews">
-  //        <ul class="reviews__list">
-  //
-  //       </ul>
-  //       </div>
-  //   </div>
-  // </div>
-  //         `;
-  //     return view
-  //   }
-  //   , after_render: async () => {
-  //     const product = document.querySelector(`.product-card-wrapper`);
-  //     const productDescriptionBtn = product.querySelector(`.product__brn--description`);
-  //     const productDescription = product.querySelector(`.product__description`);
-  //
-  //     productDescriptionBtn.addEventListener(`click`, ()=> {
-  //       toggleShowClass(productDescription);
-  //     });
-  //     productSlider();
-  //     comments();
-  //   }
-  // };
-  //
-  // export default cardPage;
 
   var products = (function () {
     var productList = document.querySelector('.catalog__list');
@@ -26674,7 +27291,7 @@
 
     function createCards(response) {
       response.data.forEach(function (item) {
-        productList.innerHTML += "\n        <li class=\"catalog__item\" data-id=\"".concat(item.id, "\">\n            <a class=\"catalog__link\" data-id=\"").concat(item.id, "\" href=\"#/i/").concat(item.id, "\">\n                <h3 class=\"catalog__title\">").concat(item.name, "</h3>\n            </a>\n            <p class=\"catalog__price\">").concat(item.price, "$</p>\n            <div class=\"catalog__wrapper\">\n                <img class=\"catalog__image\" src=\"").concat(item.img, "\">\n                <p class=\"catalog__actions\">\n                <button class=\"catalog__btn btn addToCartBtn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                </p>\n            </div>\n        </li>\n        ");
+        productList.innerHTML += "\n        <li class=\"catalog__item\"  data-id=\"".concat(item.id, "\">\n            <a class=\"catalog__link\" data-id=\"").concat(item.id, "\" href=\"#/i/").concat(item.id, "\">\n                <h3 class=\"catalog__title\">").concat(item.name, "</h3>\n            </a>\n            <p class=\"catalog__price\">").concat(item.price, "$</p>\n            <div class=\"catalog__wrapper\">\n                <img class=\"catalog__image\" src=\"").concat(item.img, "\">\n                <div class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn addToCartBtn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                </div>\n            </div>\n        </li>\n        ");
         var catalogLink = document.querySelector(".catalog__link");
         catalogLink.addEventListener("click", function () {
           if (catalogLink.getAttribute("data-id") === item.id) {
@@ -26744,7 +27361,7 @@
 
     function createProductCard() {
       filteredArray.forEach(function (item) {
-        productList.innerHTML += "\n            <li class=\"catalog__item\">\n                <a class=\"catalog__link\" href=\"#\">\n                    <h3 class=\"catalog__title\">".concat(item.name, "</h3>\n                </a>\n                <p class=\"catalog__price\">").concat(item.price, " \u0433\u0440\u043D</p>\n                <div class=\"catalog__wrapper\">\n                    <img class=\"catalog__image\" src=\"").concat(item.img, "\">\n                    <p class=\"catalog__actions\">\n                    <button class=\"catalog__btn btn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                    <button class=\"catalog__compare-btn\" type=\"button\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044E</button>\n                    </p>\n                </div>\n            </li>\n            ");
+        productList.innerHTML += "\n             <li class=\"catalog__item\"  data-id=\"".concat(item.id, "\">\n            <a class=\"catalog__link\" data-id=\"").concat(item.id, "\" href=\"#/i/").concat(item.id, "\">\n                <h3 class=\"catalog__title\">").concat(item.name, "</h3>\n            </a>\n            <p class=\"catalog__price\">").concat(item.price, "$</p>\n            <div class=\"catalog__wrapper\">\n                <img class=\"catalog__image\" src=\"").concat(item.img, "\">\n                <div class=\"catalog__actions\">\n                  <button class=\"catalog__btn btn addToCartBtn\" type=\"button\">\u0412 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</button>\n                </div>\n            </div>\n        </li>\n            ");
       });
     }
 
@@ -26785,6 +27402,7 @@
           }
 
           createProductCard();
+          addToCart();
         });
       });
     }
@@ -26810,6 +27428,7 @@
         }
 
         createProductCard();
+        addToCart();
       });
     }
 
@@ -26859,7 +27478,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "\n    <div class=\"page__wrapper\">\n        <h1 class=\"page__title\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</h1>\n        <ul class=\"page__breadcrumbs breadcrumbs\">\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"index.html\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"catalog.html\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a>\n          </li>\n        </ul>\n      </div>\n      <div class=\"catalog-columns--header\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <p class=\"catalog-columns__narrow catalog-columns__title\">\u0424\u0438\u043B\u044C\u0442\u0440:</p>\n          <section class=\"catalog-columns__wide sort\">\n            <h2 class=\"catalog-columns__title sort__title\">\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:</h2>\n            <ul class=\"sort__type-list\">\n              <li class=\"sort__type-item sort__price\">\n                <a class=\"sort__type-link sort__type-link--current\">\u041F\u043E \u0446\u0435\u043D\u0435</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u0442\u0438\u043F\u0443</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438</a>\n              </li>\n            </ul>\n            <ul class=\"sort__order-list\">\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--up\" href=\"#\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--down sort__order-link--current\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n            </ul>\n          </section>\n        </div>\n      </div>\n      <div class=\"catalog-columns\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <section class=\"catalog-columns__narrow filter\">\n            <h2 class=\"visually-hidden\">\u0424\u0438\u043B\u044C\u0442\u0440 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n            <form class=\"filter__form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C</legend>\n                <div class=\"filter__range range\">\n                  <div class=\"range__selected\"></div>\n                  <button class=\"range__slider range__slider--min\" type=\"button\" aria-label=\"\u041E\u0442\">\n                    <span class=\"range__label range__label--min\">\u043E\u0442 0</span>\n                  </button>\n                  <button class=\"range__slider range__slider--max\" type=\"button\" aria-label=\"\u0414\u043E\">\n                    <span class=\"range__label range__label--max\">\u0434\u043E 5000</span>\n                  </button>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_min\" value=\"0\">\n                  </label>\n                  <label class=\"visually-hidden\">\n                    \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C\n                    <input type=\"number\" name=\"price_max\" value=\"5000\">\n                  </label>\n                </div>\n              </fieldset>\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F</legend>\n                <ul class=\"filter__options filter__category\">\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"actionCamera\" type=\"checkbox\" name=\"actionCamera\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"actionCamera\">\u042D\u043A\u0448\u043D \u043A\u0430\u043C\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"fitnessTracker\" type=\"checkbox\" name=\"fitnessTracker\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"fitnessTracker\">\u0424\u0438\u0442\u043D\u0435\u0441 \u0442\u0440\u0435\u043A\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"quadrocopters\" type=\"checkbox\" name=\"quadrocopters\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"quadrocopters\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"selfieSticks\" type=\"checkbox\" name=\"selfieSticks\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"selfieSticks\">\u0421\u0435\u043B\u0444\u0438 \u043F\u0430\u043B\u043A\u0438</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"watches\" type=\"checkbox\" name=\"watches\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"watches\">\u0427\u0430\u0441\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"vr\" type=\"checkbox\" name=\"vr\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"vr\">VR/AR</label>\n                  </li>\n                </ul>\n              </fieldset>\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">Bluetooth</legend>\n                <ul class=\"filter__options\">\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"bluetooth-yes\" type=\"radio\" name=\"bluetooth\" value=\"yes\" checked>\n                    <label class=\"filter__option-label filter__option-label--radio\" for=\"bluetooth-yes\">\u0415\u0441\u0442\u044C</label>\n                  </li>\n                  <li>\n                    <input class=\"filter__option visually-hidden\" id=\"bluetooth-no\" type=\"radio\" name=\"bluetooth\" value=\"no\">\n                    <label class=\"filter__option-label filter__option-label--radio\" for=\"bluetooth-no\">\u041D\u0435\u0442</label>\n                  </li>\n                </ul>\n              </fieldset>\n              <button class=\"filter__btn btn\" type=\"submit\">\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C</button>\n            </form>\n          </section>\n          <section class=\"catalog-columns__wide catalog\">\n            <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433</h2>\n            <ul class=\"catalog__list\">\n            </ul>\n            <div class=\"pagination\">\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--back\">\u041D\u0430\u0437\u0430\u0434</a>\n              </div>\n              <ul class=\"pagination__list\">\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page pagination__link--current\">1</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">2</a>\n                </li>\n                <li class=\"pagination__item\">\n                  <a class=\"pagination__link pagination__link--page\" href=\"#\">3</a>\n                </li>\n              </ul>\n              <div class=\"pagination__wrapper\">\n                <a class=\"pagination__link pagination__link--next\" href=\"#\">\u0412\u043F\u0435\u0440\u0435\u0434</a>\n              </div>\n            </div>\n          </section>\n        </div>\n      </div>\n    ";
+                view = "\n    <div class=\"page__wrapper\">\n        <h1 class=\"page__title\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h1>\n        <ul class=\"page__breadcrumbs breadcrumbs\">\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"index.html\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F</a>\n          </li>\n          <li class=\"breadcrumbs__item\">\n            <a class=\"breadcrumbs__link\" href=\"catalog.html\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n          </li>\n        </ul>\n      </div>\n      <div class=\"catalog-columns--header\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <p class=\"catalog-columns__narrow catalog-columns__title\">\u0424\u0438\u043B\u044C\u0442\u0440:</p>\n          <section class=\"catalog-columns__wide sort\">\n            <h2 class=\"catalog-columns__title sort__title\">\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:</h2>\n            <ul class=\"sort__type-list\">\n              <li class=\"sort__type-item sort__price\">\n                <a class=\"sort__type-link sort__type-link--current\">\u041F\u043E \u0446\u0435\u043D\u0435</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u0442\u0438\u043F\u0443</a>\n              </li>\n              <li class=\"sort__type-item\">\n                <a class=\"sort__type-link\" href=\"#\">\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438</a>\n              </li>\n            </ul>\n            <ul class=\"sort__order-list\">\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--up\" href=\"#\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n              <li class=\"sort__order-item\">\n                <a class=\"sort__order-link sort__order-link--down sort__order-link--current\">\n                  <span class=\"visually-hidden\">\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E</span>\n                </a>\n              </li>\n            </ul>\n          </section>\n        </div>\n      </div>\n      <div class=\"catalog-columns\">\n        <div class=\"catalog-columns__wrapper page__wrapper\">\n          <section class=\"catalog-columns__narrow filter\">\n            <h2 class=\"visually-hidden\">\u0424\u0438\u043B\u044C\u0442\u0440 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</h2>\n            <form class=\"filter__form\">\n              <fieldset class=\"filter__section\">\n                <legend class=\"filter__section-title\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F</legend>\n                <ul class=\"filter__options filter__category\">\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"actionCamera\" type=\"checkbox\" name=\"actionCamera\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"actionCamera\">\u042D\u043A\u0448\u043D \u043A\u0430\u043C\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"fitnessTracker\" type=\"checkbox\" name=\"fitnessTracker\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"fitnessTracker\">\u0424\u0438\u0442\u043D\u0435\u0441 \u0442\u0440\u0435\u043A\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"quadrocopters\" type=\"checkbox\" name=\"quadrocopters\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"quadrocopters\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"selfieSticks\" type=\"checkbox\" name=\"selfieSticks\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"selfieSticks\">\u0421\u0435\u043B\u0444\u0438 \u043F\u0430\u043B\u043A\u0438</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"watches\" type=\"checkbox\" name=\"watches\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"watches\">\u0427\u0430\u0441\u044B</label>\n                  </li>\n                  <li>\n                    <input class=\"category__filter filter__option visually-hidden\" id=\"vr\" type=\"checkbox\" name=\"vr\">\n                    <label class=\"filter__option-label filter__option-label--check\" for=\"vr\">VR/AR</label>\n                  </li>\n                </ul>\n              </fieldset>\n            </form>\n          </section>\n          <section class=\"catalog-columns__wide catalog\">\n            <h2 class=\"visually-hidden\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433</h2>\n            <ul class=\"catalog__list\">\n            </ul>\n          </section>\n        </div>\n      </div>\n    ";
                 return _context.abrupt("return", view);
 
               case 2:
@@ -27203,9 +27822,11 @@
     var cartPopup = document.querySelector(".cart-popup");
     var cartPopupCloseBtn = cartPopup.querySelector(".cart__close");
     cartPopupLink.addEventListener("click", function () {
+      disableBodyScroll(cartPopup);
       showSection(cartPopup);
     });
     cartPopupCloseBtn.addEventListener("click", function () {
+      enableBodyScroll(cartPopup);
       hideSection(cartPopup);
     });
   });
@@ -27220,7 +27841,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "<nav class=\"main-nav\">\n        <a class=\"page-header__logo main-nav__logo logo\" href=\"/#/\">\n          <img class=\"logo__image\" src=\"img/logo-device.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n        </a>\n<<<<<<< HEAD\n=======\n<!--        <form class=\"search-form\" action=\"https://echo.htmlacademy.ru\" method=\"get\">-->\n<!--          <label class=\"visually-hidden\" for=\"site-search\">\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u0430\u0439\u0442\u0443</label>-->\n<!--          <input class=\"search-form__input\" id=\"site-search\" type=\"text\" name=\"search\" placeholder=\"\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u0430\u0439\u0442\u0443\" required>-->\n<!--          <button class=\"search-form__btn\" type=\"submit\">\u041D\u0430\u0439\u0442\u0438</button>-->\n<!--        </form>-->\n<!--        <ul class=\"page-header__user-menu user-menu\">-->\n<!--          <li class=\"user-menu__item\">-->\n<!--            <a class=\"user-menu__link user-menu__link--login\" href=\"#\">\u0412\u043E\u0439\u0442\u0438</a>-->\n<!--          </li>-->\n<!--        </ul>-->\n>>>>>>> main-page\n        <ul class=\"page-header__user-actions user-menu\">\n          <li class=\"user-menu__item user-menu__item--cart\">\n            <a class=\"user-menu__link user-menu__link--cart\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n          </li>\n        </ul>\n        <ul class=\"page-header__site-menu site-menu\">\n        </ul>\n      </nav>\n";
+                view = "<nav class=\"main-nav\">\n        <a class=\"page-header__logo main-nav__logo logo\" href=\"/#/\">\n          <img class=\"logo__image\" src=\"img/logo-device.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n        </a>\n\n        <ul class=\"page-header__user-actions user-menu\">\n          <li class=\"user-menu__item user-menu__item--cart\">\n            <a class=\"user-menu__link user-menu__link--cart\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n          </li>\n        </ul>\n        <ul class=\"page-header__site-menu site-menu\">\n        </ul>\n      </nav>\n";
                 return _context.abrupt("return", view);
 
               case 2:
@@ -27249,11 +27870,11 @@
                 siteMenu = document.querySelector(".site-menu");
                 pageMainLink = document.querySelector(".page-header__logo");
 
-                if (window.location.href.indexOf("localhost:3000/") !== -1) {
-                  siteMenu.innerHTML = "\n       <li class=\"site-menu__item site-menu__item--dropdown\">\n            <a class=\"site-menu__link site-menu__link--dropdown\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n            <div class=\"page-header__catalog-dropdown dropdown\">\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu catalog-menu__info\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a></li>\n              </ul>\n            </div>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--delivery\"\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--warranty\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--contacts\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>\n          </li>\n      ";
-                } else {
+                if (window.location.href.includes("catalog") || window.location.href.includes("i/")) {
                   pageMainLink.setAttribute("href", "/#/");
-                  siteMenu.innerHTML = "\n         <li class=\"site-menu__item site-menu__item--dropdown\">\n            <a class=\"site-menu__link site-menu__link--dropdown\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n            <div class=\"page-header__catalog-dropdown dropdown\">\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"catalog.html\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu catalog-menu__info\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a></li>\n              </ul>\n            </div>\n          </li>\n      ";
+                  siteMenu.innerHTML = "\n         <li class=\"site-menu__item site-menu__item--dropdown\">\n            <a class=\"site-menu__link site-menu__link--dropdown\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n            <div class=\"page-header__catalog-dropdown dropdown\">\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu catalog-menu__info\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a></li>\n              </ul>\n            </div>\n          </li>\n      ";
+                } else {
+                  siteMenu.innerHTML = "\n       <li class=\"site-menu__item site-menu__item--dropdown\">\n            <a class=\"site-menu__link site-menu__link--dropdown\" href=\"/#/catalog\">\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0442\u043E\u0432\u0430\u0440\u043E\u0432</a>\n            <div class=\"page-header__catalog-dropdown dropdown\">\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0412\u0438\u0440\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041C\u043E\u043D\u043E\u043F\u043E\u0434\u044B \u0434\u043B\u044F \u0441\u0435\u043B\u0444\u0438</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u042D\u043A\u0448\u043D-\u043A\u0430\u043C\u0435\u0440\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0424\u0438\u0442\u043D\u0435\u0441-\u0431\u0440\u0430\u0441\u043B\u0435\u0442\u044B</a></li>\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u0423\u043C\u043D\u044B\u0435 \u0447\u0430\u0441\u044B</a></li>\n              </ul>\n              <ul class=\"catalog-menu catalog-menu__info\">\n                <li><a class=\"catalog-menu__link\" href=\"#\">\u041A\u0432\u0430\u0434\u0440\u043E\u043A\u043E\u043F\u0442\u0435\u0440\u044B</a></li>\n              </ul>\n            </div>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--delivery\"\">\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--warranty\">\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F</a>\n          </li>\n          <li class=\"site-menu__item\">\n            <a class=\"site-menu__link site-menu__link--contacts\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>\n          </li>\n      ";
                 }
 
                 cartPopup();
@@ -27285,7 +27906,7 @@
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                view = "\n           <div class=\"page__wrapper\">\n        <div class=\"page-footer__top\">\n          <a class=\"logo\">\n            <img class=\"logo__image\" src=\"img/logo-device-color.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n          </a>\n          <ul class=\"page-footer__user-menu user-menu user-menu--contrast\">\n           <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"/#/order\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"/#/test-card-page\">\u041A\u0410\u0420\u0422\u041E\u0427\u041A\u0410 \u0422\u041E\u0412\u0410\u0420\u0410</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--product\" href=\"#/order\">\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043A\u0430\u0437\u0430</a>\n            </li>\n            <li class=\"user-menu__item\">\n              <a class=\"user-menu__link user-menu__link--cart\" href=\"/#/cart\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n            </li>\n            \n          </ul>\n        </div>\n\n        <div class=\"page-footer__middle\">\n          <p class=\"page-footer__contacts\">\u0433. \u041A\u0438\u0435\u0432, \u041C\u0430\u0439\u0434\u0430\u043D \u041D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438, 1</p>\n          <p class=\"page-footer__contacts\">\u0422\u0435\u043B.: +3 (803) 495-95-95</p>\n        </div>\n\n        <div class=\"page-footer__bottom\">\n          <ul class=\"page-footer__social social\">\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--facebook\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0424\u0435\u0439\u0441\u0431\u0443\u043A\">\n                <span class=\"visually-hidden\">\u0424\u0435\u0439\u0441\u0431\u0443\u043A</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--instagram\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C\">\n                <span class=\"visually-hidden\">\u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--twitter\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0422\u0432\u0438\u0442\u0442\u0435\u0440\">\n                <span class=\"visually-hidden\">\u0422\u0432\u0438\u0442\u0442\u0435\u0440</span>\n              </a>\n            </li>\n          </ul>\n          <a class=\"page-footer__copyright\" href=\"https://htmlacademy.ru/intensive/htmlcss\">\n            <span class=\"visually-hidden\">\u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E:</span>\n            <img class=\"page-footer__copyright-logo\" src=\"img/logo-html.svg\" width=\"27\" height=\"35\" alt=\"HTML Academy\">\n          </a>\n        </div>\n      </div>\n\n    ";
+                view = "\n           <div class=\"page__wrapper\">\n        <div class=\"page-footer__top\">\n          <a class=\"logo\">\n            <img class=\"logo__image\" src=\"img/logo-device-color.svg\" width=\"163\" height=\"36\" alt=\"\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442-\u043C\u0430\u0433\u0430\u0437\u0438\u043D Device\">\n          </a>\n          <ul class=\"page-footer__user-menu user-menu user-menu--contrast\">\n<!--           <li class=\"user-menu__item\">-->\n<!--              <a class=\"user-menu__link user-menu__link&#45;&#45;product\" href=\"/#/order\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>-->\n<!--            </li>-->\n<!--            <li class=\"user-menu__item\">-->\n<!--              <a class=\"user-menu__link user-menu__link&#45;&#45;product\" href=\"/#/test-card-page\">\u041A\u0410\u0420\u0422\u041E\u0427\u041A\u0410 \u0422\u041E\u0412\u0410\u0420\u0410</a>-->\n<!--            </li>-->\n<!--            <li class=\"user-menu__item\">-->\n<!--              <a class=\"user-menu__link user-menu__link&#45;&#45;product\" href=\"#/order\">\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043A\u0430\u0437\u0430</a>-->\n<!--            </li>-->\n<!--            <li class=\"user-menu__item\">-->\n<!--              <a class=\"user-menu__link user-menu__link&#45;&#45;cart\" href=\"/#/cart\">\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043A\u0430\u0437\u0430</a>-->\n<!--            </li>-->\n\n          </ul>\n        </div>\n\n        <div class=\"page-footer__middle\">\n          <p class=\"page-footer__contacts\">\u0433. \u041A\u0438\u0435\u0432, \u041C\u0430\u0439\u0434\u0430\u043D \u041D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438, 1</p>\n          <p class=\"page-footer__contacts\">\u0422\u0435\u043B.: +3 (803) 495-95-95</p>\n        </div>\n\n        <div class=\"page-footer__bottom\">\n          <ul class=\"page-footer__social social\">\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--facebook\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0424\u0435\u0439\u0441\u0431\u0443\u043A\">\n                <span class=\"visually-hidden\">\u0424\u0435\u0439\u0441\u0431\u0443\u043A</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--instagram\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C\">\n                <span class=\"visually-hidden\">\u0418\u043D\u0441\u0442\u0430\u0433\u0440\u0430\u043C</span>\n              </a>\n            </li>\n            <li class=\"social__item\">\n              <a class=\"social__link social__link--twitter\" href=\"#\" aria-label=\"\u041D\u0430\u0448 \u0422\u0432\u0438\u0442\u0442\u0435\u0440\">\n                <span class=\"visually-hidden\">\u0422\u0432\u0438\u0442\u0442\u0435\u0440</span>\n              </a>\n            </li>\n          </ul>\n          <a class=\"page-footer__copyright\" href=\"https://htmlacademy.ru/intensive/htmlcss\">\n            <span class=\"visually-hidden\">\u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E:</span>\n            <img class=\"page-footer__copyright-logo\" src=\"img/logo-html.svg\" width=\"27\" height=\"35\" alt=\"HTML Academy\">\n          </a>\n        </div>\n      </div>\n\n    ";
                 return _context.abrupt("return", view);
 
               case 2:

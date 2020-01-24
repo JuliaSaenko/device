@@ -2,6 +2,7 @@
 
 import { async } from "./polyfill";
 import products from "./products";
+import addToCart from './addToCart';
 
 export default () => {
     const productList = document.querySelector('.catalog__list');
@@ -20,19 +21,18 @@ export default () => {
     function createProductCard() {
         filteredArray.forEach(item => {
             productList.innerHTML += `
-            <li class="catalog__item">
-                <a class="catalog__link" href="#">
-                    <h3 class="catalog__title">${item.name}</h3>
-                </a>
-                <p class="catalog__price">${item.price} грн</p>
-                <div class="catalog__wrapper">
-                    <img class="catalog__image" src="${item.img}">
-                    <p class="catalog__actions">
-                    <button class="catalog__btn btn" type="button">В корзину</button>
-                    <button class="catalog__compare-btn" type="button">Добавить к сравнению</button>
-                    </p>
+             <li class="catalog__item"  data-id="${item.id}">
+            <a class="catalog__link" data-id="${item.id}" href="#/i/${item.id}">
+                <h3 class="catalog__title">${item.name}</h3>
+            </a>
+            <p class="catalog__price">${item.price}$</p>
+            <div class="catalog__wrapper">
+                <img class="catalog__image" src="${item.img}">
+                <div class="catalog__actions">
+                  <button class="catalog__btn btn addToCartBtn" type="button">В корзину</button>
                 </div>
-            </li>
+            </div>
+        </li>
             `;
         })
     }
@@ -66,6 +66,7 @@ export default () => {
                     sortArrayByPrice();
                 }
                 createProductCard();
+                addToCart();
             })
         })
     }
@@ -88,6 +89,7 @@ export default () => {
                 }
             }
             createProductCard();
+            addToCart();
         });
     }
     const showProducts = async () => {

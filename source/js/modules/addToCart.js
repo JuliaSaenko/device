@@ -33,8 +33,10 @@ export default () => {
       let i = 0;
       if (cartArray.length === 0) {
         cartArray.push(cartItemInfo);
+
         localStorage.setItem('cartData', JSON.stringify(cartArray));
         document.querySelector('.finalPrice').innerHTML = totalPrice(cartArray);
+        deleteFromCart();
       } else if (cartArray.length > 0) {
         let flag = true;
         cartArray.forEach((item, index) => {
@@ -52,10 +54,7 @@ export default () => {
         localStorage.setItem('cartData', JSON.stringify(cartArray));
         document.querySelector('.finalPrice').innerHTML = totalPrice(cartArray);
       }
-
-
      miniCartRender();
-     deleteFromCart();
     }
 
 

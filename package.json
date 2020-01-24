@@ -20,7 +20,9 @@
   "homepage": "https://github.com/JuliaSaenko/device#readme",
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
+    "aos": "^3.0.0-beta.6",
     "autoprefixer": "^9.7.3",
+    "body-scroll-lock": "^2.6.4",
     "browser-sync": "^2.26.7",
     "del": "^5.1.0",
     "gulp": "^4.0.2",
@@ -36,6 +38,7 @@
     "moment": "^2.24.0",
     "plumber": "^0.4.8",
     "postcss": "^7.0.25",
+    "rater-js": "^1.0.1",
     "rollup": "^1.27.14",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-node-resolve-next": "^0.3.0",
