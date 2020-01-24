@@ -1,8 +1,13 @@
+
+'use strict';
+import addToCart from './addToCart';
 import fillter from "./fillter";
 import cardPage from "./card-page";
 
 
 export default () => {
+
+
   const productList = document.querySelector('.catalog__list');
   const catalogCrumb = document.getElementById('catalog-crumb');
   catalogCrumb.addEventListener('click', handleClickOnCatalogCrumb);
@@ -32,7 +37,7 @@ export default () => {
   };
 
   const showData = () => {
-    requestData().then((response) => {      
+    requestData().then((response) => {
       if(filter !== null){
         response.data.forEach(item => {
           if(item.category === filter){
@@ -41,10 +46,12 @@ export default () => {
           }
         })
         checkBreadCrumbs();
-        createCards(filteredArray); 
-        localStorage.removeItem('categoryName');       
+        createCards(filteredArray);
+        addToCart();
+        localStorage.removeItem('categoryName');
       }else {
-        createCards(response.data);     
+        createCards(response.data);
+        addToCart();
       }
     })
       .catch((error) => {
@@ -56,6 +63,7 @@ export default () => {
       })
   };
 
+
   function createCards(response) {
 
     response.forEach(item => {
@@ -64,12 +72,12 @@ export default () => {
             <a class="catalog__link" data-id="${item.id}" href="#/i/${item.id}">
                 <h3 class="catalog__title">${item.name}</h3>
             </a>
-            <p class="catalog__price">${item.price} грн</p>
+            <p class="catalog__price">${item.price}$</p>
             <div class="catalog__wrapper">
                 <img class="catalog__image" src="${item.img}">
-                <p class="catalog__actions">
-                <button class="catalog__btn btn" type="button">В корзину</button>
-                </p>
+                <div class="catalog__actions">
+                    <button class="catalog__btn btn addToCartBtn" type="button">В корзину</button>
+                </div>
             </div>
         </li>
         `;
@@ -83,13 +91,14 @@ export default () => {
       });
     })
   }
+
   function checkBreadCrumbs(){
     const crumb = document.getElementById('breadcrumb');
     crumb.innerHTML = `${userFilter}`;
   }
   function handleClickOnCatalogCrumb(){
     //удаляем локал сторедж
-    localStorage.removeItem('categoryName'); 
+    localStorage.removeItem('categoryName');
     //получаем крошку категории
     const crumb = document.getElementById('breadcrumb');
     //фильтра по категориям
@@ -113,5 +122,6 @@ export default () => {
 
   checkState();
   showData(filter);
+
 }
 

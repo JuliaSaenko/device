@@ -17,7 +17,9 @@
 
 .cart-popup.show {
   display: flex;
-
+  max-width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
   animation: slide-down 0.4s 1s ease-out forwards;
 
   .cart-popup__title {

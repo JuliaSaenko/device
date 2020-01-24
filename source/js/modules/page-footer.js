@@ -16,9 +16,9 @@ let pageFooter = {
 <!--            <li class="user-menu__item">-->
 <!--              <a class="user-menu__link user-menu__link&#45;&#45;product" href="#/order">Оформление заказа</a>-->
 <!--            </li>-->
-            <li class="user-menu__item">
-              <a class="user-menu__link user-menu__link--cart" href="/#/cart">Оформление заказа</a>
-            </li>
+<!--            <li class="user-menu__item">-->
+<!--              <a class="user-menu__link user-menu__link&#45;&#45;cart" href="/#/cart">Оформление заказа</a>-->
+<!--            </li>-->
 
           </ul>
         </div>

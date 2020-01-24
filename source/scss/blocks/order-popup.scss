@@ -90,15 +90,16 @@
       font-size: 16px;
       padding: 20px 0px;
     }
-
+    #user-complete-order{
+      .cart__product{
+        opacity: 1;
+      }
   }
 }
 
 
-.hide{
-  display: none;
+  .hide{
+    display: none;
+  }
 }
 
-.inputs-transition{
-  transform: translate( -50%);
-}

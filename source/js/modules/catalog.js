@@ -116,8 +116,11 @@ let catalogPage = {
     products();
     fillter();
 
+    window.onload = function() {
+      console.log('Страница загружена');
+      // к этому моменту страница загружена
+    };
   }
-
 };
 
 export default catalogPage;

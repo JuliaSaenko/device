@@ -8,7 +8,7 @@ import renderComments from "./comments";
 import productSlider from "./product-slider";
 import renderImages from "./render-images";
 import raterJs from "rater-js";
-
+import addToCart from './addToCart';
 
 let card;
 
@@ -68,7 +68,7 @@ let cardPage = {
               <div class="product__price-wrapper inner-order-content">
                  <p class="product__price price-title">Цена: <span id="productPrice">${card.price}</span><span class="product__currency"> грн</span> </p>
               </div>
-              <button class="product__btn-buy main-buy-btn btn">🛒Купить</button>
+              <button class="product__btn-buy main-buy-btn btn addToCartBtn">🛒Купить</button>
             </div>
             <div class="product__brns">
                <button class="product__brn product__brn--description btn">Описание</button>
@@ -269,7 +269,7 @@ let cardPage = {
 
 
     console.log(card);
-
+    addToCart();
   }
 };
 

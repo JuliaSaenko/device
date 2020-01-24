@@ -3,8 +3,10 @@ import sliders from './sliders';
 import services from './services';
 import contacts from './contacts';
 import aboutUs from './about-us';
+import addToCart from './addToCart';
 import redirect from './redirect';
 import redirectMain from './redirectMain';
+
 
 let mainPage = {
   render : async () => {
@@ -214,6 +216,7 @@ let mainPage = {
     aboutUs();
     commentForm();
     redirectMain();
+    addToCart();
   }
 
 };

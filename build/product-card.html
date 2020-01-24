@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Device — интернет-магазин гаджетов</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<!--<header class="header">-->
+<!--    <div class="container">-->
+<!--        <a href="index.html" class="logo"><img src="imgs/header-images/logo.png" alt="logo" height="36" width="165"></a>-->
+<!--        <div class="header-user-wrapper">-->
+<!--            <form class="search-form" method="post" action="index.html">-->
+<!--                <input type="text" name="search" class="search-input" placeholder="Поиск по сайту">-->
+<!--                <button type="submit" class="srch-btn">Найти</button>-->
+<!--            </form>-->
+<!--            <ul class="header-user-list">-->
+<!--                <li class="user-list-item">-->
+<!--                    <span class="user-name"></span>-->
+<!--                    <a href="#">Войти</a>-->
+<!--                </li>-->
+<!--                <li class="user-list-item"><a href="#">Сравнить</a></li>-->
+<!--                <li class="user-list-item"><a href="#">Корзина</a></li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--        <nav class="header-navigation">-->
+<!--            <ul class="header-navigation-list">-->
+<!--                <li class="nav-list-item"><a href="catalog.html" class="list-catalog-link">Каталог товаров</a>-->
+<!--                    <div class="sub-catalog-wrapper">-->
+<!--                        <ul class="sub-catalog-list">-->
+<!--                            <li class="sub-catalog-list-item"><a href="#">Виртуальня реальность</a></li>-->
+<!--                            <li class="sub-catalog-list-item"><a href="#">Моноподы для селфи</a></li>-->
+<!--                            <li class="sub-catalog-list-item"><a href="#">Экшн-камеры</a></li>-->
+<!--                        </ul>-->
+
+<!--                        <ul class="sub-catalog-list">-->
+<!--                            <li class="sub-catalog-list-item"><a href="#">Фитнес-браслеты</a></li>-->
+<!--                            <li class="sub-catalog-list-item"><a href="#">Умные часы</a></li>-->
+<!--                        </ul>-->
+
+<!--                        <ul class="sub-catalog-list">-->
+<!--                            <li class="sub-catalog-list-item"><a href="#">Квадрокоптеры</a></li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--                <li class="nav-list-item"><a href="#">Доставка</a></li>-->
+<!--                <li class="nav-list-item"><a href="#">Гарантия</a></li>-->
+<!--                <li class="nav-list-item"><a href="#">Контакты</a></li>-->
+<!--            </ul>-->
+<!--        </nav>-->
+<!--    </div>-->
+<!--</header>-->
+<div class="product-card-wrapper page">
+   <ul class="page__breadcrumbs breadcrumbs product-card__breadcrumbs">
+     <li class="breadcrumbs__item"><a class="breadcrumbs__link"  href="index.html">Главная</a></li>
+     <li class="breadcrumbs__item"><a class="breadcrumbs__link" href="catalog.html">Каталог товаров</a></li>
+     <li class="breadcrumbs__item"><a class="breadcrumbs__link" href="#">Моноподы для селфи</a></li>
+     <li class="breadcrumbs__item">Beike QZSD Q999H</li>
+    </ul>
+
+  <div class="product-wrapper">
+    <button type="button" class="product__close btn--close"><span class="visually-hidden">закрыть</span></button>
+    <div class="product__gallery">
+      <ul class="product__slider">
+        <li class="product__slide"><img src="img/content/selfie-sticks/1.jpg" width="600" height="600"></li>
+        <li class="product__slide"><img src="img/content/selfie-sticks/1.jpg" width="600" height="600"></li>
+        <li class="product__slide"><img src="img/content/selfie-sticks/1.jpg" width="600" height="600"></li>
+        <li class="product__slide"><img src="img/content/selfie-sticks/1.jpg" width="600" height="600"></li>
+      </ul>
+    </div>
+      <div class="product__info">
+        <div class="product__heading">
+          <h1 class="product__title">Монопод Beike QZSD Q999H</h1>
+          <p class="product__art">Артикул: <span id="product-article">#12345</span></p>
+          <div id="reviewStars-input">
+            <input class="stars-rait" type="checkbox" id="st1" value="1">
+            <label for="st1"></label>
+            <input class="stars-rait" type="checkbox" id="st2" value="2">
+            <label for="st2"></label>
+            <input class="stars-rait" type="checkbox" id="st3" value="3">
+            <label for="st3"></label>
+            <input class="stars-rait" type="checkbox" id="st4" value="4">
+            <label for="st4"></label>
+            <input class="stars-rait" type="checkbox" id="st5" value="5">
+            <label for="st5"></label>
+          </div>
+        </div>
+
+        <div class="product__about">
+          <div class="product__price-wrapper inner-order-content">
+            <p class="product__price price-title">Цена: <span id="productPrice">$ 1000</span></p>
+          </div>
+          <button class="product__btn-buy main-buy-btn btn">🛒Купить</button>
+          <div class="product__delivery-info">
+            <p>Осталось в наличии: 2</p>
+          </div>
+        </div>
+        <div class="product__brns">
+          <button class="product__brn product__brn--description btn">Описание</button>
+          <button class="product__brn product__brn--review btn">Отзывы</button>
+        </div>
+        <div class="product__review-wrapper">
+          <a class="product__review" id="feedback">Оставить отзыв</a>
+        </div>
+      </div>
+      </div>
+  </div>
+</div>
+
+<div class="comment-popup modal hide">
+  <h2 class="visually-hidden">Напишите нам</h2>
+  <form class="comment__form" >
+    <p class="comment__field">
+      <label class="comment__label" for="comment-name">Ваше имя:</label>
+      <input class="comment__input" id="comment-name" type="text" name="name" placeholder="Имя">
+    </p>
+    <p class="comment__field comment__field--message">
+      <label class="comment__label" for="comment-message">Текст комментария:</label>
+      <textarea class="comment__textarea" id="comment-message" cols="78" rows="4" name="message" placeholder="В свободной форме"></textarea>
+    </p>
+    <button class="comment__btn btn" type="submit">Отправить</button>
+  </form>
+  <button class="modal__close close" type="button">
+    <span class="visually-hidden">Закрыть</span>
+  </button>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

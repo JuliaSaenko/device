@@ -1,5 +1,7 @@
 import cartPopup from './cart-popup';
+import miniCartRender from "./miniCartRender";
 import redirect from './redirect';
+
 
 let pageHeader = {
   render: async () => {
@@ -7,7 +9,6 @@ let pageHeader = {
         <a class="page-header__logo main-nav__logo logo" href="/#/">
           <img class="logo__image" src="img/logo-device.svg" width="163" height="36" alt="Интернет-магазин Device">
         </a>
-
 
         <ul class="page-header__user-actions user-menu">
           <li class="user-menu__item user-menu__item--cart">
@@ -32,9 +33,11 @@ let pageHeader = {
             <a class="site-menu__link site-menu__link--dropdown" href="/#/catalog">Каталог товаров</a>
             <div class="page-header__catalog-dropdown dropdown">
               <ul class="catalog-menu">
+
                 <li><a class="catalog-menu__link" data-id="vr" href="/#/catalog">Виртуальная реальность</a></li>
                 <li><a class="catalog-menu__link" data-id="selfieSticks" href="/#/catalog">Моноподы для селфи</a></li>
                 <li><a class="catalog-menu__link" data-id="actionCamera" href="/#/catalog">Экшн-камеры</a></li>
+
               </ul>
               <ul class="catalog-menu">
                 <li><a class="catalog-menu__link" data-id="fitnessTracker" href="/#/catalog">Фитнес-браслеты</a></li>
@@ -76,9 +79,9 @@ let pageHeader = {
           </li>
       `;
     }
-
     cartPopup();
     redirect();
+    miniCartRender();
   }
 };
 

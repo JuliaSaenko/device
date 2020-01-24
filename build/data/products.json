@@ -1,0 +1,440 @@
+[
+    {
+        "id": "1",
+        "category": "actionCamera",
+        "userCategory": "Экшн камеры",
+        "name": "Sony Tessar",
+        "art": "12345",
+        "rating": "4",
+        "color": "Черный",
+        "brand" : "Sony",
+        "imgLarge": ["../img/content/actioncams/1-1-l.jpg", "../img/content/actioncams/1-2-l.jpg", "../img/content/actioncams/1-3-l.jpg"],
+        "imgSmall": ["../img/content/actioncams/1-1-s.jpg", "../img/content/actioncams/1-2-s.jpg", "../img/content/actioncams/1-3-s.jpg"],
+        "img": "../img/content/actioncams/1-1-l.jpg",
+
+        "price": "9000",
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1553025855",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          },
+          {
+            "author": "Константин Константинопольский",
+            "time": "1558555931",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          },
+          {
+            "author": "Константин Константинопольский",
+            "time": "1570804401",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+    },
+    {
+        "id": "2",
+        "category": "actionCamera",
+        "userCategory": "Экшн камеры",
+        "name": "GO PRO Fusion",
+        "art": "32421",
+        "rating": "4.7",
+        "color": "Черный",
+        "brand" : "Go Pro",
+        "img": "../img/content/actioncams/2-1-l.jpg",
+        "imgLarge": ["../img/content/actioncams/2-1-l.jpg", "../img/content/actioncams/2-2-l.jpg", "../img/content/actioncams/2-3-l.jpg"],
+        "imgSmall": ["../img/content/actioncams/2-1-s.jpg", "../img/content/actioncams/2-2-s.jpg", "../img/content/actioncams/2-3-s.jpg"],
+
+        "price": "15000",
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1553025855",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          },
+          {
+            "author": "Константин Константинопольский",
+            "time": "1570804401",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+       },
+    {
+        "id": "3",
+        "category": "actionCamera",
+        "userCategory": "Экшн камеры",
+        "name": "Airon ProCam",
+        "art": "13275",
+        "rating": "5",
+        "color": "Белый",
+        "brand" : "Airon",
+        "img": "../img/content/actioncams/3-1-l.jpg",
+        "imgLarge": ["../img/content/actioncams/3-1-l.jpg", "../img/content/actioncams/3-2-l.jpg", "../img/content/actioncams/3-3-l.jpg"],
+        "imgSmall": ["../img/content/actioncams/3-1-s.jpg", "../img/content/actioncams/3-2-s.jpg", "../img/content/actioncams/3-3-s.jpg"],
+
+        "price": "7000",
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1553025855",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+    },
+    {
+        "id": "4",
+        "category": "fitnessTracker",
+        "userCategory": "Фитнес трекеры",
+        "name": "Xiaomi X10Pro",
+        "art": "14575",
+        "rating": "4.3",
+        "color": "Черный",
+        "brand" : "Xiaomi",
+        "img": "../img/content/fitness-trackers/1-1-l.jpg",
+        "imgLarge": ["../img/content/fitness-trackers/1-1-l.jpg", "../img/content/fitness-trackers/1-2-l.jpg", "../img/content/fitness-trackers/1-3-l.jpg"],
+        "imgSmall": ["../img/content/fitness-trackers/1-1-s.jpg", "../img/content/fitness-trackers/1-2-s.jpg", "../img/content/fitness-trackers/1-3-s.jpg"],
+
+        "price": "4000",
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1553025855",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          },
+          {
+            "author": "Константин Константинопольский",
+            "time": "1575347642",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          },
+          {
+            "author": "Константин Константинопольский",
+            "time": "1575347642",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+      ]
+    },
+    {
+        "id": "5",
+        "category": "fitnessTracker",
+
+        "userCategory": "Фитнес трекеры",
+
+
+        "name": "Apple watch 5 Series",
+        "art": "23575",
+        "rating": "4.4",
+
+        "color": "Черный",
+        "brand" : "Apple",
+        "img": "../img/content/fitness-trackers/2-1-l.jpg",
+        "imgLarge": ["../img/content/fitness-trackers/2-1-l.jpg", "../img/content/fitness-trackers/2-2-l.jpg", "../img/content/fitness-trackers/2-3-l.jpg"],
+        "imgSmall": ["../img/content/fitness-trackers/2-1-s.jpg", "../img/content/fitness-trackers/2-2-s.jpg", "../img/content/fitness-trackers/2-3-s.jpg"],
+
+        "price": "17000",
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1553025855",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+    },
+    {
+        "id": "6",
+        "category": "fitnessTracker",
+        "userCategory": "Фитнес трекеры",
+        "name": "Xiaomi MiBand",
+        "art": "45689",
+        "rating": "5",
+        "color": "Черный",
+        "brand" : "Xiaomi",
+        "img": "../img/content/fitness-trackers/3-1-l.jpg",
+        "imgLarge": ["../img/content/fitness-trackers/3-1-l.jpg", "../img/content/fitness-trackers/3-2-l.jpg", "../img/content/fitness-trackers/3-3-l.jpg"],
+        "imgSmall": ["../img/content/fitness-trackers/3-1-s.jpg", "../img/content/fitness-trackers/3-2-s.jpg", "../img/content/fitness-trackers/3-3-s.jpg"],
+        "price": "3000",
+      "comments": [
+        {
+          "author": "Константин Константинопольский",
+          "time": "1553025855",
+          "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+        }
+      ]
+    },
+    {
+        "id": "7",
+        "category": "quadrocopters",
+        "userCategory": "Квадрокоптеры",
+        "name": "Ultimate Fly",
+        "art": "88765",
+        "rating": "3.9",
+        "color": "Красный",
+        "brand": "Quadro Sport",
+
+
+        "price": "13000",
+
+        "img": "../img/content/quadrocopters/1-1-l.jpg",
+        "imgLarge": ["../img/content/quadrocopters/1-1-l.jpg", "../img/content/quadrocopters/1-2-l.jpg", "../img/content/quadrocopters/1-3-l.jpg"],
+        "imgSmall": ["../img/content/quadrocopters/1-1-s.jpg", "../img/content/quadrocopters/1-2-s.jpg", "../img/content/quadrocopters/1-3-s.jpg"],
+
+      "comments": [
+        {
+          "author": "Константин Константинопольский",
+          "time": "1558555931",
+          "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+        }
+      ]
+
+    },
+    {
+        "id": "8",
+        "category": "quadrocopters",
+
+        "userCategory": "Квадрокоптеры",
+
+        "art": "54675",
+        "rating": "4",
+
+        "name": "Double Fly",
+        "color": "Белый",
+        "brand" : "Future GEN",
+        "img": "../img/content/quadrocopters/2-1-l.jpg",
+        "imgLarge": ["../img/content/quadrocopters/2-1-l.jpg", "../img/content/quadrocopters/2-2-l.jpg", "../img/content/quadrocopters/2-3-l.jpg"],
+        "imgSmall": ["../img/content/quadrocopters/2-1-s.jpg", "../img/content/quadrocopters/2-2-s.jpg", "../img/content/quadrocopters/2-3-s.jpg"],
+        "price": "7000",
+      "comments": [
+        {
+          "author": "Константин Константинопольский",
+          "time": "1558555931",
+          "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+        },
+        {
+          "author": "Константин Константинопольский",
+          "time": "1575347642",
+          "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+        }
+      ]
+    },
+    {
+        "id": "9",
+        "category": "quadrocopters",
+        "userCategory": "Квадрокоптеры",
+        "name": "Orange Fly",
+        "art": "43215",
+        "rating": "4.1",
+        "color": "Оранжевый",
+
+        "brand" : "Flying Beasts",
+
+        "price": "24000",
+
+
+        "img": "../img/content/quadrocopters/3-1-l.jpg",
+        "imgLarge": ["../img/content/quadrocopters/3-1-l.jpg", "../img/content/quadrocopters/3-2-l.jpg", "../img/content/quadrocopters/3-3-l.jpg"],
+        "imgSmall": ["../img/content/quadrocopters/3-1-s.jpg", "../img/content/quadrocopters/3-2-s.jpg", "../img/content/quadrocopters/3-3-s.jpg"],
+
+
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1558555931",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          },
+          {
+            "author": "Константин Константинопольский",
+            "time": "1568167383",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+
+    },
+    {
+        "id": "10",
+        "category": "selfieSticks",
+        "userCategory": "Моноподы и селфи-палки",
+        "name": "Monopod XR5609",
+        "art": "16275",
+        "rating": "5",
+        "color": "Черный",
+
+        "brand" : "Superpods",
+
+        "price": "6000",
+
+
+        "img": "../img/content/selfie-sticks/1-1-l.jpg",
+        "imgLarge": ["../img/content/selfie-sticks/1-1-l.jpg", "../img/content/selfie-sticks/1-2-l.jpg", "../img/content/selfie-sticks/1-3-l.jpg"],
+        "imgSmall": ["../img/content/selfie-sticks/1-1-s.jpg", "../img/content/selfie-sticks/1-2-s.jpg", "../img/content/selfie-sticks/1-3-s.jpg"],
+ 
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1568167383",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          },
+          {
+            "author": "Константин Константинопольский",
+            "time": "1575347642",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+
+    },
+    {
+        "id": "11",
+        "category": "selfieSticks",
+        "userCategory": "Моноподы и селфи-палки",
+        "name": "Monopod Small",
+        "art": "13575",
+        "rating": "3.7",
+        "color": "Черный",
+
+        "brand" : "Superpods",
+
+        "price": "4000",
+
+
+        "img": "../img/content/selfie-sticks/2-2-l.jpg",
+        "imgLarge": ["../img/content/selfie-sticks/2-1-l.jpg", "../img/content/selfie-sticks/2-2-l.jpg", "../img/content/selfie-sticks/2-3-l.jpg"],
+        "imgSmall": ["../img/content/selfie-sticks/2-1-s.jpg", "../img/content/selfie-sticks/2-2-s.jpg", "../img/content/selfie-sticks/2-3-s.jpg"],
+
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1568167383",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+
+    },
+    {
+        "id": "12",
+        "category": "watches",
+        "userCategory": "Часы",
+        "name": "Apple Watch Series 3",
+        "art": "11575",
+        "rating": "4.2",
+        "color": "Черный",
+        "brand" : "Apple",
+        "img": "../img/content/smart-watch/1-1-l.jpg",
+        "imgLarge": ["../img/content/smart-watch/1-1-l.jpg", "../img/content/smart-watch/1-2-l.jpg", "../img/content/smart-watch/1-3-l.jpg"],
+        "imgSmall": ["../img/content/smart-watch/1-1-s.jpg", "../img/content/smart-watch/1-2-s.jpg", "../img/content/smart-watch/1-3-s.jpg"],
+        "price": "9000",
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1568167383",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+    },
+    {
+        "id": "13",
+        "category": "watches",
+        "userCategory": "Часы",
+        "name": "Samsung Supreme Watch 3",
+        "art": "87095",
+        "rating": "4.3",
+        "color": "Черный",
+        "brand" : "Samsung",
+        "img": "../img/content/smart-watch/2-1-l.jpg",
+        "imgLarge": ["../img/content/smart-watch/2-1-l.jpg", "../img/content/smart-watch/2-2-l.jpg", "../img/content/smart-watch/2-3-l.jpg"],
+        "imgSmall": ["../img/content/smart-watch/2-1-s.jpg", "../img/content/smart-watch/2-2-s.jpg", "../img/content/smart-watch/2-3-s.jpg"],
+        "price": "11000",
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1576112644",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+    },
+    {
+        "id": "14",
+        "category": "watches",
+        "userCategory": "Часы",
+        "name": "Apple Watch Series 5",
+        "rating": "4.9",
+        "art": "12134",
+        "color": "Розовый",
+        "brand" : "Apple",
+        "img": "../img/content/smart-watch/3-1-l.jpg",
+        "imgLarge": ["../img/content/smart-watch/3-1-l.jpg", "../img/content/smart-watch/3-2-l.jpg", "../img/content/smart-watch/3-3-l.jpg"],
+        "imgSmall": ["../img/content/smart-watch/3-1-s.jpg", "../img/content/smart-watch/3-2-s.jpg", "../img/content/smart-watch/3-3-s.jpg"],
+        "price": "15000",
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1576112644",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+    },
+    {
+        "id": "15",
+        "category": "vr",
+        "userCategory": "Шлемы виртуальной реальности",
+        "name": "Sony VR for PS4",
+        "art": "15674",
+        "rating": "5",
+        "color": "Белый",
+        "brand" : "Sony",
+        "img": "../img/content/vr/1-1-l.jpg",
+        "imgLarge": ["../img/content/vr/1-1-l.jpg", "../img/content/vr/1-2-l.jpg", "../img/content/vr/1-3-l.jpg"],
+        "imgSmall": ["../img/content/vr/1-1-s.jpg", "../img/content/vr/1-2-s.jpg", "../img/content/vr/1-3-s.jpg"],
+        "price": "15000",
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1576112644",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n  Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n некоторую вероятность коллапса."
+          }
+        ]
+    },
+    {
+        "id": "16",
+        "category": "vr",
+        "userCategory": "Шлемы виртуальной реальности",
+        "name": "FibRum NewAge 2.0",
+        "art": "13565",
+        "rating": "4",
+        "color": "Черный",
+
+        "brand" : "Fibrum",
+
+        "price": "7000",
+
+        "img": "../img/content/vr/2-2-l.jpg",
+        "imgLarge": ["../img/content/vr/2-1-l.jpg", "../img/content/vr/2-2-l.jpg", "../img/content/vr/2-3-l.jpg"],
+        "imgSmall": ["../img/content/vr/2-1-s.jpg", "../img/content/vr/2-2-s.jpg", "../img/content/vr/2-3-s.jpg"],
+
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1576112644",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+
+    },
+    {
+        "id": "17",
+        "category": "vr",
+        "userCategory": "Шлемы виртуальной реальности",
+        "name": "HTC BeHero 5",
+        "art": "09275",
+        "rating": "4.4",
+        "color": "Черный",
+        "brand" : "HTC",
+        "img": "../img/content/vr/3-1-l.jpg",
+        "imgLarge": ["../img/content/vr/3-1-l.jpg", "../img/content/vr/3-2-l.jpg", "../img/content/vr/3-3-l.jpg"],
+        "imgSmall": ["../img/content/vr/3-1-s.jpg", "../img/content/vr/3-2-s.jpg", "../img/content/vr/3-3-s.jpg"],
+        "price": "22000",
+        "comments": [
+          {
+            "author": "Константин Константинопольский",
+            "time": "1576112644",
+            "text": "Излучение облучает фронт, однозначно свидетельствуя о неустойчивости процесса в целом. Сверхпроводник конфокально нейтрализует спиральный квазар.\n                Солитон растягивает наносекундный вихрь, при этом дефект массы не образуется. Взвесь, несмотря на\n                некоторую вероятность коллапса."
+          }
+        ]
+    }
+]
