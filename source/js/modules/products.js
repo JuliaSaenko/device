@@ -1,5 +1,8 @@
+'use strict';
 import addToCart from './addToCart';
 import miniCartRender from './miniCartRender';
+import cardPage from "./card-page";
+import deleteFromCart from "./deleteFromCart";
 
 export default () => {
 
@@ -37,11 +40,11 @@ export default () => {
 
     response.data.forEach(item => {
       productList.innerHTML += `
-        <li class="catalog__item">
-            <a class="catalog__link" href="#">
+        <li class="catalog__item" data-id="${item.id}">
+            <a class="catalog__link" data-id="${item.id}" href="#/i/${item.id}">
                 <h3 class="catalog__title">${item.name}</h3>
             </a>
-            <p class="catalog__price">${item.price} грн</p>
+            <p class="catalog__price">${item.price}$</p>
             <div class="catalog__wrapper">
                 <img class="catalog__image" src="${item.img}">
                 <p class="catalog__actions">
@@ -52,10 +55,16 @@ export default () => {
         </li>
         `;
 
+      const catalogLink = document.querySelector(`.catalog__link`);
+      catalogLink.addEventListener(`click`, () => {
+        if(catalogLink.getAttribute(`data-id`) === item.id) {
+          console.log(1);
+          cardPage();
+        }
+      });
     })
   }
 
  showData();
-  miniCartRender();
 }
 

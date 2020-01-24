@@ -33,6 +33,7 @@
     "gulp-sass": "^4.0.2",
     "gulp-svgstore": "^7.0.1",
     "jquery": "^3.4.1",
+    "moment": "^2.24.0",
     "plumber": "^0.4.8",
     "postcss": "^7.0.25",
     "rollup": "^1.27.14",

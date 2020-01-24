@@ -5,6 +5,7 @@ import aboutUs from "./about-us";
 import commentForm from "./comment-form";
 import products from './products';
 import fillter from './fillter';
+//import cardPage from "./card-page";
 
 
 let catalogPage = {
@@ -162,12 +163,9 @@ let catalogPage = {
 
     window.onload = function() {
       console.log('Страница загружена');
-
       // к этому моменту страница загружена
     };
-
   }
-
 };
 
 export default catalogPage;

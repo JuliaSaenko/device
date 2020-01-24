@@ -9,11 +9,12 @@ import addToCart from './addToCart';
 let orderPage = {
   render : async () => {
     let view = `
-<div class="order-popup-container">
+
+<div class="order-popup-container modal modal--order">
   <h3>Ваш заказ</h3>
 
   <div class="popup-form order-form">
-    <form name="popupform"  action="#" class="input-text-wraper">
+    <form class="input-text-wraper" name="popupform">
       <label for="user_name" class="popup-label">
         Ваше имя:
         <input type="text" name="user_name" placeholder="Имя Фамилая">
@@ -51,7 +52,7 @@ let orderPage = {
       </label>
       <label class="popup-label hide" id="user-adress">
         Адрес:
-        <input type="text" name=email" placeholder="адрес">
+        <input type="text" name="adress" placeholder="адрес">
       </label>
       <label for="payment-option" id="payment-option" class="popup-label hide">
         Способ оплаты:
@@ -67,19 +68,18 @@ let orderPage = {
       </label>
     </form>
     <ul class="products-list-in-cart">   <!-- тут список товаров в корзине -->
- 
- 
+
     </ul>
     <div class="finalPrice-container">
       <div>
         <span>Всего:</span>
-        <span class="finalPrice">2000</span>
+        <span class="finalPrice"></span>
       </div>
       <button type="button" class="btn confirm-order-btn">Заказ подтверждаю</button>
     </div>
 
   </div>
-<!--  <button disabled type="button " class="cart__close modal__close"></button>-->
+
 </div>
 
 
