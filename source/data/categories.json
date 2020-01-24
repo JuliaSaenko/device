@@ -1,0 +1,8 @@
+{
+    "actionCamera" : ["Sony", "Go Pro", "Airon"],
+    "fitnessTracker" : ["Xiaomi" , "Apple"],
+    "quadrocopters" : ["Quadro Sport", "Future GEN", "Flying Beasts"],
+    "selfieSticks" : ["Superpods"],
+    "watches" : ["Apple", "Samsung"],
+    "vr" : ["Sony", "Fibrum", "HTC"]
+}

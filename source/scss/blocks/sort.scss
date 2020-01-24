@@ -45,7 +45,7 @@
   line-height: 18px;
   text-decoration: none;
   color: #000000;
-
+  cursor: pointer;
   opacity: 0.3;
 }
 
@@ -72,6 +72,7 @@
 
 .sort__order-item {
   margin-left: 9px;
+  cursor: pointer;
 }
 
 .sort__order-item:last-child {

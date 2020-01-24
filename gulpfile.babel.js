@@ -117,7 +117,7 @@ gulp.task('js-build', () => rollup.rollup({
     }),
     commonjs(),
     babel(),
-    uglify(),
+    //uglify(),
   ],
 }).then(bundle => bundle.write({
   file: './build/js/app.js',

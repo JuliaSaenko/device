@@ -9,10 +9,8 @@ import addToCart from './addToCart';
 let orderPage = {
   render : async () => {
     let view = `
-
 <div class="order-popup-container modal modal--order">
   <h3>Ваш заказ</h3>
-
   <div class="popup-form order-form">
     <form class="input-text-wraper" name="popupform">
       <label for="user_name" class="popup-label">
@@ -68,7 +66,6 @@ let orderPage = {
       </label>
     </form>
     <ul class="products-list-in-cart">   <!-- тут список товаров в корзине -->
-
     </ul>
     <div class="finalPrice-container">
       <div>
@@ -77,13 +74,8 @@ let orderPage = {
       </div>
       <button type="button" class="btn confirm-order-btn">Заказ подтверждаю</button>
     </div>
-
   </div>
-
 </div>
-
-
-
         `;
 
 
