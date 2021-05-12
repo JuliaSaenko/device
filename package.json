@@ -45,7 +45,7 @@
     "rollup-plugin-uglify": "^6.0.4",
     "sass": "^1.24.0",
     "scroll-to-element": "^2.0.3",
-    "swiper": "^5.2.1"
+    "swiper": "^6.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
