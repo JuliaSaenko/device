@@ -37,7 +37,7 @@
     "jquery": "^3.4.1",
     "moment": "^2.24.0",
     "plumber": "^0.4.8",
-    "postcss": "^7.0.25",
+    "postcss": "^8.2.10",
     "rater-js": "^1.0.1",
     "rollup": "^1.27.14",
     "rollup-plugin-babel": "^4.3.3",
